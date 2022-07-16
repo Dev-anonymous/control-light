@@ -60,7 +60,7 @@
             </div>
         </div>
         @php
-            $compte = \App\Models\Compte::orderby('id', 'desc')->where('compte_id', compte_id())->get();
+            $compte = \App\Models\Compte::orderby('id', 'desc')->get();
             $n = 1;
         @endphp
         <div class="main-content">
