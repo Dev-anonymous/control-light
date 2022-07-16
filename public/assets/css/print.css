@@ -1,0 +1,10 @@
+@page {
+    /* margin: 2px; */
+    /* size: 80mm; */
+}
+@media print {
+    body {
+        /* width: 80mm !important;
+        margin: 2px; */
+    }
+}
