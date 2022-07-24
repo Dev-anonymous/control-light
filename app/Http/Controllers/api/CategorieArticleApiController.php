@@ -131,7 +131,7 @@ class CategorieArticleApiController extends Controller
             }
             $to = (int) request()->to;
             $cid = compte_id();
-            DB::statement("update categorie_article set par_defaut=0 where compte_id =$cid and groupe_article_id=$categorie_article->groupe_article_id");
+            DB::statement("update categorie_article set par_defaut=0 where compte_id=$cid and groupe_article_id=$categorie_article->groupe_article_id");
             $categorie_article->update(['par_defaut' => $to]);
             if ($to == 1) {
                 $m = "La catégorie \"$categorie_article->categorie\" est maintenant marquée comme catégorie par defaut";

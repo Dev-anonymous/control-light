@@ -117,7 +117,7 @@ class GroupeArticleApiController extends Controller
             }
             $to = (int) request()->to;
             $cid = compte_id();
-            DB::statement("update groupe_article where compte_id =$cid set par_defaut=0");
+            DB::statement("update groupe_article set par_defaut=0 where compte_id=$cid");
             $groupe_article->update(['par_defaut' => $to]);
             if ($to == 1) {
                 $m = "Le groupe \"$groupe_article->groupe\" est maintenant marqué comme groupe par defaut";

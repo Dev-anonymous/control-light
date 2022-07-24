@@ -187,7 +187,7 @@ class ArticlesApiController extends Controller
                 Approvisionnement::create(['qte' => $qte, 'article_id' => $article->id, 'compte_id' => compte_id()]);
                 $article->update(['stock' => $st, 'date_expiration' => $date_expiration]);
             });
-            return $this->success([], "Le stock de a été mis à jour.");
+            return $this->success([], "Le stock de l'article été mis à jour.");
         } else {
             $validator = Validator::make(request()->all(), [
                 'article' => 'required|string|max:128',

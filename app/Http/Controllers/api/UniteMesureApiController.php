@@ -109,7 +109,7 @@ class UniteMesureApiController extends Controller
             }
             $to = (int) request()->to;
             $cid = compte_id();
-            DB::statement("update unite_mesure where compte_id=$cid set par_defaut=0");
+            DB::statement("update unite_mesure set par_defaut=0 where compte_id=$cid");
             $unite_mesure->update(['par_defaut' => $to]);
             if ($to == 1) {
                 $m = "L'unité \"$unite_mesure->unite_mesure\" est maintenant marquée comme unité par defaut";
