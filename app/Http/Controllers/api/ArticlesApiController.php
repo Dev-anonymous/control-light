@@ -32,7 +32,8 @@ class ArticlesApiController extends Controller
             $max = date('Y-m-d', strtotime('+30 days'));
             $articles = $articles->where(function ($query) use ($max) {
                 $query->whereNotNull('date_expiration')->whereDate('date_expiration', '>=', $max);
-            })->orWhereNull('date_expiration');
+                $query->orWhereNull('date_expiration');
+            });
         }
 
         $tab = [];
