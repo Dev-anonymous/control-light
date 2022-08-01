@@ -42,8 +42,8 @@
                                                     </h2>
                                                 @endforeach
                                             @else
-                                                <h2 class="mb-3 font-20 d-block text-muted">0.0 CDF</h2>
-                                                <h2 class="mb-3 font-20 d-block text-muted">0.0 USD</h2>
+                                                <h2 class="mb-3 font-20 d-block text-muted">0.00 CDF</h2>
+                                                <h2 class="mb-3 font-20 d-block text-muted">0.00 USD</h2>
                                             @endif
 
                                         </div>

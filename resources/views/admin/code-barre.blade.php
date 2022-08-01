@@ -38,7 +38,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table id="t-data" class="table table-condensed table-bordered table-hover"
+                                <table id="t-data"
+                                    class="table table-condensed table-bordered table-hover font-weight-bold font-weight-bold"
                                     style="width: 100%;">
                                     <thead>
                                         <tr>

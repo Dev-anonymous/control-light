@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $categorie_article
  * @property int|null $qte
  * @property float|null $prix
+ * @property float|null $reduction
  * @property string|null $unite_mesure
  * @property string|null $devise
  * @property int|null $vente_a_credit
@@ -46,6 +47,7 @@ class Vente extends Model
         'categorie_article_id' => 'int',
         'qte' => 'int',
         'prix' => 'float',
+        'reduction' => 'float',
         'vente_a_credit' => 'int',
         'etat_payement' => 'int',
         'compte_id' => 'int'
@@ -61,6 +63,7 @@ class Vente extends Model
         'categorie_article',
         'qte',
         'prix',
+        'reduction',
         'unite_mesure',
         'devise',
         'vente_a_credit',

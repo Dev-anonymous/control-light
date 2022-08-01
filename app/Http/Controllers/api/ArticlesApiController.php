@@ -44,6 +44,8 @@ class ArticlesApiController extends Controller
             $a->categorie = $e->categorie_article->categorie;
             $a->groupe = $e->categorie_article->groupe_article->groupe;
             $a->prix = montant($e->prix, $e->devise->devise);
+            $a->reduction = $red = (float) $e->reduction;
+            $a->prix_min = $red > 0 ? montant(reduction($e->prix,  $red), $e->devise->devise) : $a->prix;
             $a->unite_mesure = $e->unite_mesure->unite_mesure;
             $a->stock = $e->stock;
             $a->code = $e->code;
@@ -89,6 +91,7 @@ class ArticlesApiController extends Controller
                 'devise_id' => 'required|exists:devise,id',
                 'prix' => 'required|numeric|min:1',
                 'stock' => 'required|numeric|integer|min:1',
+                'reduction' => 'required|numeric|min:0|max:90',
             ]
         );
 
@@ -195,6 +198,7 @@ class ArticlesApiController extends Controller
                 'categorie_article_id' => 'required|exists:categorie_article,id',
                 'devise_id' => 'required|exists:devise,id',
                 'prix' => 'required|numeric|min:1',
+                'reduction' => 'required|numeric|min:0|max:90',
                 'date_expiration' => 'sometimes|after:' . date('Y-m-d'),
             ]);
             if ($validator->fails()) {

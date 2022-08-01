@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table id="t-unite" class="table table-condensed table-bordered table-hover"
+                                <table id="t-unite" class="table table-condensed table-bordered table-hover font-weight-bold"
                                     style="width: 100%;">
                                     <thead>
                                         <tr>

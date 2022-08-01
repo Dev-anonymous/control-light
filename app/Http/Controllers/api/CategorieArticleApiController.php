@@ -141,10 +141,14 @@ class CategorieArticleApiController extends Controller
             return $this->success([], $m);
         } else {
             $validator = Validator::make(request()->all(), [
-                'categorie' => "required|unique:categorie_article,categorie,{$categorie_article->id}"
+                'categorie' => "required"
             ]);
             if ($validator->fails()) {
                 return $this->error('Erreur de validation', ['msg' => $validator->errors()->all()]);
+            }
+            $t = CategorieArticle::where('categorie', '=', $categorie_article->categorie)->where('compte_id', '=', compte_id())->where('id', '<>', $categorie_article->id);
+            if ($t->first()) {
+                return $this->error('Erreur de validation', ['msg' => ["Cette catégorie existe déjà."]]);
             }
             $data = $validator->validated();
             $categorie_article->update($data);

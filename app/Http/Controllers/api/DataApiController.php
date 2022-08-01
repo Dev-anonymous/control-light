@@ -34,7 +34,19 @@ class DataApiController extends Controller
                 try {
                     $article = Article::where('id', $e->id)->where('compte_id', compte_id())->first();
                     if ($article) {
-                        $tot +=  change($article->prix, $article->devise->devise, $devise) * $e->qte;
+                        $pv = str_replace(['USD', 'CDF', ' '], '', $e->pv);
+                        if (!is_numeric($pv)) {
+                            $erro = true;
+                            $msg = "Le prix de vente $pv semble etre invalide";
+                            break;
+                        }
+                        $prix_min = reduction($article->prix, $article->reduction);
+                        if ($pv < $prix_min or $pv > $article->prix) {
+                            $erro = true;
+                            $msg = "Le prix de vente de l'article \"$article->article\" doit etre dans la marge de réduction de $article->reduction% de $article->prix {$article->devise->devise}, c-a-d entre $prix_min {$article->devise->devise} et $article->prix {$article->devise->devise}.";
+                            break;
+                        }
+                        $tot +=  change($pv, $article->devise->devise, $devise) * $e->qte;
                     } else {
                         $erro = true;
                         $msg = "Certains articles sur votre facture n'ont pas été retrouvés.";
@@ -42,6 +54,7 @@ class DataApiController extends Controller
                 } catch (\Throwable $th) {
                     $erro = true;
                     $msg = "Données non valides.";
+                    break;
                 }
             }
         }
@@ -68,12 +81,23 @@ class DataApiController extends Controller
             foreach ($items as $e) {
                 $article = Article::where('id', @$e->id)->where('compte_id', compte_id())->first();
                 if ($article) {
-                    $tot +=  change($article->prix, $article->devise->devise, $devise) * (int) @$e->qte;
+                    $pv = str_replace(['USD', 'CDF', ' '], '', $e->pv);
+                    if (!is_numeric($pv)) {
+                        $msg = "Le prix de vente $pv semble etre invalide";
+                        return $this->error($msg);
+                    }
+                    $prix_min = reduction($article->prix, $article->reduction);
+                    if ($pv < $prix_min or $pv > $article->prix) {
+                        $msg = "Le prix de vente de l'article \"$article->article\" doit etre dans la marge de réduction de $article->reduction% de $article->prix {$article->devise->devise}, c-a-d entre $prix_min {$article->devise->devise} et $article->prix {$article->devise->devise}.";
+                        return $this->error($msg);
+                    }
+
+                    $tot +=  change($pv, $article->devise->devise, $devise) * (int) @$e->qte;
                     $a = new stdClass();
                     $a->article = $article->article;
                     $a->qte = @$e->qte . " {$article->unite_mesure->unite_mesure}";
-                    $a->prix = montant($article->prix, $article->devise->devise);
-                    $a->total = montant($article->prix * (int) @$e->qte, $article->devise->devise);
+                    $a->prix = montant($pv, $article->devise->devise);
+                    $a->total = montant($pv * (int) @$e->qte, $article->devise->devise);
                     array_push($tab, $a);
                 } else {
                     return $this->error("Un article n'a pas été retrouvé! nous essayons de mettre à jour votre liste d'articles.");
@@ -101,11 +125,19 @@ class DataApiController extends Controller
             foreach ($items as $e) {
                 $article = Article::where('id', @$e->id)->where('compte_id', compte_id())->first();
                 if ($article) {
+                    $pv = (float) str_replace(['USD', 'CDF', ' '], '', @$e->pv);
                     $a = new stdClass();
                     $a->id = $article->id;
                     $a->article = $article->article;
                     $a->qte = (int) @$e->qte;
                     $a->prix = montant($article->prix, $article->devise->devise);
+                    $prix_min = reduction($article->prix, $article->reduction);
+                    if ($pv < $prix_min or $pv > $article->prix) {
+                        $pv = $prix_min;
+                    }
+                    $a->pv = $pv;
+                    $a->prix_min = $prix_min;
+                    $a->reduction = $article->reduction;
                     array_push($valid, $a);
                 }
             }
@@ -144,7 +176,16 @@ class DataApiController extends Controller
 
                 if ($article and (int) @$e->qte > 0) {
                     if ($article->stock >= $e->qte) {
-                        $tot +=  change($article->prix, $article->devise->devise, $devise) * $e->qte;
+                        $pv = (float) str_replace(['USD', 'CDF', ' '], '', @$e->pv);
+                        $prix_min = reduction($article->prix, $article->reduction);
+                        if ($pv < $prix_min or $pv > $article->prix) {
+                            $msg = "Le prix de vente de l'article \"$article->article\" doit etre dans la marge de réduction de $article->reduction% de $article->prix {$article->devise->devise}, c-a-d entre $prix_min {$article->devise->devise} et $article->prix {$article->devise->devise}.";
+                            $can = false;
+                            array_push($error, $msg);
+                            continue;
+                        }
+
+                        $tot +=  change($pv, $article->devise->devise, $devise) * $e->qte;
 
                         $a = new stdClass();
                         $a->ida = $article->id;
@@ -155,7 +196,7 @@ class DataApiController extends Controller
                         $a->groupe_article_id = $article->categorie_article->groupe_article->id;
                         $a->groupe = $article->categorie_article->groupe_article->groupe;
                         $a->qte = $e->qte;
-                        $a->prix = $article->prix;
+                        $a->prix = $pv;
                         $a->devise = $article->devise->devise;
                         $a->unite_mesure = $article->unite_mesure->unite_mesure;
                         array_push($tabA, $a);

@@ -5,10 +5,11 @@ use App\Models\Devise;
 use App\Models\Facture;
 use App\Models\FactureSupprimee;
 use App\Models\Taux;
+use PhpParser\Node\Expr\Cast\Double;
 
 function montant($montant, $devise = '')
 {
-    return  number_format($montant, 2, ',', ' ') . (empty($devise) ? '' : " $devise");
+    return  number_format($montant, 2, '.', ' ') . (empty($devise) ? '' : " $devise");
 }
 
 function code_article()
@@ -109,4 +110,9 @@ function facture_supprimee()
 function compte_id()
 {
     return (int)  auth()->user()->compte_id;
+}
+
+function reduction($montant, $pourc)
+{
+    return round($montant - ($montant * $pourc / 100), 2);
 }

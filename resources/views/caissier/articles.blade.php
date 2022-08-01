@@ -45,6 +45,7 @@
                                             <th>#</th>
                                             <th>Article</th>
                                             <th>Prix de vente/Unité de mesure</th>
+                                            <th>Réduction</th>
                                             <th>Qté Stock</th>
                                             <th>Code article</th>
                                             <th>Catégorie</th>
@@ -90,7 +91,7 @@
                 ],
             };
             spin =
-                `<tr><td class="text-center" colspan="7"><span class="spinner-border text-danger"></span></td></tr>`;
+                `<tr><td class="text-center" colspan="8"><span class="spinner-border text-danger"></span></td></tr>`;
             var table = $('#t-data');
             var groupchange = $('.groupe-change');
             var catechange = $('.cat-change');
@@ -178,10 +179,20 @@
                                     `Cet article expire dans ${e.jour_restant} jour(s).`;
                             }
                         }
+
+                        var red = '',
+                            redt = '';
+                        if (Number(e.reduction) > 0) {
+                            red = "<span class='badge badge-danger'>" + e.reduction + '%</span>';
+                            red += '<br>' + e.prix_min + ' - ' + e.prix;
+                            redt = "Le prix de vente va varier entre " + e.prix_min + " et " + e
+                                .prix + ' lors de la vente';
+                        }
                         str += `<tr>
                                     <td>${i+1}</td>
                                     <td title="${e.article}">${art}</td>
                                     <td title="Prix de vente : ${e.prix} Par ${e.unite_mesure}">${e.prix}</td>
+                                    <td class="text-center" title="${redt}">${red}</td>
                                     <td class="${stCl}" title="${stTi}">${e.stock} ${e.unite_mesure}</td>
                                     <td>${e.code}</td>
                                     <td>${e.categorie}</td>
@@ -191,7 +202,7 @@
                     catechange.attr('disabled', false);
                     groupchange.attr('disabled', false);
                     table.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
                     );
                     table.DataTable().destroy();
                     if (str.length > 0) {
@@ -199,7 +210,7 @@
                         table.DataTable(opt);
                     } else {
                         str =
-                            '<tr><td colspan="7" class="text-danger font-weight-bolder text-center">Aucun article</td></tr>';
+                            '<tr><td colspan="8" class="text-danger font-weight-bolder text-center">Aucun article</td></tr>';
                         table.find('tbody').html(str);
                     }
 

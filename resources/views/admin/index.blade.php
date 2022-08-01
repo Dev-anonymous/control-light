@@ -11,7 +11,7 @@
             </div>
         </div>
         @php
-            $caissier = \App\Models\User::orderby('id')->where('compte_id', compte_id());
+            $caissier = \App\Models\User::orderby('id', 'desc')->where('compte_id', compte_id());
             $tc = $caissier->get()->count() - 1;
 
             $ta = \App\Models\Article::where('compte_id', compte_id())->get()->count();
@@ -39,8 +39,8 @@
                                                     </h2>
                                                 @endforeach
                                             @else
-                                                <h2 class="mb-3 font-20 d-block text-muted">0.0 CDF</h2>
-                                                <h2 class="mb-3 font-20 d-block text-muted">0.0 USD</h2>
+                                                <h2 class="mb-3 font-20 d-block text-muted">0.00 CDF</h2>
+                                                <h2 class="mb-3 font-20 d-block text-muted">0.00 USD</h2>
                                             @endif
 
                                         </div>

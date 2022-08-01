@@ -127,11 +127,17 @@ class GroupeArticleApiController extends Controller
             return $this->success([], $m);
         } else {
             $validator = Validator::make(request()->all(), [
-                'groupe' => "required|unique:groupe_article,groupe,{$groupe_article->id}"
+                'groupe' => "required"
             ]);
             if ($validator->fails()) {
                 return $this->error('Erreur de validation', ['msg' => $validator->errors()->all()]);
             }
+
+            $t = GroupeArticle::where('groupe', '=', $groupe_article->groupe)->where('compte_id', '=', compte_id())->where('id', '<>', $groupe_article->id);
+            if ($t->first()) {
+                return $this->error('Erreur de validation', ['msg' => ["Ce groupe existe déjà."]]);
+            }
+
             $data = $validator->validated();
             $groupe_article->update($data);
             return $this->success($data, 'Données mises à jour.');

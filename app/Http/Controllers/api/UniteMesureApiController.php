@@ -119,10 +119,14 @@ class UniteMesureApiController extends Controller
             return $this->success([], $m);
         } else {
             $validator = Validator::make(request()->all(), [
-                'unite_mesure' => "required|unique:unite_mesure,unite_mesure,{$unite_mesure->id}"
+                'unite_mesure' => "required"
             ]);
             if ($validator->fails()) {
                 return $this->error('Erreur de validation', ['msg' => $validator->errors()->all()]);
+            }
+            $t = UniteMesure::where('unite_mesure', '=', $unite_mesure->unite_mesure)->where('compte_id', '=', compte_id())->where('id', '<>', $unite_mesure->id);
+            if ($t->first()) {
+                return $this->error('Erreur de validation', ['msg' => ["Cette unité de mesure existe déjà."]]);
             }
             $data = $validator->validated();
             $unite_mesure->update($data);

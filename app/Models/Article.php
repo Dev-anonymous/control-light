@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $article
  * @property int $categorie_article_id
  * @property int $unite_mesure_id
+ * @property float|null $reduction
  * @property float $prix
  * @property int $devise_id
  * @property Carbon|null $date_expiration
@@ -40,6 +41,7 @@ class Article extends Model
     protected $casts = [
         'categorie_article_id' => 'int',
         'unite_mesure_id' => 'int',
+        'reduction' => 'float',
         'prix' => 'float',
         'devise_id' => 'int',
         'stock' => 'int',
@@ -54,6 +56,7 @@ class Article extends Model
         'article',
         'categorie_article_id',
         'unite_mesure_id',
+        'reduction',
         'prix',
         'devise_id',
         'date_expiration',

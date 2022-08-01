@@ -63,6 +63,7 @@
                                             <th></th>
                                             <th>Article</th>
                                             <th>Prix de vente</th>
+                                            <th>Réduction</th>
                                             <th>Qté</th>
                                             <th>Total</th>
                                             <th></th>
@@ -147,6 +148,7 @@
                                                 <th>#</th>
                                                 <th>Article</th>
                                                 <th>Prix de vente/Unité de mesure</th>
+                                                <th>Réduction</th>
                                                 <th>Qté Stock</th>
                                                 <th>Code article</th>
                                                 <th>Catégorie</th>
@@ -326,6 +328,8 @@
     <script src="{{ asset('assets/phone/jquery.mask.min.js') }}"></script>
     <script src="{{ asset('assets/js/qrcode.min.js') }}"></script>
 
+    <script src="{{ asset('assets/js/jquery.inputmask.min.js') }}"></script>
+
     <link rel="stylesheet" href="{{ asset('assets/css/print.css') }}" media="print">
     <script src="{{ asset('assets/js/printThis.js') }}"></script>
     @php
@@ -377,7 +381,7 @@
                 }
             }
             spin =
-                `<tr><td class="text-center" colspan="8"><span class="spinner-border text-danger"></span></td></tr>`;
+                `<tr><td class="text-center" colspan="9"><span class="spinner-border text-danger"></span></td></tr>`;
             spin2 =
                 `<tr><td class="text-center" colspan="7"><span class="spinner-border text-danger"></span></td></tr>`;
 
@@ -451,13 +455,26 @@
                         var newFact = JSON.stringify({
                             id: e.id,
                             article: e.article,
-                            prix: e.prix
+                            prix: e.prix,
+                            reduction: e.reduction,
+                            prix_min: e.prix_min,
+                            pv: e.prix_min
                         });
+
+                        var red = '',
+                            redt = '';
+                        if (Number(e.reduction) > 0) {
+                            red = "<span class='badge badge-danger'>" + e.reduction + '%</span>';
+                            red += '<br>' + e.prix_min + ' - ' + e.prix;
+                            redt = "Le prix de vente va varier entre " + e.prix_min;
+                            redt += " et " + e.prix + ' lors de la vente';
+                        }
 
                         str += `<tr>
                                     <td>${i+1}</td>
                                     <td title="${e.article}">${art}</td>
                                     <td title="Prix de vente : ${e.prix} Par ${e.unite_mesure}">${e.prix}</td>
+                                    <td class="text-center" title="${redt}">${red}</td>
                                     <td class="${stCl}" title="${stTi}">${e.stock} ${e.unite_mesure}</td>
                                     <td>${e.code}</td>
                                     <td>${e.categorie}</td>
@@ -470,7 +487,7 @@
                     catechange.attr('disabled', false);
                     groupchange.attr('disabled', false);
                     table.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
                     );
                     table.DataTable().destroy();
                     if (str.length > 0) {
@@ -636,7 +653,6 @@
                     };
                     iqte.val(qte);
                     data.qte = qte;
-
                     saveItem(data);
                     insert(data, true);
                     addNum();
@@ -706,7 +722,7 @@
                 localStorage.setItem('items', JSON.stringify([]));
             }
 
-            function updateItem(id, qte) {
+            function updateItem(id, qte, pv) {
                 var items = localStorage.getItem('items');
                 var tab = [];
                 if (items) {
@@ -714,7 +730,10 @@
                     let t = [];
                     $(tab).each(function(i, e) {
                         if (e.id == id) {
-                            e.qte = qte
+                            e.qte = qte;
+                            if (pv) {
+                                e.pv = pv;
+                            }
                         }
                         t.push(e);
                     });
@@ -739,13 +758,21 @@
 
             function insert(data, blink = false) {
                 var dev = (data.prix.split(' ')).slice(-1)[0];
-                var pr = Number(data.prix.replace(` ${dev}`, '').replace(' ', '').split(',')[0]);
+                var pr = Number(data.prix.replace(` ${dev}`, ''));
+                var pv = Number(data.pv.toString().replace(` ${dev}`, ''));
+                var prMin = Number(data.prix_min.toString().replace(` ${dev}`, ''));
+                var reduction = Number(data.reduction);
 
                 var tr = $('[tr-item=' + data.id + ']');
-                var tot = data.qte * pr;
+                var tot = data.qte * pv;
                 tot = tot.toLocaleString('fr-FR', {
                     minimumFractionDigits: 2
                 });
+                tot = tot.replace(',', '.');
+                var tit = '';
+                if (reduction > 0) {
+                    tit = "Le prix de vente doit etre >= " + data.prix_min + " et <= " + data.prix;
+                }
                 if (tr.length) {
                     $('[item-tot-' + data.id + ']', tr).html(tot + ' ' + dev).show();
                 } else {
@@ -753,8 +780,13 @@
                                     <td></td>
                                     <td item-name-${data.id}>${data.article}</td>
                                     <td item-prix-${data.id}>${data.prix}</td>
+                                    <td title="${tit}">
+                                       ${reduction > 0 ? '<i class="text-danger">[-'+ reduction+ '%] ' + data.prix_min+' - '+ data.prix+ '</i>' :''}
+                                        <input ${reduction == 0 ? 'disabled':''} item-reduction="${data.id}" reduction="${reduction}" dev="${dev}" prix="${pr}" style="max-width: 200px"
+                                            class="form-control reduction" value="${pv}" min-val="${prMin}" max-val="${pr}" placeholder="Prix réduction">
+                                        </td>
                                     <td>
-                                        <input dev="${dev}" prix="${pr}" item-qte='${data.id}' item-qte-${data.id} style="max-width: 100px"
+                                        <input dev="${dev}" prix="${prMin}" item-qte='${data.id}' item-qte-${data.id} style="max-width: 100px"
                                             class="form-control" value='${data.qte}' placeholder="Quantite">
                                     </td>
                                     <td item-tot-${data.id}>${tot} ${dev}</td>
@@ -806,7 +838,7 @@
                 $('input[item-qte]').off('keyup change').on('change keyup', function() {
                     var id = $(this).attr('item-qte');
                     var dev = $(this).attr('dev');
-                    var prix = $(this).attr('prix');
+                    var prix = $('[item-reduction=' + id + ']').val();
                     var qte = this.value;
                     if (qte.toString().length > 0) {
                         qte = Number(qte);
@@ -822,8 +854,30 @@
                     tot = tot.toLocaleString('fr-FR', {
                         minimumFractionDigits: 2
                     });
+                    tot = tot.replace(',', '.');
                     $('[item-tot-' + id + ']').html(tot + ' ' + dev);
                     updateItem(id, qte);
+                });
+                $('input[item-reduction]').off('keyup change').on('change keyup', function() {
+                    var id = $(this).attr('item-reduction');
+                    var dev = $(this).attr('dev');
+                    var qte = Number($('[item-qte=' + id + ']').val());
+                    var prix = Number(this.value);
+                    if (!qte || !prix) return
+
+                    var min = Number($(this).attr('min-val'));
+                    var max = Number($(this).attr('max-val'));
+
+                    if (prix < min || prix > max) return;
+
+
+                    var tot = qte * prix;
+                    tot = tot.toLocaleString('fr-FR', {
+                        minimumFractionDigits: 2
+                    });
+                    tot = tot.replace(',', '.');
+                    $('[item-tot-' + id + ']').html(tot + ' ' + dev);
+                    updateItem(id, qte, prix);
                 });
                 $('.remove').off('click').click(function() {
                     var id = this.value;
@@ -831,6 +885,16 @@
                     $('tr[tr-item=' + id + ']').addClass('bg-danger').fadeOut(function() {
                         $(this).remove();
                         addNum();
+                    });
+                })
+
+                $('.reduction').each(function(i, e) {
+                    $(e).inputmask('remove');
+                    $(e).inputmask('decimal', {
+                        min: $(e).attr('min-val'),
+                        max: $(e).attr('max-val'),
+                        digits: 2,
+                        rightAlign: false
                     });
                 })
             }
@@ -867,7 +931,7 @@
                         var m = data.total;
                         dmontant.html("<h3 class='class=font-weight-bold'>" + m + "</h3>");
                     } else {
-                        var m = data.message;
+                        var m = res.message;
                         dmontant.html("<i class='text-danger '>" + m + "</i>");
                     }
                 }).fail(function(res) {

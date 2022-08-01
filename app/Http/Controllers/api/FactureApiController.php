@@ -179,7 +179,8 @@ class FactureApiController extends Controller
                     'date_facture' => $facture->date,
                     'date_suppression' => now('Africa/Lubumbashi'),
                     'articles' => $art,
-                    'notifier' => 1
+                    'notifier' => 1,
+                    'compte_id' => compte_id(),
                 ]);
                 $facture->delete();
             });

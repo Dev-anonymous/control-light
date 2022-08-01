@@ -88,6 +88,17 @@
                                                 {{ $article->unite_mesure->unite_mesure }}</td>
                                         </tr>
                                         <tr>
+                                            <td>Réduction</td>
+                                            <td>
+                                                {{ $article->reduction }}%
+                                                @if ($article->reduction > 0)
+                                                    | Prix de vente entre :
+                                                    {{ montant(reduction($article->prix, $article->reduction), $article->devise->devise) }}
+                                                    - {{ montant($article->prix, $article->devise->devise) }}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td>Quantité en stock </td>
                                             <td>
                                                 {{ $article->stock }} {{ $article->unite_mesure->unite_mesure }}
@@ -274,6 +285,14 @@
                                         @endforeach
                                     </select>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Réduction en %</label>
+                            <div class="input-group mb-3">
+                                <input class="form-control" name="reduction" required type="number"
+                                    placeholder="Reduction en %" value="{{ $article->reduction }}" min="0" step="0.01"
+                                    max="90" aria-describedby="basic-addon2">
                             </div>
                         </div>
                         @empty($article->date_expiration)
