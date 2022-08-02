@@ -757,9 +757,9 @@
 
             function insert(data, blink = false) {
                 var dev = (data.prix.split(' ')).slice(-1)[0];
-                var pr = Number(data.prix.replace(` ${dev}`, ''));
-                var pv = Number(data.pv.toString().replace(` ${dev}`, ''));
-                var prMin = Number(data.prix_min.toString().replace(` ${dev}`, ''));
+                var pr = Number(data.prix.replace(`${dev}`, '').split(' ').join(''));
+                var pv = Number(data.pv.toString().replace(` ${dev}`, '').split(' ').join(''));
+                var prMin = Number(data.prix_min.toString().replace(`${dev}`, '').split(' ').join(''));
                 var reduction = Number(data.reduction);
 
                 var tr = $('[tr-item=' + data.id + ']');
