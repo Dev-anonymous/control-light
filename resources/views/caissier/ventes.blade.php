@@ -988,7 +988,7 @@
                                     <th></th>
                                     <th>Article</th>
                                     <th>Qte</th>
-                                    <th style="text-align: right">Prix</th>
+                                    <th style="text-align: right">Prix Unit.</th>
                                 </thead>
                                 <tbody>
                                     `;
