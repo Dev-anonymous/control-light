@@ -631,7 +631,6 @@
 
             $('[btn-fac]').click(function() {
                 $('#print-zone-2').printThis({
-                    importStyle: false,
                     footer: "<div style='margin:2rem;'>Merci d'etre passé! A bientot.</div>",
                 });
             })
@@ -1062,7 +1061,6 @@
                         $('input[name=client]').val('');
                         setTimeout(() => {
                             $('#print-zone').printThis({
-                                importStyle: false,
                                 footer: "<div style='margin:2rem;'>Merci d'etre passé! A bientot.</div>",
                             });
                         }, 1000);

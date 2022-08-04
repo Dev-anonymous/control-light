@@ -417,7 +417,6 @@
 
             $('[btn-fac]').click(function() {
                 $('#print-zone').printThis({
-                    importStyle: false,
                     footer: "<div style='margin:2rem;'>Merci d'etre passé! A bientot.</div>",
                 });
             })
