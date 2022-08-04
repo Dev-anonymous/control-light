@@ -1,10 +1,14 @@
-@page {
-    /* margin: 2px; */
-    /* size: 80mm; */
-}
 @media print {
-    body {
-        /* width: 80mm !important;
-        margin: 2px; */
+    @page {
+        margin: 2px !important;
+        size: 80mm auto !important;
+        /* background: red !important; */
+    }
+    #print-zone-2,
+    #print-zone {
+        width: 100% !important;
+        margin: 2px !important;
+        height: auto !important;
+        /* background: red !important; */
     }
 }
