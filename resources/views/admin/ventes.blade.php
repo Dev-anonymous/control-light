@@ -337,6 +337,14 @@
     @endphp
 
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <style>
+        [invalid-data="true"] {
+            background-color: #fce4e4;
+            border: 2px solid #cc0033;
+            box-shadow: rgba(255, 0, 0, 0.35) 0px 5px 15px;
+        }
+
+    </style>
 
     <script>
         $(function() {
@@ -458,7 +466,7 @@
                             prix: e.prix,
                             reduction: e.reduction,
                             prix_min: e.prix_min,
-                            pv: e.prix_min
+                            pv: e.prix
                         });
 
                         var red = '',
@@ -581,11 +589,11 @@
                         var facture = data.facture;
                         var articles = data.articles;
                         var str =
-                            `<div class="mb-2">
-                                <div style="text-align: center">
-                                    <h4>{{ @$shop->shop }}</h4>
-                                    <h5>{{ @$shop->adresse }}</h5>
-                                    <h6>{{ @$shop->contact }}</h6>
+                            `<div style="margin-bottom:10px;">
+                                <div style="text-align: center; margin-bottom:10px;">
+                                    <span>{{ @$shop->shop }}</span><br>
+                                    <span>{{ @$shop->adresse }}</span><br>
+                                    <span>{{ @$shop->contact }}</span>
                                 </div>
                                 <div>
                                     <span>N° facture : ${facture.numero_facture}</span>
@@ -631,9 +639,24 @@
             }
 
             $('[btn-fac]').click(function() {
-                $('#print-zone-2').printThis({
-                    footer: "<div style='margin:2rem;'>Merci d'etre passé! A bientot.</div>",
-                });
+                var div = $('#print-zone-2')[0];
+                var mywindow = window.open('', 'PRINT', 'height=500,width=800');
+                mywindow.document.write(
+                    '<html><head><style>td,th{padding:5px;} html,body {h1,h2,h3,h4,h5,h6 {padding: 0px;margin: 0px;},font-size: 12pt !important; font-weight:bold; margin-top:5px !important; margin-bottom:10px !important;}</style>'
+                );
+                mywindow.document.write('</head><body >');
+                mywindow.document.write(div.innerHTML);
+                mywindow.document.write(
+                    "<div style='margin-bottom:10px; margin-top:10px;'>Merci d'etre passé! A bientot.</div>"
+                );
+                mywindow.document.write('</body></html>');
+                mywindow.document.close();
+                mywindow.focus();
+                mywindow.print();
+                setTimeout(function() {
+                    mywindow.close();
+                }, 1000);
+                // $('#print-zone-2').printThis();
             })
 
             var listarticle = $('#liste-article');
@@ -753,6 +776,7 @@
                 $("input[item-qte]").off('mask').mask('0000000');
                 initActions();
                 addNum();
+                invalidData();
             }
 
             function insert(data, blink = false) {
@@ -832,6 +856,20 @@
 
             }
 
+            function invalidData() {
+                $('input[item-reduction]').each(function(i, e) {
+                    var min = Number($(this).attr('min-val'));
+                    var max = Number($(this).attr('max-val'));
+                    var prix = Number(this.value);
+
+                    if (prix < min || prix > max) {
+                        $(this).attr('invalid-data', 'true');
+                    } else {
+                        $(this).attr('invalid-data', 'false');
+                    }
+                })
+            }
+
             function initActions() {
                 $("input[item-qte]").off('mask').mask('0000000');
                 $('input[item-qte]').off('keyup change').on('change keyup', function() {
@@ -864,11 +902,16 @@
                     var prix = Number(this.value);
                     if (!qte || !prix) return
 
-                    var min = Number($(this).attr('min-val'));
-                    var max = Number($(this).attr('max-val'));
+                    // var min = Number($(this).attr('min-val'));
+                    // var max = Number($(this).attr('max-val'));
 
-                    if (prix < min || prix > max) return;
+                    // if (prix < min || prix > max) {
+                    //     $(this).attr('invalid-data', 'true');
+                    // } else {
+                    //     $(this).attr('invalid-data', 'false');
+                    // }
 
+                    invalidData();
 
                     var tot = qte * prix;
                     tot = tot.toLocaleString('fr-FR', {
@@ -876,6 +919,7 @@
                     });
                     tot = tot.replace(',', '.');
                     $('[item-tot-' + id + ']').html(tot + ' ' + dev);
+
                     updateItem(id, qte, prix);
                 });
                 $('.remove').off('click').click(function() {
@@ -890,8 +934,8 @@
                 $('.reduction').each(function(i, e) {
                     $(e).inputmask('remove');
                     $(e).inputmask('decimal', {
-                        min: $(e).attr('min-val'),
-                        max: $(e).attr('max-val'),
+                        // min: $(e).attr('min-val'),
+                        // max: $(e).attr('max-val'),
                         digits: 2,
                         rightAlign: false
                     });
@@ -964,11 +1008,11 @@
                         var articles = data.articles;
                         var client = localStorage.getItem('client') ?? '-';
                         var str = `
-                            <div class="mb-2">
-                                <div style="text-align: center">
-                                    <h4>{{ @$shop->shop }}</h4>
-                                    <h5>{{ @$shop->adresse }}</h5>
-                                    <h6>{{ @$shop->contact }}</h6>
+                            <div style="margin-bottom:10px;">
+                                <div style="text-align: center; margin-bottom:10px;">
+                                    <span>{{ @$shop->shop }}</span><br>
+                                    <span>{{ @$shop->adresse }}</span><br>
+                                    <span>{{ @$shop->contact }}</span>
                                 </div>
                                 <div>
                                     <span>N° facture : <span numero-facture>-</span></span>
@@ -1061,9 +1105,26 @@
                         localStorage.setItem('client', '');
                         $('input[name=client]').val('');
                         setTimeout(() => {
-                            $('#print-zone').printThis({
-                                footer: "<div style='margin:2rem;'>Merci d'etre passé! A bientot.</div>",
-                            });
+                            // $('#print-zone').printThis({
+                            //     footer: "<div style='margin:2rem;'>Merci d'etre passé! A bientot.</div>",
+                            // });
+                            var div = $('#print-zone')[0];
+                            var mywindow = window.open('', 'PRINT', 'height=500,width=800');
+                            mywindow.document.write(
+                                '<html><head><style>td,th{padding:5px;} html,body {h1,h2,h3,h4,h5,h6 {padding: 0px;margin: 0px;},font-size: 12pt !important; font-weight:bold; margin-top:5px !important; margin-bottom:10px !important;}</style>'
+                            );
+                            mywindow.document.write('</head><body >');
+                            mywindow.document.write(div.innerHTML);
+                            mywindow.document.write(
+                                "<div style='margin-bottom:10px; margin-top:10px;'>Merci d'etre passé! A bientot.</div>"
+                            );
+                            mywindow.document.write('</body></html>');
+                            mywindow.document.close();
+                            mywindow.focus();
+                            mywindow.print();
+                            setTimeout(function() {
+                                mywindow.close();
+                            }, 1000);
                         }, 1000);
 
                     } else {

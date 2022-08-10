@@ -82,14 +82,14 @@
                         <h5>Montant total (A)
                             <button data-toggle="pop" title="Information"
                                 data-content="Ceci est le montant représentatif des ventes,
-                                                                                                                                                                            il indique la somme vendue sans conversion de devise,
-                                                                                                                                                                            c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
-                                                                                                                                                                            le montant de cet artcle en CDF sera converti en USD sur la facture,
-                                                                                                                                                                            donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
-                                                                                                                                                                            la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
-                                                                                                                                                                            si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
-                                                                                                                                                                            et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
-                                                                                                                                                                            et vous verrez que le montant X USD sera égale au montant Y USD"
+                                                                                                                                                                                                                                                                il indique la somme vendue sans conversion de devise,
+                                                                                                                                                                                                                                                                c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
+                                                                                                                                                                                                                                                                le montant de cet artcle en CDF sera converti en USD sur la facture,
+                                                                                                                                                                                                                                                                donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
+                                                                                                                                                                                                                                                                la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
+                                                                                                                                                                                                                                                                si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
+                                                                                                                                                                                                                                                                et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
+                                                                                                                                                                                                                                                                et vous verrez que le montant X USD sera égale au montant Y USD"
                                 class="btn">
                                 <i class="fa fa-info-circle text-danger"></i>
                             </button>
@@ -437,9 +437,25 @@
             }
 
             $('[btn-fac]').click(function() {
-                $('#print-zone').printThis({
-                    footer: "<div style='margin:2rem;'>Merci d'etre passé! A bientot.</div>",
-                });
+                console.log('ok jj 00');
+                var div = $('#print-zone')[0];
+                var mywindow = window.open('', 'PRINT', 'height=500,width=800');
+                mywindow.document.write(
+                    '<html><head><style>td,th{padding:5px;} html,body {h1,h2,h3,h4,h5,h6 {padding: 0px;margin: 0px;},font-size: 12pt !important; font-weight:bold; margin-top:5px !important; margin-bottom:10px !important;}</style>'
+                );
+                mywindow.document.write('</head><body >');
+                mywindow.document.write(div.innerHTML);
+                mywindow.document.write(
+                    "<div style='margin-bottom:10px; margin-top:10px;'>Merci d'etre passé! A bientot.</div>"
+                );
+                mywindow.document.write('</body></html>');
+                mywindow.document.close();
+                mywindow.focus();
+                mywindow.print();
+                mywindow.close();
+                // $('#print-zone').printThis({
+                //     footer: "<div style='margin:2rem;'>Merci d'etre passé! A bientot.</div>",
+                // });
             })
             mdl = $('#mdl-detail');
 
@@ -458,11 +474,12 @@
                         var data = res.data;
                         var facture = data.facture;
                         var articles = data.articles;
-                        var str = `<div class="mb-2">
-                                <div style="text-align: center">
-                                    <h4>{{ @$shop->shop }}</h4>
-                                    <h5>{{ @$shop->adresse }}</h5>
-                                    <h6>{{ @$shop->contact }}</h6>
+                        var str = `
+                            <div style="margin-bottom:10px;">
+                                <div style="text-align: center; margin-bottom:10px;">
+                                    <span>{{ @$shop->shop }}</span><br>
+                                    <span>{{ @$shop->adresse }}</span><br>
+                                    <span>{{ @$shop->contact }}</span>
                                 </div>
                                 <div>
                                     <span>N° facture : ${facture.numero_facture}</span>

@@ -133,7 +133,7 @@ class DataApiController extends Controller
                     $a->prix = montant($article->prix, $article->devise->devise);
                     $prix_min = reduction($article->prix, $article->reduction);
                     if ($pv < $prix_min or $pv > $article->prix) {
-                        $pv = $prix_min;
+                        $pv = $a->prix;
                     }
                     $a->pv = $pv;
                     $a->prix_min = $prix_min;
