@@ -16,7 +16,110 @@
         <div class="main-content">
             <div class="card ">
                 <div class="card-header">
-                    <h4>Ventes magasin</h4>
+                    <h4></h4>
+                    <div class="card-header-action">
+                        <a data-collapse="#mycard-collapse0" class="btn btn-outline-danger btn-icon"
+                            style="border-radius: 10px!important" href="#">
+                            <i class="fas fa-minus"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-header">
+                    <h4>Situation générale des ventes du magasin</h4>
+                    <div class="card-header-action">
+                        <form id="f-change0">
+                            <div class="row">
+                                <div class="col-md form-group d-block mr-1">
+                                    <select class="custom-select groupe-change" name="groupe">
+                                        <option value="">Tous les groupes d'articles</option>
+                                        @foreach ($groupe as $e)
+                                            <option @if ($e->par_defaut == 1) selected @endif
+                                                value="{{ $e->id }}">
+                                                {{ $e->groupe }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md form-group d-block ml-1">
+                                    <select class="custom-select cat-change change0" name="categorie" disabled>
+                                        <option value="">Toutes les catégories d'articles</option>
+                                    </select>
+                                </div>
+                                <div class="col-md form-group ml-1 mr-1">
+                                    <input class="form-control change0 datepicker  p-3 rounded-sm" name="date"
+                                        value="{{ date('Y-m-d') }}" />
+                                </div>
+                                <div class="col-md form-group ml-1">
+                                    <select class="form-control change0 rounded-0 p-0" name="devise">
+                                        <option value="">Toutes</option>
+                                        <option>CDF</option>
+                                        <option>USD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="collapse show" id="mycard-collapse0">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table id="t-vente0"
+                                        class="table table-condensed table-bordered table-hover font-weight-bold"
+                                        style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Article</th>
+                                                <th>Code</th>
+                                                <th>Stock actuel</th>
+                                                <th>Qté tot. vendue</th>
+                                                <th>Prix</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="bg-whitesmoke p-3" id="z-vente0" style="display: none">
+                            <h5>Montant total
+                                <button data-toggle="pop" title="Information"
+                                    data-content="Ceci est le montant représentatif des ventes,
+                                                                                                                                                                                                                                                                                                                                                                                                                                il indique la somme vendue sans conversion de devise,
+                                                                                                                                                                                                                                                                                                                                                                                                                                c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
+                                                                                                                                                                                                                                                                                                                                                                                                                                le montant de cet artcle en CDF sera converti en USD sur la facture,
+                                                                                                                                                                                                                                                                                                                                                                                                                                donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
+                                                                                                                                                                                                                                                                                                                                                                                                                                la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
+                                                                                                                                                                                                                                                                                                                                                                                                                                si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
+                                                                                                                                                                                                                                                                                                                                                                                                                                et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
+                                                                                                                                                                                                                                                                                                                                                                                                                                et vous verrez que le montant X USD sera égale au montant Y USD"
+                                    class="btn">
+                                    <i class="fa fa-info-circle text-danger"></i>
+                                </button>
+                            </h5>
+                            <hr>
+                            <div class="" id="d-vente0"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card ">
+                <div class="card-header">
+                    <h4></h4>
+                    <div class="card-header-action">
+                        <a data-collapse="#mycard-collapse1" class="btn btn-outline-danger btn-icon"
+                            style="border-radius: 10px!important" href="#">
+                            <i class="fas fa-minus"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-header">
+                    <h4>Ventes détaillées du magasin</h4>
                     <div class="card-header-action">
                         <form id="f-change">
                             <div class="row">
@@ -32,16 +135,16 @@
                                     </select>
                                 </div>
                                 <div class="col-md form-group d-block ml-1">
-                                    <select class="custom-select cat-change" name="categorie" disabled>
+                                    <select class="custom-select cat-change change" name="categorie" disabled>
                                         <option value="">Toutes les catégories d'articles</option>
                                     </select>
                                 </div>
                                 <div class="col-md form-group ml-1 mr-1">
-                                    <input class="form-control datepicker p-3 rounded-sm" name="date"
+                                    <input class="form-control change datepicker p-3 rounded-sm" name="date"
                                         value="{{ date('Y-m-d') }}" />
                                 </div>
                                 <div class="col-md form-group ml-1">
-                                    <select class="form-control rounded-0 p-0" name="devise">
+                                    <select class="form-control change rounded-0 p-0" name="devise">
                                         <option value="">Toutes</option>
                                         <option>CDF</option>
                                         <option>USD</option>
@@ -51,54 +154,65 @@
                         </form>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table id="t-vente"
-                                    class="table table-condensed table-bordered table-hover font-weight-bold"
-                                    style="width: 100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Article</th>
-                                            <th>Code</th>
-                                            <th>Quantité vendue</th>
-                                            <th>Prix</th>
-                                            <th>Total</th>
-                                            <th>Caissier</th>
-                                            <th>Date vente</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
+                <div class="collapse show" id="mycard-collapse1">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table id="t-vente"
+                                        class="table table-condensed table-bordered table-hover font-weight-bold"
+                                        style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Article</th>
+                                                <th>Code</th>
+                                                <th>Quantité vendue</th>
+                                                <th>Prix</th>
+                                                <th>Total</th>
+                                                <th>Caissier</th>
+                                                <th>Date vente</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <div class="bg-whitesmoke p-3" id="z-vente" style="display: none">
-                        <h5>Montant total (A)
-                            <button data-toggle="pop" title="Information"
-                                data-content="Ceci est le montant représentatif des ventes,
-                                                                                                    il indique la somme vendue sans conversion de devise,
-                                                                                                    c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
-                                                                                                    le montant de cet artcle en CDF sera converti en USD sur la facture,
-                                                                                                    donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
-                                                                                                    la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
-                                                                                                    si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
-                                                                                                    et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
-                                                                                                    et vous verrez que le montant X USD sera égale au montant Y USD"
-                                class="btn">
-                                <i class="fa fa-info-circle text-danger"></i>
-                            </button>
-                        </h5>
-                        <hr>
-                        <div class="" id="d-vente"></div>
+                    <div class="card-footer">
+                        <div class="bg-whitesmoke p-3" id="z-vente" style="display: none">
+                            <h5>Montant total (A)
+                                <button data-toggle="pop" title="Information"
+                                    data-content="Ceci est le montant représentatif des ventes,
+                                                                                                                                                                                                                                                                                                                                                                                                                                    il indique la somme vendue sans conversion de devise,
+                                                                                                                                                                                                                                                                                                                                                                                                                                    c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
+                                                                                                                                                                                                                                                                                                                                                                                                                                    le montant de cet artcle en CDF sera converti en USD sur la facture,
+                                                                                                                                                                                                                                                                                                                                                                                                                                    donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
+                                                                                                                                                                                                                                                                                                                                                                                                                                    la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
+                                                                                                                                                                                                                                                                                                                                                                                                                                    si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
+                                                                                                                                                                                                                                                                                                                                                                                                                                    et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
+                                                                                                                                                                                                                                                                                                                                                                                                                                    et vous verrez que le montant X USD sera égale au montant Y USD"
+                                    class="btn">
+                                    <i class="fa fa-info-circle text-danger"></i>
+                                </button>
+                            </h5>
+                            <hr>
+                            <div class="" id="d-vente"></div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="card ">
+                <div class="card-header">
+                    <h4></h4>
+                    <div class="card-header-action">
+                        <a data-collapse="#mycard-collapse" class="btn btn-outline-danger btn-icon"
+                            style="border-radius: 10px!important" href="#">
+                            <i class="fas fa-minus"></i>
+                        </a>
+                    </div>
+                </div>
                 <div class="card-header">
                     <h4>Factures</h4>
                     <div class="card-header-action">
@@ -119,41 +233,43 @@
                         </form>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table id="t-facture"
-                                    class="table table-condensed table-bordered table-hover font-weight-bold"
-                                    style="width: 100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>N° Facture</th>
-                                            <th>Client</th>
-                                            <th>Caissier</th>
-                                            <th>Total</th>
-                                            <th>Date</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
+                <div class="collapse show" id="mycard-collapse">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table id="t-facture"
+                                        class="table table-condensed table-bordered table-hover font-weight-bold"
+                                        style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>N° Facture</th>
+                                                <th>Client</th>
+                                                <th>Caissier</th>
+                                                <th>Total</th>
+                                                <th>Date</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <div class="bg-whitesmoke p-3" id="z-vente-2" style="display: none">
-                        <h5>Montant total (B)
-                            <button data-toggle="pop" title="Information"
-                                data-content="Ceci est le montant de référence si vous voulez vérifier vos factures. Ce total représente la somme des totaux de chaque facture enregistrée en une devise spécifique."
-                                class="btn ">
-                                <i class="fa fa-info-circle text-danger"></i>
-                            </button>
-                        </h5>
-                        <hr>
-                        <div class="" id="d-vente-2"></div>
+                    <div class="card-footer">
+                        <div class="bg-whitesmoke p-3" id="z-vente-2" style="display: none">
+                            <h5>Montant total (B)
+                                <button data-toggle="pop" title="Information"
+                                    data-content="Ceci est le montant de référence si vous voulez vérifier vos factures. Ce total représente la somme des totaux de chaque facture enregistrée en une devise spécifique."
+                                    class="btn ">
+                                    <i class="fa fa-info-circle text-danger"></i>
+                                </button>
+                            </h5>
+                            <hr>
+                            <div class="" id="d-vente-2"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -266,31 +382,37 @@
             spin2 =
                 `<tr><td class="text-center" colspan="7"><span class="spinner-border text-danger"></span></td></tr>`;
 
+            var table0 = $('#t-vente0');
             var table = $('#t-vente');
             var table2 = $('#t-facture');
 
-            var groupchange = $('.groupe-change');
-            var catechange = $('.cat-change');
-            groupchange.change(function() {
-                $(this).attr('disabled', true);
-                catechange.attr('disabled', true);
-                getCategorie();
+            var fchange0 = $('#f-change0');
+            var fchange = $('#f-change');
+
+            $('.groupe-change').change(function() {
+                var form = $(this).closest('form');
+                $(":input", form).attr('disabled', true);
+                getCategorie(form);
             });
-            $('#f-change').change(function() {
+            $('.change0').change(function() {
+                getData0();
+            });
+            $('.change').change(function() {
                 getData();
             });
             $('#f-change-2').change(function() {
                 getData2();
             });
-            $('#f-change,#f-change-2').submit(function() {
-                event.preventDefault()
+            $('#f-change0,#f-change,#f-change-2,.groupe-change').submit(function() {
+                event.preventDefault();
             })
 
-            function getCategorie() {
+            function getCategorie(form_context = null) {
+                if (!form_context) return;
                 $.ajax({
                     url: '{{ route('categorie-article.index') }}',
                     data: {
-                        groupe: groupchange.val()
+                        groupe: $('.groupe-change', form_context).val()
                     },
                     timeout: 20000,
                 }).done(function(res) {
@@ -299,13 +421,15 @@
                     $(data).each(function(i, e) {
                         str += `<option  value="${e.id}">${e.categorie}</option>`;
                     });
-                    catechange.html(str).attr('disabled', false);
-                    groupchange.attr('disabled', false);
-                    getData();
-
+                    $('.cat-change', form_context).html(str).attr('disabled', false);
+                    $(':input', form_context).attr('disabled', false);
+                    if (form_context.attr('id') == 'f-change0') {
+                        getData0();
+                    } else {
+                        getData();
+                    }
                 })
             }
-            getCategorie();
 
             function getData() {
                 table.find('tbody').html(spin);
@@ -358,7 +482,59 @@
                 })
             }
 
-            getData2();
+            function getData0() {
+                table0.find('tbody').html(spin);
+                $('#z-vente0').slideUp();
+
+                $(':input', fchange0).attr('disabled', false);
+                var data = fchange0.serialize();
+                $(':input', fchange0).attr('disabled', true);
+
+                $.ajax({
+                    url: '{{ route('ventes.index') }}',
+                    data: data + "&groupall=true",
+                    timeout: 20000,
+                }).done(function(res) {
+                    $(':input', fchange0).attr('disabled', false);
+                    var data = res.data;
+                    var ventes = data.ventes;
+                    var total = data.total;
+                    var str = '';
+                    var str2 = '';
+                    $(ventes).each(function(i, e) {
+                        str += `<tr>
+                                    <td>${i+1}</td>
+                                    <td title="${e.categorie_article}(${e.groupe})">${e.article}</td>
+                                    <td>${e.code}</td>
+                                    <td>${e.stock}</td>
+                                    <td>${e.qte}</td>
+                                    <td>${e.prix}</td>
+                                    <td>${e.total}</td>
+                                </tr>`;
+                    });
+                    $(total).each(function(i, e) {
+                        str2 += `<h3 class="font-weight-bold">${e.montant }</h4>`;
+                    });
+                    $('#d-vente0').html(str2);
+                    if (ventes.length > 0) {
+                        $('#z-vente0').slideDown();
+                    } else {
+                        $('#z-vente0').slideUp();
+                    }
+                    table0.find('tbody').html(
+                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+                    );
+                    table0.DataTable().destroy();
+                    if (str.length > 0) {
+                        table0.find('tbody').html(str);
+                        table0.DataTable(opt);
+                    } else {
+                        str =
+                            '<tr><td colspan="9" class="text-danger font-weight-bolder text-center">Aucune vente</td></tr>';
+                        table0.find('tbody').html(str);
+                    }
+                })
+            }
 
             function getData2() {
                 table2.find('tbody').html(spin2);
@@ -538,6 +714,9 @@
                 })
             }
 
+            getData2();
+            getCategorie($('#f-change'));
+            getCategorie($('#f-change0'));
 
         })
     </script>

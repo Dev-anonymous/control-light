@@ -24,6 +24,7 @@ class VenteApiController extends Controller
         $categorie = request()->categorie;
         $groupe = request()->groupe;
         $devise = request()->devise;
+        $groupall = request()->groupall;
 
         $ventesTot = Vente::orderBy('id', 'desc')->where('compte_id', compte_id());
 
@@ -50,37 +51,84 @@ class VenteApiController extends Controller
         }
 
         if (auth()->user()->user_role != 'admin') {
-            $ventesTot = $ventesTot->whereHas('facture', function ($query) use ($from, $to) {
+            $ventesTot = $ventesTot->whereHas('facture', function ($query) {
                 return $query->where('users_id', auth()->user()->id);
             });
         }
 
-        $tot = $ventesTot;
-        $ventesTot = $ventesTot->get();
+        if ($groupall) {
+            $tot = $ventesTot;
+            $ventesTot = $ventesTot->groupBy('article_id')->selectRaw('*,sum(qte) as qtevendue')->get();
+            $tot = $tot->groupBy('devise')->selectRaw('sum(qte*prix) as total, devise')->get();
 
-        $tot = $tot->groupBy('devise')->selectRaw('sum(qte*prix) as total, devise')->get();
+            $tab = [];
+            $tab2 = [];
+            foreach ($ventesTot as $el) {
+                $a = new stdClass();
+                $a->id = $el->article_id;
+                $a->article = $el->article;
+                $a->code = $el->code;
+                $a->categorie_article = $el->categorie_article;
+                $a->groupe = $el->groupe;
+                $a->caissier = $el->facture->caissier;
+                $stock = '-';
+                if ($el->article()->first()) {
+                    $stock = $el->article()->first()->stock;
+                }
+                $a->stock = "$stock $el->unite_mesure";
+                $a->qte = "$el->qtevendue $el->unite_mesure";
+                $a->prix = montant($el->prix, $el->devise);
+                $a->total = montant($el->prix * $el->qtevendue, $el->devise);
+                array_push($tab, $a);
+            }
 
-        $tab = [];
-        $tab2 = [];
-        foreach ($ventesTot as $el) {
-            $a = new stdClass();
-            $a->id = $el->article_id;
-            $a->article = $el->article;
-            $a->code = $el->code;
-            $a->categorie_article = $el->categorie_article;
-            $a->groupe = $el->groupe;
-            $a->caissier = $el->facture->caissier;
-            $a->qte = "$el->qte $el->unite_mesure";
-            $a->prix = montant($el->prix, $el->devise);
-            $a->total = montant($el->prix * $el->qte, $el->devise);
-            $a->date = $el->facture->date->format('Y-m-d H:i:s');
-            array_push($tab, $a);
-        }
+            $tm = [];
+            $tot = $tot->toArray();
+            foreach (['USD', 'CDF'] as $d) {
+                $tv = 0;
+                foreach ($tot as $t) {
+                    if ($t['devise'] == $d) {
+                        $tv += $t['total'];
+                    }
+                }
+                $t['total'] = $tv;
+                array_push($tm, (object) ['total' => $tv, 'devise' => $d]);
+            }
+            $tot = $tm;
 
-        foreach ($tot as $el) {
-            $a = new stdClass();
-            $a->montant = montant($el->total, $el->devise);
-            array_push($tab2, $a);
+            foreach ($tot as $el) {
+                $a = new stdClass();
+                $a->montant = montant($el->total, $el->devise);
+                array_push($tab2, $a);
+            }
+        } else {
+            $tot = $ventesTot;
+            $ventesTot = $ventesTot->get();
+
+            $tot = $tot->groupBy('devise')->selectRaw('sum(qte*prix) as total, devise')->get();
+
+            $tab = [];
+            $tab2 = [];
+            foreach ($ventesTot as $el) {
+                $a = new stdClass();
+                $a->id = $el->article_id;
+                $a->article = $el->article;
+                $a->code = $el->code;
+                $a->categorie_article = $el->categorie_article;
+                $a->groupe = $el->groupe;
+                $a->caissier = $el->facture->caissier;
+                $a->qte = "$el->qte $el->unite_mesure";
+                $a->prix = montant($el->prix, $el->devise);
+                $a->total = montant($el->prix * $el->qte, $el->devise);
+                $a->date = $el->facture->date->format('Y-m-d H:i:s');
+                array_push($tab, $a);
+            }
+
+            foreach ($tot as $el) {
+                $a = new stdClass();
+                $a->montant = montant($el->total, $el->devise);
+                array_push($tab2, $a);
+            }
         }
 
         return $this->success([
