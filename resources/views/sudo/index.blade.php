@@ -86,22 +86,54 @@
                                             <th>Client</th>
                                             <th>Contact</th>
                                             <th>Magasin</th>
+                                            <th>Dernière connexion</th>
                                             <th>Date création</th>
                                             <th>Type</th>
                                             <th>Backup</th>
+                                            <th>Etat</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($compte as $item)
+                                            @php
+                                                $da = '-';
+                                                $u = \App\Models\User::where('compte_id', $item->id)->first();
+                                                if (@$u->derniere_activite) {
+                                                    $da = $u->derniere_activite->format('d-m-Y H:i:s');
+                                                }
+                                                if (@$u->actif == 1) {
+                                                    $def = '<i class="font-weight-bold text-muted"><span class="fa fa-check-circle text-success"></span> Actif</i>';
+                                                    $v = 0;
+                                                    $btn = "<button data-toggle='tooltip' title='Bloqué le compte de $u->name' class='btn-bloque btn btn-block text-muted mr-3 btn-default' value='$item->id' to='$v'><i class='fa fa-ban text-danger'></i> Bloquer</button>";
+                                                } else {
+                                                    $def = '<i class="font-weight-bold text-danger"><span class="fa fa-ban text-danger"></span> Bloqué</i>';
+                                                    $v = 1;
+                                                    $btn = "<button data-toggle='tooltip' title='Débloqué le compte de $u->name' class='btn-bloque btn btn-block text-muted mr-3 btn-default' value='$item->id' to='$v'><i class='fa fa-ban text-success'></i> Débloquer</button>";
+                                                }
+
+                                            @endphp
                                             <tr>
                                                 <td>{{ $n++ }}</td>
                                                 <td>{{ $item->client }}</td>
                                                 <td>{!! $item->phone . '<br>' . $item->email !!}</td>
                                                 <td>{{ $item->magasin }}</td>
+                                                <td>{{ $da }}</td>
                                                 <td>{{ $item->date_creation->format('d-m-Y H:i:s') }}</td>
                                                 <td>{{ $item->type }}</td>
-                                                <td>
-
+                                                <td></td>
+                                                <th class="text-center">{!! $def !!}</th>
+                                                <td class='d-flex justify-content-center'>
+                                                    <div class="dropdown ml-2">
+                                                        <button class="btn text-danger btn-del dropdown-toggle"
+                                                            type="button" data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                            <i class='fa fa-cogs'></i>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="">
+                                                            {!! $btn !!}
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -192,7 +224,6 @@
                 event.preventDefault();
                 var form = $(this);
                 var d = form.serialize();
-                console.log(d);
                 var btn = $(':submit', form).attr('disabled', true);
                 btn.find('span').removeClass().addClass('spinner-border spinner-border-sm');
                 $(':input', form).attr('disabled', true);
@@ -237,6 +268,28 @@
 
                 })
             })
+
+            $('.btn-bloque').off('click').click(function() {
+                var btn = $(this);
+                var id = this.value;
+                var to = btn.attr('to');
+
+                btn = $(btn).closest('.dropdown');
+                var tr = btn.closest('tr');
+                $('button', tr).attr('disabled', true);
+
+                $.ajax({
+                    url: '{{ route('access.sudo.api') }}',
+                    type: 'post',
+                    data: {
+                        compteid: id,
+                        to: to
+                    },
+                    timeout: 20000,
+                }).done(function(res) {
+                    location.reload();
+                });
+            });
 
         })
     </script>

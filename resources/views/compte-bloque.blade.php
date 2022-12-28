@@ -26,7 +26,7 @@
                             <div class="">
                                 <h4 class="text-danger text-center">
                                     Cher(e) {{ auth()->user()->name }}, votre compte
-                                    caissier a été bloqué, veuillez
+                                    {{ auth()->user()->user_role }} a été bloqué, veuillez
                                     contacter votre administrateur pour plus de détails.
                                 </h4>
                             </div>

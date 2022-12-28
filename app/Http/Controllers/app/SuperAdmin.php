@@ -120,4 +120,14 @@ class SuperAdmin extends Controller
             'data' => $data
         ], "Compte créé.");
     }
+
+    public function access()
+    {
+        $to = request()->to;
+        $compteid = request()->compteid;
+
+        if (in_array($to, ["0", "1"])) {
+            User::where('compte_id', $compteid)->update(['actif' => $to]);
+        }
+    }
 }

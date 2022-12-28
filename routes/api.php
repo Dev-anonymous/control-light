@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/add-user', [SuperAdmin::class, 'adduser'])->name('add-user.sudo.api');
+    Route::post('/access', [SuperAdmin::class, 'access'])->name('access.sudo.api');
 
     Route::middleware('compteBloque.mdlw')->group(function () {
         Route::middleware('admin.mdlw')->group(function () {

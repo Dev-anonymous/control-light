@@ -16,7 +16,8 @@ class CompteBloqueMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->user_role == 'caissier') {
+        $role = auth()->user()->user_role;
+        if (in_array($role, ['caissier', 'admin'])) {
             if (auth()->user()->actif == 0) {
                 if (request()->wantsJson()) {
                     return response(["message" => "Compte bloqué."], 401);
