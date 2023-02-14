@@ -1191,6 +1191,8 @@
                                 data.prix_min = prix_min + " " + dev;
                                 data.prix = prix + " " + dev;
 
+                                console.log(data);
+
                                 var tr = $('[tr-item=' + data.id + ']');
                                 var iqte = $('[item-qte-' + data.id + ']', tr);
                                 var qte = Number(iqte.val());
