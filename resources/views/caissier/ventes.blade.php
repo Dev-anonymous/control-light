@@ -1177,27 +1177,6 @@
                         if (!init_soc) {
                             init_soc = true;
                             socketIO.on("new-item", (data) => {
-                                var dev = (data.prix.split(' ')).slice(-1)[0];
-                                var prix = data.prix.replace(` ${dev}`, '');
-                                var pv = data.pv.replace(` ${dev}`, '');
-                                var prix_min = data.prix_min.replace(` ${dev}`, '');
-
-                                prix = Number(prix.trim()).toLocaleString(
-                                    'fr-FR', {
-                                        minimumFractionDigits: 2
-                                    }).replace(',', '.');
-                                prix_min = Number(prix_min.trim()).toLocaleString(
-                                    'fr-FR', {
-                                        minimumFractionDigits: 2
-                                    }).replace(',', '.');
-                                pv = Number(pv.trim()).toLocaleString(
-                                    'fr-FR', {
-                                        minimumFractionDigits: 2
-                                    }).replace(',', '.');
-                                data.prix_min = prix_min + " " + dev;
-                                data.prix = prix + " " + dev;
-                                data.pv = pv + " " + dev;
-
                                 var tr = $('[tr-item=' + data.id + ']');
                                 var iqte = $('[item-qte-' + data.id + ']', tr);
                                 var qte = Number(iqte.val());
