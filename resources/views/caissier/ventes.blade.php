@@ -50,7 +50,8 @@
                                 <input name="client" class="form-control" placeholder="Nom du client">
                             </div>
                             <div class="form-inline">
-                                <b class="mr-3 mt-3" for="">Devise de la facture : <b id="label-dev" for=""></b></b>
+                                <b class="mr-3 mt-3" for="">Devise de la facture : <b id="label-dev"
+                                        for=""></b></b>
                             </div>
                         </div>
                         <div class="col-md-12 mt-3">
@@ -333,17 +334,16 @@
     <link rel="stylesheet" href="{{ asset('assets/css/print.css') }}" media="print">
     <script src="{{ asset('assets/js/printThis.js') }}"></script>
     @php
-    $shop = \App\Models\Shop::where('compte_id', compte_id())->first();
+        $shop = \App\Models\Shop::where('compte_id', compte_id())->first();
     @endphp
 
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="https://socket-control.gooomart.com/socket.io/socket.io.js"></script>
     <style>
         [invalid-data="true"] {
             background-color: #fce4e4;
             border: 2px solid #cc0033;
             box-shadow: rgba(255, 0, 0, 0.35) 0px 5px 15px;
         }
-
     </style>
     <script>
         $(function() {
@@ -1138,7 +1138,8 @@
                 });
             })
 
-            var io_server = 'http://localhost:3000/';
+            var io_server = 'https://socket-control.gooomart.com/';
+            // var io_server = 'http://localhost:3000/';
             var uid = '{{ auth()->user()->id }}';
             var id = localStorage.getItem('_socket_id');
             if (!id) {

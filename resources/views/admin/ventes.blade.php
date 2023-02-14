@@ -336,7 +336,7 @@
     $shop = \App\Models\Shop::where('compte_id', compte_id())->first();
     @endphp
 
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="https://socket-control.gooomart.com/socket.io/socket.io.js"></script>
     <style>
         [invalid-data="true"] {
             background-color: #fce4e4;
@@ -1140,7 +1140,8 @@
                 });
             })
 
-            var io_server = 'http://localhost:3000/';
+            var io_server = 'https://socket-control.gooomart.com/';
+            // var io_server = 'http://localhost:3000/';
             var uid = '{{ auth()->user()->id }}';
             var id = localStorage.getItem('_socket_id');
             if (!id) {
@@ -1197,7 +1198,9 @@
                     });
 
                 }
-            } catch (error) {}
+            } catch (error) {
+                console.log(error);
+            }
 
 
         })
