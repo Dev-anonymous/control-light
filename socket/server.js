@@ -76,7 +76,7 @@ async function initEvent(socket, data) {
         if (data?.uid && data?.type && data?.code) {
             if (data.type == "app") {
                 connection.query(
-                    "SELECT article.id, article, devise, prix FROM article join devise on devise.id=article.devise_id where code=?",
+                    "SELECT article.id, article, devise, prix, reduction FROM article join devise on devise.id=article.devise_id where code=?",
                     [data?.code],
                     function (error, results) {
                         if (error) return;
@@ -99,11 +99,21 @@ async function initEvent(socket, data) {
                         if (m.length > 0) {
                             mid = m[0]?.socketId;
                         }
+
+                        var prix = results.prix;
+                        var reduction = results.reduction;
+                        var red = prix - prix * (reduction / 100);
+                        var prix_min = reduction > 0 ? red : prix;
+
                         var res = {
                             id: results.id,
                             article: results.article,
-                            prix: results.prix + " " + results.devise,
+                            prix: prix + " " + results.devise,
+                            reduction: reduction,
+                            prix_min: prix_min + " " + results.devise,
+                            pv: prix + " " + results.devise,
                         };
+
                         socketIO.to(mid).emit("new-item", res);
                         socketIO.to(socket.id).emit("message", {
                             ok: true,

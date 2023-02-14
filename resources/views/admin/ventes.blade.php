@@ -50,7 +50,8 @@
                                 <input name="client" class="form-control" placeholder="Nom du client">
                             </div>
                             <div class="form-inline">
-                                <b class="mr-3 mt-3" for="">Devise de la facture : <b id="label-dev" for=""></b></b>
+                                <b class="mr-3 mt-3" for="">Devise de la facture : <b id="label-dev"
+                                        for=""></b></b>
                             </div>
                         </div>
                         <div class="col-md-12 mt-3">
@@ -333,7 +334,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/print.css') }}" media="print">
     <script src="{{ asset('assets/js/printThis.js') }}"></script>
     @php
-    $shop = \App\Models\Shop::where('compte_id', compte_id())->first();
+        $shop = \App\Models\Shop::where('compte_id', compte_id())->first();
     @endphp
 
     <script src="https://socket-control.gooomart.com/socket.io/socket.io.js"></script>
@@ -343,7 +344,6 @@
             border: 2px solid #cc0033;
             box-shadow: rgba(255, 0, 0, 0.35) 0px 5px 15px;
         }
-
     </style>
 
     <script>
@@ -1179,6 +1179,18 @@
                         if (!init_soc) {
                             init_soc = true;
                             socketIO.on("new-item", (data) => {
+                                var dev = (data.prix.split(' ')).slice(-1)[0];
+                                var prix = data.prix.replace(` ${dev}`, '').toLocaleString(
+                                    'fr-FR', {
+                                        minimumFractionDigits: 2
+                                    });
+                                var prix_min = data.prix_min.replace(` ${dev}`, '').toLocaleString(
+                                    'fr-FR', {
+                                        minimumFractionDigits: 2
+                                    });
+                                data.prix_min = prix_min + " " + dev;
+                                data.prix = prix + " " + dev;
+
                                 var tr = $('[tr-item=' + data.id + ']');
                                 var iqte = $('[item-qte-' + data.id + ']', tr);
                                 var qte = Number(iqte.val());
