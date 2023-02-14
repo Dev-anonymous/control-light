@@ -1180,18 +1180,18 @@
                             init_soc = true;
                             socketIO.on("new-item", (data) => {
                                 var dev = (data.prix.split(' ')).slice(-1)[0];
-                                var prix = data.prix.replace(` ${dev}`, '').toLocaleString(
+                                var prix = data.prix.replace(` ${dev}`, '');
+                                Number(prix.trim()).toLocaleString(
                                     'fr-FR', {
                                         minimumFractionDigits: 2
                                     });
-                                var prix_min = data.prix_min.replace(` ${dev}`, '').toLocaleString(
+                                var prix_min = data.prix_min.replace(` ${dev}`, '');
+                                Number(prix_min.trim()).toLocaleString(
                                     'fr-FR', {
                                         minimumFractionDigits: 2
                                     });
                                 data.prix_min = prix_min + " " + dev;
                                 data.prix = prix + " " + dev;
-
-                                console.log(data);
 
                                 var tr = $('[tr-item=' + data.id + ']');
                                 var iqte = $('[item-qte-' + data.id + ']', tr);
