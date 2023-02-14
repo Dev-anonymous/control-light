@@ -1185,15 +1185,15 @@
                                 prix = Number(prix.trim()).toLocaleString(
                                     'fr-FR', {
                                         minimumFractionDigits: 2
-                                    });
+                                    }).replace(',', '.');
                                 prix_min = Number(prix_min.trim()).toLocaleString(
                                     'fr-FR', {
                                         minimumFractionDigits: 2
-                                    });
+                                    }).replace(',', '.');
                                 pv = Number(pv.trim()).toLocaleString(
                                     'fr-FR', {
                                         minimumFractionDigits: 2
-                                    });
+                                    }).replace(',', '.');
                                 data.prix_min = prix_min + " " + dev;
                                 data.prix = prix + " " + dev;
                                 data.pv = pv + " " + dev;
