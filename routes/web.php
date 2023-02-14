@@ -13,8 +13,10 @@ Route::get('', function () {
         $user = Auth::user();
         if ($user->user_role == 'admin') {
             $url = route('accueil.admin');
-        } else {
+        } else if ($user->user_role == 'caissier') {
             $url = route('accueil.caissier');
+        } else {
+            $url = route('accueil.super-admin');
         }
         return redirect($url);
     }
