@@ -45,12 +45,15 @@
                                         <tr>
                                             <th>Article</th>
                                             <th>Code article</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="text-center" colspan="8">
-                                                <span class="spinner-border text-danger"></span>
+                                            <td class="text-center"
+                                                colspan="3>
+                                                <span class="spinner-border
+                                                text-danger"></span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -88,6 +91,8 @@
     <script src="{{ asset('assets/datatables/pdfmake.min.js') }}"></script>
     <script src="{{ asset('assets/datatables/vfs_fonts.js') }}"></script>
     <script src="{{ asset('assets/datatables/datatables.min.js') }}"></script>
+
+    <script src="{{ asset('assets/js/JsBarcode.all.min.js') }}"></script>
 
     <script>
         $(function() {
@@ -140,6 +145,18 @@
             }
             getCategorie();
 
+
+            function makeQr() {
+                $('[code]').each(function(i, e) {
+                    var code = $(e).attr('code');
+                    JsBarcode(e, code, {
+                        foraamt: "pharmacode",
+                        lineColor: '#0aa',
+                        height:30
+                    });
+                });
+            }
+
             function getData() {
                 table.find('tbody').html(spin);
                 $.ajax({
@@ -156,16 +173,18 @@
                         str += `<tr>
                                     <td>${e.article}</td>
                                     <td>${e.code}</td>
+                                    <td><canvas code='${e.code}' ></canvas></td>
                                 </tr>`;
                     });
                     catechange.attr('disabled', false);
                     groupchange.attr('disabled', false);
                     table.find('tbody').html(
-                        '<tr><td></td><td></td></tr>'
+                        '<tr><td></td><td></td><td></td></tr>'
                     );
                     table.DataTable().destroy();
                     if (str.length > 0) {
                         table.find('tbody').html(str);
+                        makeQr();
                         table.DataTable(opt);
                     } else {
                         str =

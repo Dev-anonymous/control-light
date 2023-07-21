@@ -31,8 +31,14 @@
                     <h4>Articles</h4>
                     <div class="card-header-action">
                         <div class="form-group m-2 d-block">
+                            <button class="btn btn-outline-secondary mr-3" data-toggle='modal' data-target='#mdl-imp'
+                                style="border-radius: 5px!important;">
+                                <i class="fa fa-file"></i>
+                                Importer les articles
+                            </button>
                             <button class="btn btn-danger" data-toggle='modal' data-target='#mdl-add'
                                 style="border-radius: 5px!important;">
+                                <i class="fa fa-plus-circle"></i>
                                 Ajouter un article
                             </button>
                         </div>
@@ -58,7 +64,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table id="t-data" class="table table-condensed table-bordered table-hover font-weight-bold"
+                                <table id="t-data"
+                                    class="table table-condensed table-bordered table-hover font-weight-bold"
                                     style="width: 100%;">
                                     <thead>
                                         <tr>
@@ -140,7 +147,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="">Catégorie de l'article</label>
-                            <select class="custom-select" id="select-cat" name="categorie_article_id" required></select>
+                            <select class="custom-select" select-cat name="categorie_article_id" required></select>
                         </div>
                         <div class="form-group">
                             <label for="">Nom de l'article</label>
@@ -161,8 +168,8 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="">Prix de vente unitaire</label>
-                                    <input class="form-control w-100" name="prix" required min="1" type="number"
-                                        step="0.000001" placeholder="Prix de vente unitaire" />
+                                    <input class="form-control w-100" name="prix" required min="1"
+                                        type="number" step="0.000001" placeholder="Prix de vente unitaire" />
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -197,8 +204,8 @@
                             <label for="">Réduction en %</label>
                             <div class="input-group mb-3">
                                 <input class="form-control" name="reduction" required type="number"
-                                    placeholder="Reduction en %" value="0" min="0" step="0.01" max="90"
-                                    aria-describedby="basic-addon2">
+                                    placeholder="Reduction en %" value="0" min="0" step="0.01"
+                                    max="90" aria-describedby="basic-addon2">
                             </div>
                         </div>
                         <div class="form-group mb-2">
@@ -223,6 +230,69 @@
                             <span></span>
                             Ajouter
                         </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mdl-imp" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content ">
+                <div class="modal-header bg-danger text-white font-weight-bold d-flex justify-content-between">
+                    <b>Importattion des articles</b>
+                    <span style="cursor: pointer" data-dismiss="modal">
+                        <i class="fa fa-times-circle p-2 "></i>
+                    </span>
+                </div>
+                <form id="f-imp" class="was-validated">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Catégorie des l'articles</label>
+                                    <select class="custom-select" select-cat name="categorie_article_id"
+                                        required></select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    <label for="">Unité de mesure</label>
+                                    <select class="custom-select w-100" name="unite_mesure_id" required>
+                                        @foreach ($unite as $e)
+                                            <option @if ($e->par_defaut == 1) selected @endif
+                                                value="{{ $e->id }}">
+                                                {{ $e->unite_mesure }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="">Fichier Excel</label>
+                                <input required type="file" accept=".xls,.xlsx" name="file"
+                                    class="form-control mb-2">
+                            </div>
+                        </div>
+                        <div class="form-group" style="display: none" id="rep"></div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <div class="">
+                            <a href="{{ asset('Modele-article.xlsx') }}" class="btn btn-outline-danger">
+                                <span class="fa fa-file-excel"></span>
+                                Modele fu fichier
+                            </a>
+                        </div>
+                        <div class="">
+                            <button class="btn btn-secondary" data-dismiss="modal">
+                                Fermer
+                            </button>
+                            <button class="btn btn-danger " type="submit">
+                                <span></span>
+                                Importer
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -322,7 +392,7 @@
                             str2 += `<option  value="${e.id}">${e.categorie}</option>`;
                         }
                     });
-                    $('#select-cat').html(str2);
+                    $('[select-cat]').html(str2);
                     catechange.html(str).attr('disabled', false);
                     groupchange.attr('disabled', false);
                     getData();
@@ -464,6 +534,40 @@
                     setTimeout(() => {
                         rep.slideUp();
                     }, 5000);
+                    btn.attr('disabled', false);
+                    btn.find('span').removeClass();
+                });
+            })
+
+            $('#f-imp').submit(function() {
+                event.preventDefault();
+                var form = $(this);
+                var btn = $(':submit', form).attr('disabled', true);
+                btn.find('span').removeClass().addClass('spinner-border spinner-border-sm mr-3');
+                rep = $('#rep', form);
+                rep.removeClass().slideUp();
+
+                var data = new FormData(this);
+
+                $.ajax({
+                    url: '{{ route('article.import') }}',
+                    type: 'post',
+                    data: data,
+                    timeout: 20000,
+                    contentType: false,
+                    processData: false,
+                }).done(function(res) {
+                    data = res.data;
+                    if (res.success == true) {
+                        form.get(0).reset();
+                        var m = res.message;
+                        rep.addClass('alert alert-success w-100').html(m);
+                        getData();
+                    } else {
+                        var m = res.message;
+                        rep.addClass('alert alert-danger w-100').html(m);
+                    }
+                    rep.slideDown();
                     btn.attr('disabled', false);
                     btn.find('span').removeClass();
                 });

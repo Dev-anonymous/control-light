@@ -30,3 +30,5 @@
         }
     });
 </script>
+
+@include('files.pwa-js')

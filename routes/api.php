@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::resource('groupe-article', GroupeArticleApiController::class);
         Route::resource('categorie-article', CategorieArticleApiController::class);
         Route::resource('articles', ArticlesApiController::class);
+        Route::post('articles/import', [ArticlesApiController::class, 'import'])->name('article.import');
         Route::resource('factures', FactureApiController::class);
         Route::resource('ventes', VenteApiController::class);
         Route::get('/statistique', [DataApiController::class, 'statistique'])->name('statistique.api');

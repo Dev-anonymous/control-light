@@ -9,6 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>Connexion | {{ config('app.name') }}</title>
     @include('files.css')
+    @include('files.pwa')
 </head>
 
 <body>
@@ -81,7 +82,6 @@
         .iti--separate-dial-code {
             width: 100% !important
         }
-
     </style>
 
     <script>
@@ -205,6 +205,8 @@
             };
         })
     </script>
+    @include('files.pwa-js')
+
     <script src='https://zbot.gooomart.com/zbot/QWtjeGRsM0tPK0xKSlZOU1FLWUVIZz09' async></script>
 
 </body>

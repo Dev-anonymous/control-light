@@ -5,10 +5,12 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Approvisionnement;
 use App\Models\Article;
+use App\Models\Devise;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use stdClass;
 
 class ArticlesApiController extends Controller
@@ -226,5 +228,117 @@ class ArticlesApiController extends Controller
         }
         $article->delete();
         return $this->success([], "L'article a été supprimé.");
+    }
+
+    public function import(Request $request)
+    {
+        if (auth()->user()->user_role != 'admin') {
+            abort(401);
+        }
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'categorie_article_id' => 'required|exists:categorie_article,id',
+                'unite_mesure_id' => 'required|exists:unite_mesure,id',
+                'file' => 'required|mimes:xls,xlsx',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return $this->error('Erreur de validation', ['msg' => $validator->errors()->all()]);
+        }
+
+        $temp_dir = $_FILES['file']['tmp_name'];
+        $ext  = pathinfo($_FILES['file']['name'])['extension'];
+        $ext = strtolower($ext);
+
+        $reader = new Xlsx();
+        $spreadsheet = $reader->load($temp_dir);
+        $sheet_data  = $spreadsheet->getActiveSheet(0)->toArray();
+
+        $ni = $j = 0;
+        $err = [];
+
+        for ($i = 1; $i < count($sheet_data); $i++) {
+            $article = $sheet_data[$i]['0'];
+            $qte = $sheet_data[$i]['1'];
+            $prix = $sheet_data[$i]['2'];
+            $reduction = $sheet_data[$i]['3'];
+            $devise = $sheet_data[$i]['4'];
+            $exp = $sheet_data[$i]['5'];
+
+            if (empty($article)) {
+                $err[] = "Ligne $i : nom de l'article vide.";
+                $ni++;
+                continue;
+            }
+
+            if (!(is_numeric($qte) and $qte > 0)) {
+                $err[] = "Ligne $i : qantité invalide => \"$qte\".";
+                $ni++;
+                continue;
+            }
+            if (!(is_numeric($prix) and $prix > 0)) {
+                $err[] = "Ligne $i : prix invalide => \"$prix\".";
+                $ni++;
+                continue;
+            }
+            if (!(is_numeric($reduction) and $reduction >= 0 and $reduction <= 90)) {
+                $err[] = "Ligne $i : reduction invalide => \"$reduction\". La valeur doit etre entre 0 et 90.";
+                $ni++;
+                continue;
+            }
+            if (!in_array($devise, ['CDF', 'USD'])) {
+                $err[] = "Ligne $i : devise invalide => \"$devise\".";
+                $ni++;
+                continue;
+            }
+            if ($exp) {
+                $t = strtotime($exp);
+                if (!$t) {
+                    $err[] = "Ligne $i : format date invalide => \"$exp\". La date doit etre au format AAAA/MM/JJ";
+                    $ni++;
+                    continue;
+                }
+            }
+            if (Article::where(['article' => $article, 'categorie_article_id' => $request->categorie_article_id, 'compte_id' => compte_id()])->first()) {
+                $err[] = "Ligne $i : l'article \"$article\" existe déjà dans cette catégorie.";
+                $ni++;
+                continue;
+            }
+
+            $data = [
+                'article' => $article,
+                'categorie_article_id' => $request->categorie_article_id,
+                'compte_id' => compte_id(),
+                'unite_mesure_id' => $request->unite_mesure_id,
+                'reduction' => $reduction,
+                'prix' => $prix,
+                'devise_id' => Devise::where('devise', $devise)->first()->id,
+                'date_expiration' => $exp,
+                'stock' => (int) $qte,
+                'code' => code_article()
+            ];
+
+            DB::transaction(function () use ($data) {
+                $art = Article::create($data);
+                Approvisionnement::create(['article_id' => $art->id, 'qte' => $data['stock'], 'date' => now('Africa/Lubumbashi'), 'compte_id' => compte_id()]);
+            });
+            $j++;
+        }
+
+        $message = '';
+        if ($j) {
+            $message .= "$j ligne(s) importée(e) <br><br>";
+        }
+        if ($ni) {
+            $message .= "$ni ligne(s) non importée(e) <br><br>";
+            $message .= implode('<br>', $err);
+        }
+
+        return response()->json([
+            'success' => !count($err),
+            'message' => $message ,
+        ], 200);
     }
 }

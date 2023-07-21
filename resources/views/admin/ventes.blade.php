@@ -264,13 +264,20 @@
 
                 </div>
                 <div id="fac-rep"></div>
+                <div class="modal-footer d-flex justify-content-start">
+                    <label class="m-b-0" style="cursor: pointer">
+                        <input type="checkbox" id="printnow" class="custom-switch-input">
+                        <span class="custom-switch-indicator"></span>
+                        <span class="control-label p-l-10">Imprimer directement la facture</span>
+                    </label>
+                </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-dismiss="modal">
                         Fermer
                     </button>
                     <button class="btn btn-danger " btn-fac2>
                         <span class="fa fa-print"></span>
-                        Enregistrer & imprimer la facture
+                        Enregistrer la vente
                     </button>
                 </div>
             </div>
@@ -679,6 +686,12 @@
                     insert(data, true);
                     addNum();
                     initActions();
+                    var btn = $(this);
+                    btn.html('<i class="fa fa-check-circle fa-3x"></i>');
+                    $(btn).Blink();
+                    setTimeout(() => {
+                        btn.html('<i class="fa fa-plus-circle"></i> Ajouter à la facture');
+                    }, 500);
                 });
             }
 
@@ -983,6 +996,52 @@
 
             }
 
+            //////// TAUX ////////////
+            TAUX = {
+                CDF: Number('{{ $txusd }}'), // CDF => USD
+                USD: Number('{{ $txcdf }}'), // USD => CDF
+            };
+            ///////////////////////////
+
+            function _change(montant, from, to) {
+                if (from == to) {
+                    return Number(montant);
+                }
+                return Number(TAUX[to] * montant);
+            }
+
+            function initDiff() {
+                $('.mrecu').off('keyup').keyup(function() {
+                    var val = Number(this.value);
+                    var i = $(this);
+                    if (!val) {
+                        i.val('');
+                        return;
+                    }
+
+                    var totfac = $('[totfac]').html();
+                    var spandif = $('[spandif]');
+                    var dev = (totfac.split(' ')).slice(-1)[0];
+                    var pr = Number(totfac.replace(`${dev}`, '').split(' ').join(''));
+                    if (val < pr) {
+                        $('b[berror]').html('Le montant reçu doit être >= au montant de la facture.');
+                        spandif.html('');
+                        return;
+                    } else {
+                        $('b[berror]').html('');
+                    }
+                    var d = val - pr;
+                    var v1 = _change(d, dev, 'CDF');
+                    var v2 = _change(v1, 'CDF', 'USD');
+
+                    v1 = new Intl.NumberFormat('fr-FR').format(v1); // v1.toFixed(0);
+                    v2 = new Intl.NumberFormat('fr-FR').format(v2); // v1.toFixed(0);
+
+                    var txt = `${v1} CDF ou ${v2} USD`;
+                    spandif.html(txt);
+                })
+            }
+
             mdlvisualise = $('#mdl-visualise');
             $('.btn-visualiser').click(function() {
                 mdlvisualise.find('.modal-body').html(
@@ -1047,12 +1106,38 @@
                                 </tr>`;
                         });
                         str2 += `<tr>
-                                    <td colspan='4' style="text-align: right; font-weight:bold; margin-top:10px;" >Total payé : ${facture.total}</td>
+                                    <td colspan='4' style="text-align: right; font-weight:bold; margin-top:10px;" >
+                                        <h4>
+                                            Total à payé : <span class='badge badge-success' totfac style='border-radius:10px'>${facture.total}</span>
+                                        </h4>
+                                    </td>
                                 </tr>`
+                        str2 += `<tr noprint>
+                                    <td colspan='2' estyle="text-align: right; margin-top:10px;" >
+                                        <b>Montant reçu en <span cdevise></span></b> :
+                                    </td>
+                                    <td colspan='2' style="text-align: right; font-weight:bold; margin-top:10px;" >
+                                       <input class='form-control mrecu' placeholder='Montant reçu' maxlength='10' />
+                                    </td>
+                                </tr>
+                                <tr noprint>
+                                    <td colspan='4'>
+                                        <h4 class='font-weight-bold mt-3'>Différence : <span class='badge badge-info' spandif style='border-radius:10px'></span></h4>
+                                    </td>
+                                </tr>
+                                <tr noprint>
+                                    <td colspan='4' style="font-weight:bold; margin-top:10px;" >
+                                        <b class='text-danger' berror></b>
+                                    </td>
+                                </tr>
+                                `;
+
                         str += str2;
                         str += `</tbody></table>`;
                         mdlvisualise.find('.modal-body').html(str);
                         $("[btn-fac2]", mdlvisualise).attr('disabled', false);
+                        $('[cdevise]').html($('#devise-fac').val());
+                        initDiff();
 
                     } else {
                         mdlvisualise.modal('hide');
@@ -1073,6 +1158,14 @@
                 })
             })
 
+            var printnow = localStorage.getItem('printnow');
+
+            var iprint = $('#printnow');
+            iprint.attr('checked', printnow == 'true');
+            iprint.change(function() {
+                event.preventDefault();
+                localStorage.setItem('printnow', iprint.is(':checked'));
+            })
 
             $('[btn-fac2]').click(function() {
                 event.preventDefault();
@@ -1104,28 +1197,33 @@
                         getData();
                         localStorage.setItem('client', '');
                         $('input[name=client]').val('');
-                        setTimeout(() => {
-                            // $('#print-zone').printThis({
-                            //     footer: "<div style='margin:2rem;'>Merci d'etre passé! A bientot.</div>",
-                            // });
-                            var div = $('#print-zone')[0];
-                            var mywindow = window.open('', 'PRINT', 'height=500,width=800');
-                            mywindow.document.write(
-                                '<html><head><style>td,th{padding:5px;} html,body {h1,h2,h3,h4,h5,h6 {padding: 0px;margin: 0px;},font-size: 12pt !important; font-weight:bold; margin-top:5px !important; margin-bottom:10px !important;}</style>'
-                            );
-                            mywindow.document.write('</head><body >');
-                            mywindow.document.write(div.innerHTML);
-                            mywindow.document.write(
-                                "<div style='margin-bottom:10px; margin-top:10px;'>Merci d'etre passé! A bientot.</div>"
-                            );
-                            mywindow.document.write('</body></html>');
-                            mywindow.document.close();
-                            mywindow.focus();
-                            mywindow.print();
-                            setTimeout(function() {
-                                mywindow.close();
+                        if (iprint.is(':checked')) {
+                            setTimeout(() => {
+                                // $('#print-zone').printThis({
+                                //     footer: "<div style='margin:2rem;'>Merci d'etre passé! A bientot.</div>",
+                                // });
+                                var div = $('#print-zone');
+                                div.find('[noprint]').hide();
+                                var mywindow = window.open('', 'PRINT',
+                                    'height=500,width=800');
+                                mywindow.document.write(
+                                    '<html><head><style>td,th{padding:5px;} html,body {h1,h2,h3,h4,h5,h6 {padding: 0px;margin: 0px;},font-size: 12pt !important; font-weight:bold; margin-top:5px !important; margin-bottom:10px !important;}</style>'
+                                );
+                                mywindow.document.write('</head><body >');
+                                mywindow.document.write(div[0].innerHTML);
+                                mywindow.document.write(
+                                    "<div style='margin-bottom:10px; margin-top:10px;'>Merci d'etre passé! A bientot.</div>"
+                                );
+                                mywindow.document.write('</body></html>');
+                                mywindow.document.close();
+                                mywindow.focus();
+                                mywindow.print();
+                                div.find('[noprint]').show();
+                                setTimeout(function() {
+                                    mywindow.close();
+                                }, 1000);
                             }, 1000);
-                        }, 1000);
+                        }
 
                     } else {
                         var m = res.message;
@@ -1199,7 +1297,7 @@
 
                 }
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
 
 

@@ -154,7 +154,6 @@ class DataApiController extends Controller
         $client = request()->client;
 
         if (!in_array($devise, ['CDF', 'USD'])) return $this->error("Devise non valide : $devise");
-        if (!$client) return $this->error("Veuillez renseigner le nom du client");
 
         $error = [];
         $tabA = [];
@@ -218,7 +217,7 @@ class DataApiController extends Controller
         }
 
         $data['articles'] = $tabA;
-        $data['client'] = $client;
+        $data['client'] = $client ?? '-';
         $data['total'] = $tot;
         $data['devise'] = strtoupper($devise);
 

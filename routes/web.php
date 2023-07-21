@@ -8,6 +8,9 @@ use App\Http\Controllers\AppController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/offline', function () {
+    return view("offline");
+});
 Route::get('', function () {
     if (Auth::check()) {
         $user = Auth::user();
