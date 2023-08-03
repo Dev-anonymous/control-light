@@ -5,7 +5,7 @@ namespace App\Http\Controllers\app;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\FactureSupprimee;
-use Illuminate\Http\Request;
+use App\Models\TauxOnline;
 
 class AdminController extends Controller
 {
@@ -74,7 +74,9 @@ class AdminController extends Controller
 
     public function devise()
     {
-        return view('admin.devise');
+        $devise_auto = (bool) getConfig('devise_auto');
+        $cur_taux = TauxOnline::first();
+        return view('admin.devise', compact('devise_auto', 'cur_taux'));
     }
 
     public function facture_sup()

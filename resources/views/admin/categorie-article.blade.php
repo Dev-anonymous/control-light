@@ -15,8 +15,8 @@
         @endphp
         <div class="main-content">
             <div class="card ">
-                <div class="card-header">
-                    <h4>Catégorie d'articles</h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Catégorie d'articles</h3>
                 </div>
                 @if (!$groupe->count())
                     <div class="card-header d-flex justify-content-center">
@@ -33,8 +33,8 @@
                     </button>
                     <div class="card-header-action">
                         <div class="form-group m-2 d-block">
-                            <select class="custom-select form-change">
-                                <option value="">Tous les groupes d'articles</option>
+                            <select class="select2 custom-select form-change">
+                                <option value="">Tous les groupes</option>
 
                                 @foreach ($groupe as $e)
                                     <option @if ($e->par_defaut == 1) selected @endif value="{{ $e->id }}">
@@ -118,7 +118,7 @@
                         <div class="form-group" style="display: none" id="rep"></div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal">
+                        <button class="btn btn-dark" data-dismiss="modal">
                             Fermer
                         </button>
                         <button class="btn btn-danger " type="submit">

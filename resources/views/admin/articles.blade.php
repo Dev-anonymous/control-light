@@ -27,11 +27,11 @@
                 </div>
             </div>
             <div class="card ">
-                <div class="card-header">
-                    <h4>Articles</h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Articles</h3>
                     <div class="card-header-action">
                         <div class="form-group m-2 d-block">
-                            <button class="btn btn-outline-secondary mr-3" data-toggle='modal' data-target='#mdl-imp'
+                            <button class="btn btn-dark mr-3" data-toggle='modal' data-target='#mdl-imp'
                                 style="border-radius: 5px!important;">
                                 <i class="fa fa-file"></i>
                                 Importer les articles
@@ -44,10 +44,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-header d-flex justify-content-center">
+                <div class="card-header">
                     <div class="form-group d-block mr-1">
-                        <select class="custom-select groupe-change">
-                            <option value="">Tous les groupes d'articles</option>
+                        <select class="select2 custom-select groupe-change">
+                            <option value="">Tous les groupes</option>
                             @foreach ($groupe as $e)
                                 <option @if ($e->par_defaut == 1) selected @endif value="{{ $e->id }}">
                                     {{ $e->groupe }}</option>
@@ -55,8 +55,22 @@
                         </select>
                     </div>
                     <div class="form-group d-block ml-1">
-                        <select class="custom-select cat-change" disabled>
-                            <option value="">Toutes les catégories d'articles</option>
+                        <select class="select2 custom-select cat-change" disabled>
+                            <option value="">Toutes les catégories</option>
+                        </select>
+                    </div>
+                    <div class="form-group d-block ml-1">
+                        <select class="select2 custom-select" name="filtre2">
+                            <option value="">Tous les articles</option>
+                            <option value="reduction">Articles avec réduction</option>
+                            <option value="no-reduction">Articles sans réduction</option>
+                            <option value="no-expire-date">Articles sans date d'éxpiration</option>
+                            <option value="expired">Articles déjà éxpirés</option>
+                            <option value="expire-in30">Articles éxpirant dans 30 Jours</option>
+                            <option value="expire-in60">Articles éxpirant dans 60 Jours</option>
+                            <option value="stock-20">Articles avec un stock < 20 </option>
+                            <option value="stock-50">Articles avec un stock < 50 </option>
+                            <option value="stock-0">Articles avec un stock de 0 </option>
                         </select>
                     </div>
                 </div>
@@ -223,7 +237,7 @@
                         <div class="form-group" style="display: none" id="rep"></div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal">
+                        <button class="btn btn-dark" data-dismiss="modal">
                             Fermer
                         </button>
                         <button class="btn btn-danger " type="submit">
@@ -281,11 +295,11 @@
                         <div class="">
                             <a href="{{ asset('Modele-article.xlsx') }}" class="btn btn-outline-danger">
                                 <span class="fa fa-file-excel"></span>
-                                Modele fu fichier
+                                Modele du fichier
                             </a>
                         </div>
                         <div class="">
-                            <button class="btn btn-secondary" data-dismiss="modal">
+                            <button class="btn btn-dark" data-dismiss="modal">
                                 Fermer
                             </button>
                             <button class="btn btn-danger " type="submit">
@@ -314,7 +328,7 @@
     <script>
         $(function() {
             $('.datepicker').daterangepicker({
-                minYear: 2022,
+                minYear: '{{ date('Y') }}',
                 showDropdowns: true,
                 locale: {
                     format: 'YYYY/MM/DD'
@@ -339,6 +353,7 @@
             var table = $('#t-data');
             var groupchange = $('.groupe-change');
             var catechange = $('.cat-change');
+            var filtre2 = $('[name=filtre2]');
             groupchange.change(function() {
                 $(this).attr('disabled', true);
                 catechange.attr('disabled', true);
@@ -370,6 +385,9 @@
                 $(this).attr('disabled', true);
                 groupchange.attr('disabled', true);
                 getData();
+            });
+            filtre2.change(function() {
+                getData();
             })
 
             function getCategorie() {
@@ -381,7 +399,7 @@
                     timeout: 20000,
                 }).done(function(res) {
                     data = res.data;
-                    str = '<option value="">Toutes les catégories d\'articles</option>';
+                    str = '<option value="">Toutes les catégories</option>';
                     str2 = '';
                     $(data).each(function(i, e) {
                         if (e.par_defaut == 1) {
@@ -403,11 +421,18 @@
 
             function getData() {
                 table.find('tbody').html(spin);
+                var data = {
+                    categorie: catechange.val(),
+                    filtre2: filtre2.val()
+                };
+
+                catechange.attr('disabled', true);
+                groupchange.attr('disabled', true);
+                filtre2.attr('disabled', true);
+
                 $.ajax({
                     url: '{{ route('articles.index') }}',
-                    data: {
-                        categorie: catechange.val()
-                    },
+                    data: data,
                     timeout: 20000,
                 }).done(function(res) {
                     var data = res.data;
@@ -471,6 +496,7 @@
                     });
                     catechange.attr('disabled', false);
                     groupchange.attr('disabled', false);
+                    filtre2.attr('disabled', false);
                     table.find('tbody').html(
                         '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
                     );
@@ -545,7 +571,7 @@
                 var btn = $(':submit', form).attr('disabled', true);
                 btn.find('span').removeClass().addClass('spinner-border spinner-border-sm mr-3');
                 rep = $('#rep', form);
-                rep.removeClass().slideUp();
+                rep.slideUp();
 
                 var data = new FormData(this);
 
@@ -557,16 +583,12 @@
                     contentType: false,
                     processData: false,
                 }).done(function(res) {
-                    data = res.data;
                     if (res.success == true) {
                         form.get(0).reset();
-                        var m = res.message;
-                        rep.addClass('alert alert-success w-100').html(m);
-                        getData();
-                    } else {
-                        var m = res.message;
-                        rep.addClass('alert alert-danger w-100').html(m);
                     }
+                    var m = res.message;
+                    rep.addClass(`alert alert-${res.classe} w-100`).html(m);
+                    getData();
                     rep.slideDown();
                     btn.attr('disabled', false);
                     btn.find('span').removeClass();

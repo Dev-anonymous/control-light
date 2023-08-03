@@ -5,16 +5,22 @@ use App\Http\Controllers\api\ArticlesApiController;
 use App\Http\Controllers\api\Caissier2ApiController;
 use App\Http\Controllers\api\CaissierApiController;
 use App\Http\Controllers\api\CategorieArticleApiController;
+use App\Http\Controllers\api\ConfigApiController;
 use App\Http\Controllers\api\DataApiController;
 use App\Http\Controllers\api\FactureApiController;
 use App\Http\Controllers\api\GroupeArticleApiController;
 use App\Http\Controllers\api\MobileDataApiController;
+use App\Http\Controllers\api\ProformaApiController;
 use App\Http\Controllers\api\UniteMesureApiController;
 use App\Http\Controllers\api\VenteApiController;
 use App\Http\Controllers\app\SuperAdmin;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/ping', function () {
+        return now();
+    })->name('ping');
+
     Route::post('/add-user', [SuperAdmin::class, 'adduser'])->name('add-user.sudo.api');
     Route::post('/access', [SuperAdmin::class, 'access'])->name('access.sudo.api');
 
@@ -26,6 +32,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::resource('unite-mesure', UniteMesureApiController::class);
             Route::post('/taux', [DataApiController::class, 'taux'])->name('taux.api');
             Route::delete('/daccord', [DataApiController::class, 'daccord'])->name('daccord.api');
+            Route::post('/config', [ConfigApiController::class, 'update'])->name('config.api');
         });
 
         Route::resource('groupe-article', GroupeArticleApiController::class);
@@ -37,6 +44,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/statistique', [DataApiController::class, 'statistique'])->name('statistique.api');
         Route::resource('caissier', CaissierApiController::class);
 
+        Route::resource('/proforma', ProformaApiController::class);
+        Route::post('/proforma/encaissement/{proforma}', [ProformaApiController::class, 'encaissement'])->name('proforma.encaissement');
 
         Route::middleware('caissier.mdlw')->group(function () {
             Route::post('/caissier/update', [Caissier2ApiController::class, 'update'])->name('caissier.update.api');
@@ -52,4 +61,3 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 Route::post('/app/check-data', [MobileDataApiController::class, 'checkdata']);
 Route::post('/app/qr-login', [MobileDataApiController::class, 'qrlogin']);
-

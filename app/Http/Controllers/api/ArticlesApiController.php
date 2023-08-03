@@ -23,19 +23,61 @@ class ArticlesApiController extends Controller
      */
     public function index()
     {
-        $articles = Article::orderBy('id', 'desc')->where('compte_id', compte_id());
+        $articles = Article::orderBy('article')->where('compte_id', compte_id());
         $categorie = request()->categorie;
         $filtre = request()->filtre;
+        $filtre2 = request()->filtre2;
         if ($categorie) {
             $articles = $articles->where('categorie_article_id', $categorie);
         }
-        $articles = $articles->where('stock', '>', 0);
+
         if ($filtre) {
             $max = date('Y-m-d', strtotime('+30 days'));
             $articles = $articles->where(function ($query) use ($max) {
                 $query->whereNotNull('date_expiration')->whereDate('date_expiration', '>=', $max);
                 $query->orWhereNull('date_expiration');
             });
+        }
+
+        if ($filtre2 == 'reduction') {
+            $articles = $articles->where('reduction', '>', 0);
+        }
+        if ($filtre2 == 'no-reduction') {
+            $articles = $articles->where('reduction', '=', 0);
+        }
+        if ($filtre2 == 'no-expire-date') {
+            $articles = $articles->WhereNull('date_expiration');
+        }
+        if ($filtre2 == 'expired') {
+            $now = date('Y-m-d');
+            $articles = $articles->where(function ($query) use ($now) {
+                $query->whereNotNull('date_expiration')->whereDate('date_expiration', '<', $now);
+            });
+        }
+        if ($filtre2 == 'expire-in30') {
+            $now = date('Y-m-d');
+            $max = date('Y-m-d', strtotime('+30 days'));
+            $articles = $articles->where(function ($query) use ($max, $now) {
+                $query->whereNotNull('date_expiration')->whereDate('date_expiration', '>=', $now);
+                $query->whereNotNull('date_expiration')->whereDate('date_expiration', '<=', $max);
+            });
+        }
+        if ($filtre2 == 'expire-in60') {
+            $now = date('Y-m-d');
+            $max = date('Y-m-d', strtotime('+60 days'));
+            $articles = $articles->where(function ($query) use ($max, $now) {
+                $query->whereNotNull('date_expiration')->whereDate('date_expiration', '>=', $now);
+                $query->whereNotNull('date_expiration')->whereDate('date_expiration', '<=', $max);
+            });
+        }
+        if ($filtre2 == 'stock-20') {
+            $articles = $articles->where('stock', '>', 0)->where('stock', '<=', 20);
+        }
+        if ($filtre2 == 'stock-50') {
+            $articles = $articles->where('stock', '>', 0)->where('stock', '<=', 50);
+        }
+        if ($filtre2 == 'stock-0') {
+            $articles = $articles->where('stock', '=', 0);
         }
 
         $tab = [];
@@ -265,44 +307,44 @@ class ArticlesApiController extends Controller
             $prix = $sheet_data[$i]['2'];
             $reduction = $sheet_data[$i]['3'];
             $devise = $sheet_data[$i]['4'];
-            $exp = $sheet_data[$i]['5'];
+            $exp = trim($sheet_data[$i]['5']);
 
             if (empty($article)) {
-                $err[] = "Ligne $i : nom de l'article vide.";
+                $err[] = "Ligne " . ($i + 1) . " : nom de l'article vide.";
                 $ni++;
                 continue;
             }
 
             if (!(is_numeric($qte) and $qte > 0)) {
-                $err[] = "Ligne $i : qantité invalide => \"$qte\".";
+                $err[] = "Ligne " . ($i + 1) . " : qantité invalide => \"$qte\".";
                 $ni++;
                 continue;
             }
             if (!(is_numeric($prix) and $prix > 0)) {
-                $err[] = "Ligne $i : prix invalide => \"$prix\".";
+                $err[] = "Ligne " . ($i + 1) . " : prix invalide => \"$prix\".";
                 $ni++;
                 continue;
             }
             if (!(is_numeric($reduction) and $reduction >= 0 and $reduction <= 90)) {
-                $err[] = "Ligne $i : reduction invalide => \"$reduction\". La valeur doit etre entre 0 et 90.";
+                $err[] = "Ligne " . ($i + 1) . " : reduction invalide => \"$reduction\". La valeur doit etre entre 0 et 90.";
                 $ni++;
                 continue;
             }
             if (!in_array($devise, ['CDF', 'USD'])) {
-                $err[] = "Ligne $i : devise invalide => \"$devise\".";
+                $err[] = "Ligne " . ($i + 1) . " : devise invalide => \"$devise\".";
                 $ni++;
                 continue;
             }
-            if ($exp) {
+            if (!empty($exp)) {
                 $t = strtotime($exp);
                 if (!$t) {
-                    $err[] = "Ligne $i : format date invalide => \"$exp\". La date doit etre au format AAAA/MM/JJ";
+                    $err[] = "Ligne " . ($i + 1) . " : format date invalide => \"$exp\". La date doit etre au format AAAA/MM/JJ";
                     $ni++;
                     continue;
                 }
             }
             if (Article::where(['article' => $article, 'categorie_article_id' => $request->categorie_article_id, 'compte_id' => compte_id()])->first()) {
-                $err[] = "Ligne $i : l'article \"$article\" existe déjà dans cette catégorie.";
+                $err[] = "Ligne " . ($i + 1) . " : l'article \"$article\" existe déjà dans cette catégorie.";
                 $ni++;
                 continue;
             }
@@ -336,9 +378,26 @@ class ArticlesApiController extends Controller
             $message .= implode('<br>', $err);
         }
 
+        if (empty($message)) {
+            $message = 'Aucun article importé';
+        }
+
+        if ($j and $ni) {
+            $cl = 'warning';
+        } elseif ($j and !$ni) {
+            $cl = 'success';
+        } else {
+            $cl = 'danger';
+        }
+
+        if ($ni == count($sheet_data) - 1) {
+            $message = 'Aucun article importé';
+        }
+
         return response()->json([
-            'success' => !count($err),
-            'message' => $message ,
+            'success' => (bool) $j,
+            'classe' => $cl,
+            'message' => $message,
         ], 200);
     }
 }

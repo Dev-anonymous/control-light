@@ -7,7 +7,7 @@
         <div class="main-wrapper main-wrapper-1">
             @include('composants.nav')
             <div class="main-sidebar sidebar-style-2">
-                @include('composants.sidebar-caissier')
+                @include('composants.sidebar')
             </div>
         </div>
         @php
@@ -34,7 +34,7 @@
                                 <div class="row">
                                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 pr-0 pt-3">
                                         <div class="card-content">
-                                            <h5 class="font-40 text-muted">Solde</h5>
+                                            <h5 class="font-30 text-muted">Solde</h5>
                                             @if (count($tot))
                                                 @foreach ($tot as $e)
                                                     <h2 class="mb-3 font-20 d-block text-muted">
@@ -59,14 +59,14 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <a no-under href="{{ route('cassier.caissier') }}">
-                            <div class="card ombre" style="min-height: 200px">
+                            <div class="card ombre" style="min-height: 200px" data-toggle="tooltip" title="Comptes caissiers">
                                 <div class="card-statistic-4">
                                     <div class="align-items-center justify-content-between">
                                         <div class="row ">
                                             <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 pr-0 pt-3">
                                                 <div class="card-content">
-                                                    <h5 class="font-40 text-muted">Caissiers</h5>
-                                                    <h2 class="mb-3 font-40 text-muted">{{ $tc }}</h2>
+                                                    <h5 class="font-30 text-muted">Caissiers</h5>
+                                                    <h2 class="mb-3 font-30 text-muted">{{ $tc }}</h2>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pl-0">
@@ -82,19 +82,19 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <a no-under href="{{ route('articles.caissier') }}">
-                            <div class="card ombre" style="min-height: 200px">
+                            <div class="card ombre" style="min-height: 200px" data-toggle="tooltip" title="Total articles dans votre magasin">
                                 <div class="card-statistic-4">
                                     <div class="align-items-center justify-content-between">
                                         <div class="row ">
                                             <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 pr-0 pt-3">
                                                 <div class="card-content">
-                                                    <h5 class="font-40 text-muted">Articles</h5>
-                                                    <h2 class="mb-3 font-40 text-muted">{{ $ta }}</h2>
+                                                    <h5 class="font-30 text-muted">Articles</h5>
+                                                    <h2 class="mb-3 font-30 text-muted">{{ $ta }}</h2>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pl-0">
                                                 <div class="h-100 d-flex justify-content-center align-items-center">
-                                                    <i class="fa fa-list-ul fa-4x text-muted"></i>
+                                                    <i class="fa fa-list-ul text-muted" style="font-size: 4em;"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -112,13 +112,13 @@
                                         <div class="row ">
                                             <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 pr-0 pt-3">
                                                 <div class="card-content">
-                                                    <h5 class="font-40 text-muted">Factures</h5>
-                                                    <h2 class="mb-3 font-40 text-muted">{{ $nf }}</h2>
+                                                    <h5 class="font-30 text-muted">Factures</h5>
+                                                    <h2 class="mb-3 font-30 text-muted">{{ $nf }}</h2>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pl-0">
                                                 <div class="h-100 d-flex justify-content-center align-items-center">
-                                                    <i class="fa fa-file fa-4x text-muted"></i>
+                                                    <i class="fa fa-file text-muted" style="font-size: 4em;"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -136,7 +136,7 @@
                         <form id="f-change">
                             <div class="d-flex">
                                 <div class="form-group ml-1">
-                                    <select class="form-control rounded-0 p-0" name="devise">
+                                    <select class="select2 form-control rounded-0 p-0" name="devise" style="width: 80px">
                                         <option value="">Toutes</option>
                                         <option>CDF</option>
                                         <option>USD</option>

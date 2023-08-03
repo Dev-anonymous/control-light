@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $token
  * @property string|null $message
  *
+ * @property Collection|Config[] $configs
  * @property Collection|User[] $users
  *
  * @package App\Models
@@ -56,6 +57,11 @@ class Compte extends Model
         'token',
         'message'
     ];
+
+    public function configs()
+    {
+        return $this->hasMany(Config::class);
+    }
 
     public function users()
     {

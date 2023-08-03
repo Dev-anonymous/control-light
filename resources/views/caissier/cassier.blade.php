@@ -7,14 +7,14 @@
         <div class="main-wrapper main-wrapper-1">
             @include('composants.nav')
             <div class="main-sidebar sidebar-style-2">
-                @include('composants.sidebar-caissier')
+                @include('composants.sidebar')
             </div>
         </div>
 
         <div class="main-content">
             <div class="card ">
-                <div class="card-header">
-                    <h4>Cassiers</h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Caissiers</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">

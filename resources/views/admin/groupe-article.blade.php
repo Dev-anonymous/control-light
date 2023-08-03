@@ -13,8 +13,8 @@
 
         <div class="main-content">
             <div class="card ">
-                <div class="card-header">
-                    <h4>Groupe d'articles</h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Groupe d'articles</h3>
                     <div class="card-header-action">
                         <div class="form-group m-2 d-block">
                             <button class="btn btn-danger" data-toggle='modal' data-target='#mdl-add'
@@ -97,7 +97,7 @@
                         <div class="form-group" style="display: none" id="rep"></div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal">
+                        <button class="btn btn-dark" data-dismiss="modal">
                             Fermer
                         </button>
                         <button class="btn btn-danger " type="submit">
@@ -192,7 +192,7 @@
                         table.DataTable(opt);
                     } else {
                         str =
-                            '<tr><td colspan="4" class="text-danger font-weight-bolder text-center">Aucun groupe d\'article</td></tr>';
+                            '<tr><td colspan="4" class="text-danger font-weight-bolder text-center">Aucun groupe</td></tr>';
                         table.find('tbody').html('<tr><td></td><td></td><td></td><td></td></tr>');
                         table.DataTable().destroy();
                         table.find('tbody').html(str);

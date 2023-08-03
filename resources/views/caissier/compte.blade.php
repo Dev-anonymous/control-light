@@ -8,7 +8,7 @@
         <div class="main-wrapper main-wrapper-1">
             @include('composants.nav')
             <div class="main-sidebar sidebar-style-2">
-                @include('composants.sidebar-caissier')
+                @include('composants.sidebar')
             </div>
         </div>
 
@@ -18,8 +18,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card ">
-                                <div class="card-header">
-                                    <h4>Mon compte</h4>
+                                <div class="card-header d-flex justify-content-between">
+                                    <h3 class="h4 font-weight-bold">Mon compte</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -58,8 +58,8 @@
                         </div>
                         <div class="col-md-12" style="display: none" id="tab-edit">
                             <div class="card">
-                                <div class="card-header">
-                                    <h4>Modification informations</h4>
+                                <div class="card-header d-flex justify-content-between">
+                                    <h3 class="h4 font-weight-bold">Modification informations</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -89,7 +89,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group w-100" id="rep" style="display: none"></div>
+                                                    <div class="form-group w-100" id="rep" style="display: none">
+                                                    </div>
                                                 </div>
                                                 <div class="form-group d-flex justify-content-between">
                                                     <button type="submit" class="btn btn-danger">
@@ -137,7 +138,7 @@
                         <div class="form-group" style="display: none" id="rep-z2"></div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal">
+                        <button class="btn btn-dark" data-dismiss="modal">
                             Fermer
                         </button>
                         <button class="btn btn-danger " type="submit">

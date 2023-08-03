@@ -24,12 +24,12 @@
                 </div>
             </div>
             <div class="card ">
-                <div class="card-header">
-                    <h4>Nouvelle facture</h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Nouvelle facture</h3>
                     <div class="card-header-action">
                         <div class="d-flex">
                             <div class="form-group mr-1">
-                                <select class="form-control rounded-0 p-0" id="devise-fac">
+                                <select class="select2 form-control rounded-0 p-0" id="devise-fac" style="width:80px">
                                     <option>CDF</option>
                                     <option>USD</option>
                                 </select>
@@ -111,8 +111,8 @@
                 </div>
             </div>
             <div class="card ">
-                <div class="card-header">
-                    <h4>Articles</h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Articles</h3>
                     <div class="card-header-action">
                         <a data-collapse="#mycard-collapse" class="btn btn-outline-danger btn-icon"
                             style="border-radius: 10px!important" href="#">
@@ -121,10 +121,10 @@
                     </div>
                 </div>
                 <div class="collapse show" id="mycard-collapse">
-                    <div class="card-header d-flex justify-content-center">
+                    <div class="card-header">
                         <div class="form-group d-block mr-1">
-                            <select class="custom-select groupe-change">
-                                <option value="">Tous les groupes d'articles</option>
+                            <select class="select2 custom-select groupe-change">
+                                <option value="">Tous les groupes</option>
                                 @foreach ($groupe as $e)
                                     <option @if ($e->par_defaut == 1) selected @endif value="{{ $e->id }}">
                                         {{ $e->groupe }}</option>
@@ -132,8 +132,8 @@
                             </select>
                         </div>
                         <div class="form-group d-block ml-1">
-                            <select class="custom-select cat-change" disabled>
-                                <option value="">Toutes les catégories d'articles</option>
+                            <select class="select2 custom-select cat-change" disabled>
+                                <option value="">Toutes les catégories</option>
                             </select>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td class="text-center" colspan="8">
+                                                <td class="text-center" colspan="9">
                                                     <span class="spinner-border text-danger"></span>
                                                 </td>
                                             </tr>
@@ -172,18 +172,18 @@
                 </div>
             </div>
             <div class="card ">
-                <div class="card-header">
-                    <h4>Mes factures enregistrées</h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Mes factures enregistrées</h3>
                     <div class="card-header-action">
                         <form id="f-change-2">
                             <input type="hidden" name="filtre" value="true">
                             <div class="d-flex">
                                 <div class="form-group ml-1 mr-1">
                                     <input class="form-control datepicker p-3 rounded-sm" name="date"
-                                        value="{{ date('Y-m-d') }}" />
+                                        value="{{ date('Y-m-d') }}" style="padding: 20px !important; width:200px" />
                                 </div>
                                 <div class="form-group ml-1">
-                                    <select class="form-control rounded-0 p-0" name="devise">
+                                    <select class="select2 form-control rounded-0 p-0" name="devise" style="width:80px">
                                         <option value="">Toutes</option>
                                         <option>CDF</option>
                                         <option>USD</option>
@@ -240,7 +240,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal">
+                    <button class="btn btn-dark" data-dismiss="modal">
                         Fermer
                     </button>
                     <button class="btn btn-danger " btn-fac>
@@ -272,7 +272,7 @@
                     </label>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal">
+                    <button class="btn btn-dark" data-dismiss="modal">
                         Fermer
                     </button>
                     <button class="btn btn-danger " btn-fac2>
@@ -313,7 +313,7 @@
                         <i class="fa fa-download"></i>
                         Télécharger l'application
                     </a>
-                    <button class="btn btn-secondary" data-dismiss="modal">
+                    <button class="btn btn-dark" data-dismiss="modal">
                         Fermer
                     </button>
                 </div>
@@ -363,7 +363,7 @@
             qrcode.makeCode((qr));
 
             $('.datepicker').daterangepicker({
-                minYear: 2022,
+                minYear: '{{ date('Y') }}',
                 showDropdowns: true,
                 locale: {
                     format: 'YYYY/MM/DD'
@@ -430,7 +430,7 @@
                     timeout: 20000,
                 }).done(function(res) {
                     data = res.data;
-                    str = '<option value="">Toutes les catégories d\'articles</option>';
+                    str = '<option value="">Toutes les catégories</option>';
                     $(data).each(function(i, e) {
                         str += `<option  value="${e.id}">${e.categorie}</option>`;
                     });
@@ -490,11 +490,11 @@
                                     <td title="${e.article}">${art}</td>
                                     <td title="Prix de vente : ${e.prix} Par ${e.unite_mesure}">${e.prix}</td>
                                     <td class="text-center" title="${redt}">${red}</td>
-                                    <td class="${stCl}" title="${stTi}">${e.stock} ${e.unite_mesure}</td>
+                                    <td class="${stCl} text-nowrap" title="${stTi}">${e.stock} ${e.unite_mesure}</td>
                                     <td>${e.code}</td>
                                     <td>${e.categorie}</td>
                                     <td>${e.date_expiration}</td>
-                                    <td class='d-flex justify-content-center'>
+                                    <td class='d-flex justify-content-center text-nowrap'>
                                         <button value='${newFact}' class='btn btn-danger new-fac' ><i class='fa fa-plus-circle'></i> Ajouter à la facture</button>
                                     </td>
                                 </tr>`;
@@ -1034,8 +1034,8 @@
                     var v1 = _change(d, dev, 'CDF');
                     var v2 = _change(v1, 'CDF', 'USD');
 
-                    v1 = new Intl.NumberFormat('fr-FR').format(v1); // v1.toFixed(0);
-                    v2 = new Intl.NumberFormat('fr-FR').format(v2); // v1.toFixed(0);
+                    v1 = new Intl.NumberFormat('fr-FR').format(v1);
+                    v2 = new Intl.NumberFormat('fr-FR').format(v2);
 
                     var txt = `${v1} CDF ou ${v2} USD`;
                     spandif.html(txt);

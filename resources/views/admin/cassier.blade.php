@@ -13,8 +13,8 @@
 
         <div class="main-content">
             <div class="card ">
-                <div class="card-header">
-                    <h4>Cassiers</h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Cassiers</h3>
                     <div class="card-header-action">
                         <div class="form-group m-2 d-block">
                             <button class="btn btn-danger" data-toggle='modal' data-target='#mdl-add'
@@ -109,7 +109,7 @@
                         <div class="form-group" style="display: none" id="rep"></div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal">
+                        <button class="btn btn-dark" data-dismiss="modal">
                             Fermer
                         </button>
                         <button class="btn btn-danger " type="submit">
@@ -155,7 +155,7 @@
                             </button>
                         </div>
                         <div class="">
-                            <button class="btn btn-secondary" data-dismiss="modal">
+                            <button class="btn btn-dark" data-dismiss="modal">
                                 Fermer
                             </button>
                             <button class="btn btn-danger " type="submit">

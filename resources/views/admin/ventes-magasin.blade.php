@@ -14,24 +14,23 @@
             $groupe = \App\Models\GroupeArticle::where('compte_id', compte_id())->get();
         @endphp
         <div class="main-content">
-            <div class="card ">
-                <div class="card-header">
-                    <h4></h4>
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Situation générale des ventes</h3>
                     <div class="card-header-action">
                         <a data-collapse="#mycard-collapse0" class="btn btn-outline-danger btn-icon"
                             style="border-radius: 10px!important" href="#">
-                            <i class="fas fa-minus"></i>
+                            <i class="fas fa-minus ielement"></i>
                         </a>
                     </div>
                 </div>
-                <div class="card-header">
-                    <h4>Situation générale des ventes du magasin</h4>
-                    <div class="card-header-action">
+                <div class="collapse show" id="mycard-collapse0">
+                    <div class="card-header ">
                         <form id="f-change0">
                             <div class="row">
-                                <div class="col-md form-group d-block mr-1">
-                                    <select class="custom-select groupe-change" name="groupe">
-                                        <option value="">Tous les groupes d'articles</option>
+                                <div class="col-md form-group mr-1">
+                                    <select class=" select2 custom-select groupe-change" name="groupe">
+                                        <option value="">Tous les groupes</option>
                                         @foreach ($groupe as $e)
                                             <option @if ($e->par_defaut == 1) selected @endif
                                                 value="{{ $e->id }}">
@@ -40,17 +39,17 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md form-group d-block ml-1">
-                                    <select class="custom-select cat-change change0" name="categorie" disabled>
-                                        <option value="">Toutes les catégories d'articles</option>
+                                <div class="col-md form-group ml-1">
+                                    <select class=" select2 custom-select cat-change change0" name="categorie" disabled>
+                                        <option value="">Toutes les catégories</option>
                                     </select>
                                 </div>
                                 <div class="col-md form-group ml-1 mr-1">
                                     <input class="form-control change0 datepicker  p-3 rounded-sm" name="date"
-                                        value="{{ date('Y-m-d') }}" />
+                                        value="{{ date('Y-m-d') }}" style="padding: 20px !important; width:200px" />
                                 </div>
                                 <div class="col-md form-group ml-1">
-                                    <select class="form-control change0 rounded-0 p-0" name="devise">
+                                    <select class=" select2 form-control change0" name="devise" style="width: 80px">
                                         <option value="">Toutes</option>
                                         <option>CDF</option>
                                         <option>USD</option>
@@ -59,8 +58,6 @@
                             </div>
                         </form>
                     </div>
-                </div>
-                <div class="collapse show" id="mycard-collapse0">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
@@ -91,14 +88,14 @@
                             <h5>Montant total
                                 <button data-toggle="pop" title="Information"
                                     data-content="Ceci est le montant représentatif des ventes,
-                                                                                                                                                                                                                                                                                                                                                                                                        il indique la somme vendue sans conversion de devise,
-                                                                                                                                                                                                                                                                                                                                                                                                        c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
-                                                                                                                                                                                                                                                                                                                                                                                                        le montant de cet artcle en CDF sera converti en USD sur la facture,
-                                                                                                                                                                                                                                                                                                                                                                                                        donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
-                                                                                                                                                                                                                                                                                                                                                                                                        la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
-                                                                                                                                                                                                                                                                                                                                                                                                        si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
-                                                                                                                                                                                                                                                                                                                                                                                                        et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
-                                                                                                                                                                                                                                                                                                                                                                                                        et vous verrez que le montant X USD sera égale au montant Y USD"
+                                    il indique la somme vendue sans conversion de devise,
+                                    c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
+                                    le montant de cet artcle en CDF sera converti en USD sur la facture,
+                                    donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
+                                    la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
+                                    si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
+                                    et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
+                                    et vous verrez que le montant X USD sera égale au montant Y USD"
                                     class="btn">
                                     <i class="fa fa-info-circle text-danger"></i>
                                 </button>
@@ -110,23 +107,22 @@
                 </div>
             </div>
             <div class="card ">
-                <div class="card-header">
-                    <h4></h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Ventes détaillées du magasin</h3>
                     <div class="card-header-action">
                         <a data-collapse="#mycard-collapse1" class="btn btn-outline-danger btn-icon"
                             style="border-radius: 10px!important" href="#">
-                            <i class="fas fa-minus"></i>
+                            <i class="fas fa-minus ielement"></i>
                         </a>
                     </div>
                 </div>
-                <div class="card-header">
-                    <h4>Ventes détaillées du magasin</h4>
-                    <div class="card-header-action">
+                <div class="collapse show" id="mycard-collapse1">
+                    <div class="card-header">
                         <form id="f-change">
                             <div class="row">
                                 <div class="col-md form-group d-block mr-1">
-                                    <select class="custom-select groupe-change" name="groupe">
-                                        <option value="">Tous les groupes d'articles</option>
+                                    <select class="select2 custom-select groupe-change" name="groupe">
+                                        <option value="">Tous les groupes</option>
                                         @foreach ($groupe as $e)
                                             <option @if ($e->par_defaut == 1) selected @endif
                                                 value="{{ $e->id }}">
@@ -136,16 +132,17 @@
                                     </select>
                                 </div>
                                 <div class="col-md form-group d-block ml-1">
-                                    <select class="custom-select cat-change change" name="categorie" disabled>
-                                        <option value="">Toutes les catégories d'articles</option>
+                                    <select class="select2 custom-select cat-change change" name="categorie" disabled>
+                                        <option value="">Toutes les catégories</option>
                                     </select>
                                 </div>
                                 <div class="col-md form-group ml-1 mr-1">
                                     <input class="form-control change datepicker p-3 rounded-sm" name="date"
-                                        value="{{ date('Y-m-d') }}" />
+                                        value="{{ date('Y-m-d') }}" style="padding: 20px !important; width:200px" />
                                 </div>
                                 <div class="col-md form-group ml-1">
-                                    <select class="form-control change rounded-0 p-0" name="devise">
+                                    <select class="select2 form-control change rounded-0 p-0" name="devise"
+                                        style="width: 80px">
                                         <option value="">Toutes</option>
                                         <option>CDF</option>
                                         <option>USD</option>
@@ -154,8 +151,6 @@
                             </div>
                         </form>
                     </div>
-                </div>
-                <div class="collapse show" id="mycard-collapse1">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
@@ -187,14 +182,14 @@
                             <h5>Montant total (A)
                                 <button data-toggle="pop" title="Information"
                                     data-content="Ceci est le montant représentatif des ventes,
-                                                                                                                                                                                                                                                                                                                                                                                                            il indique la somme vendue sans conversion de devise,
-                                                                                                                                                                                                                                                                                                                                                                                                            c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
-                                                                                                                                                                                                                                                                                                                                                                                                            le montant de cet artcle en CDF sera converti en USD sur la facture,
-                                                                                                                                                                                                                                                                                                                                                                                                            donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
-                                                                                                                                                                                                                                                                                                                                                                                                            la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
-                                                                                                                                                                                                                                                                                                                                                                                                            si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
-                                                                                                                                                                                                                                                                                                                                                                                                            et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
-                                                                                                                                                                                                                                                                                                                                                                                                            et vous verrez que le montant X USD sera égale au montant Y USD"
+                                    il indique la somme vendue sans conversion de devise,
+                                    c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
+                                    le montant de cet artcle en CDF sera converti en USD sur la facture,
+                                    donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
+                                    la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
+                                    si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
+                                    et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
+                                    et vous verrez que le montant X USD sera égale au montant Y USD"
                                     class="btn">
                                     <i class="fa fa-info-circle text-danger"></i>
                                 </button>
@@ -206,8 +201,8 @@
                 </div>
             </div>
             <div class="card ">
-                <div class="card-header">
-                    <h4></h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Factures</h3>
                     <div class="card-header-action">
                         <a data-collapse="#mycard-collapse" class="btn btn-outline-danger btn-icon"
                             style="border-radius: 10px!important" href="#">
@@ -215,39 +210,44 @@
                         </a>
                     </div>
                 </div>
-                <div class="card-header">
-                    <h4>Factures</h4>
-                    <div class="card-header-action">
+                <div class="collapse show" id="mycard-collapse">
+                    <div class="card-header" id="tab-fac">
                         <form id="f-change-2">
-                            <div class="d-flex">
+                            <div class="row">
                                 @php
                                     $caissier = \App\Models\User::orderby('id')->where('compte_id', compte_id());
                                 @endphp
-                                <div class="form-group ml-1">
-                                    <select class="form-control rounded-0 p-0" name="caissier">
-                                        <option value="">Tous</option>
-                                        @foreach ($caissier->get() as $e)
-                                            <option cassier="{{ $e->name }}" value="{{ $e->id }}">
-                                                {{ $e->name }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="col-md">
+                                    <div class="form-group ml-1">
+                                        <select class="select2 form-control rounded-0 p-0" name="caissier"
+                                            style="width:200px">
+                                            <option value="">Tous</option>
+                                            @foreach ($caissier->get() as $e)
+                                                <option cassier="{{ $e->name }}" value="{{ $e->id }}">
+                                                    {{ $e->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="form-group ml-1 mr-1">
-                                    <input class="form-control datepicker p-3 rounded-sm" name="date"
-                                        value="{{ date('Y-m-d') }}" />
+                                <div class="col-md">
+                                    <div class="form-group ml-1 mr-1">
+                                        <input class="form-control datepicker p-3 rounded-sm" name="date"
+                                            value="{{ date('Y-m-d') }}" style="padding: 20px !important; width:200px" />
+                                    </div>
                                 </div>
-                                <div class="form-group ml-1">
-                                    <select class="form-control rounded-0 p-0" name="devise">
-                                        <option value="">Toutes</option>
-                                        <option>CDF</option>
-                                        <option>USD</option>
-                                    </select>
+                                <div class="col-md">
+                                    <div class="form-group ml-1">
+                                        <select class="select2 form-control rounded-0 p-0" name="devise"
+                                            style="width: 80px">
+                                            <option value="">Toutes</option>
+                                            <option>CDF</option>
+                                            <option>USD</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </form>
                     </div>
-                </div>
-                <div class="collapse show" id="mycard-collapse">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
@@ -303,7 +303,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal">
+                    <button class="btn btn-dark" data-dismiss="modal">
                         Fermer
                     </button>
                     <button class="btn btn-danger" btn-fac>
@@ -337,7 +337,7 @@
                     <div id="del-rep"></div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal">
+                    <button class="btn btn-dark" data-dismiss="modal">
                         Annuler
                     </button>
                     <button class="btn btn-danger" btn-del-fac>
@@ -365,7 +365,7 @@
     <script src="{{ asset('assets/js/printThis.js') }}"></script>
 
     @php
-    $shop = \App\Models\Shop::where('compte_id', compte_id())->first();
+        $shop = \App\Models\Shop::where('compte_id', compte_id())->first();
     @endphp
     <script>
         $(function() {
@@ -373,7 +373,7 @@
                 trigger: 'hover'
             })
             $('.datepicker').daterangepicker({
-                minYear: 2022,
+                minYear: '{{ date('Y') }}',
                 showDropdowns: true,
                 locale: {
                     format: 'YYYY/MM/DD'
@@ -431,7 +431,7 @@
                     timeout: 20000,
                 }).done(function(res) {
                     data = res.data;
-                    str = '<option value="">Toutes les catégories d\'articles</option>';
+                    str = '<option value="">Toutes les catégories</option>';
                     $(data).each(function(i, e) {
                         str += `<option  value="${e.id}">${e.categorie}</option>`;
                     });
@@ -615,7 +615,22 @@
                     if (str.length > 0) {
                         table2.find('tbody').html(str);
                         init();
-                        table2.DataTable(opt);
+                        var tabl = table2.DataTable(opt);
+                        var nf = '{{ request()->nf }}';
+                        if (nf.length > 0) {
+                            $('[aria-controls="t-facture"]').val(nf).trigger($.Event('keyup', {
+                                keyCode: 13
+                            }));
+                            $('.ielement').each(function(i, e) {
+                                $(this).removeClass('fa-minus').addClass('fa-plus').closest('.card')
+                                    .find('.collapse').removeClass('show');
+                            })
+                            setTimeout(() => {
+                                $('html, body').animate({
+                                    scrollTop: $('#tab-fac').offset().top
+                                }, 1000);
+                            }, 3000);
+                        }
                     } else {
                         str =
                             '<tr><td colspan="7" class="text-danger font-weight-bolder text-center">Aucune facture</td></tr>';
@@ -626,7 +641,6 @@
             }
 
             $('[btn-fac]').click(function() {
-                console.log('ok jj 00');
                 var div = $('#print-zone')[0];
                 var mywindow = window.open('', 'PRINT', 'height=500,width=800');
                 mywindow.document.write(

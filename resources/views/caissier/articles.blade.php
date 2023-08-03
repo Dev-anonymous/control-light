@@ -7,7 +7,7 @@
         <div class="main-wrapper main-wrapper-1">
             @include('composants.nav')
             <div class="main-sidebar sidebar-style-2">
-                @include('composants.sidebar-caissier')
+                @include('composants.sidebar')
             </div>
         </div>
         @php
@@ -15,13 +15,13 @@
         @endphp
         <div class="main-content">
             <div class="card ">
-                <div class="card-header">
-                    <h4>Articles</h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Articles</h3>
                 </div>
-                <div class="card-header d-flex justify-content-center">
+                <div class="card-header">
                     <div class="form-group d-block mr-1">
-                        <select class="custom-select groupe-change">
-                            <option value="">Tous les groupes d'articles</option>
+                        <select class="select2 custom-select groupe-change">
+                            <option value="">Tous les groupes</option>
                             @foreach ($groupe as $e)
                                 <option @if ($e->par_defaut == 1) selected @endif value="{{ $e->id }}">
                                     {{ $e->groupe }}</option>
@@ -29,8 +29,22 @@
                         </select>
                     </div>
                     <div class="form-group d-block ml-1">
-                        <select class="custom-select cat-change" disabled>
-                            <option value="">Toutes les catégories d'articles</option>
+                        <select class="select2 custom-select cat-change" disabled>
+                            <option value="">Toutes les catégories</option>
+                        </select>
+                    </div>
+                    <div class="form-group d-block ml-1">
+                        <select class="select2 custom-select" name="filtre2">
+                            <option value="">Tous les articles</option>
+                            <option value="reduction">Articles avec réduction</option>
+                            <option value="no-reduction">Articles sans réduction</option>
+                            <option value="no-expire-date">Articles sans date d'éxpiration</option>
+                            <option value="expired">Articles déjà éxpirés</option>
+                            <option value="expire-in30">Articles éxpirant dans 30 Jours</option>
+                            <option value="expire-in60">Articles éxpirant dans 60 Jours</option>
+                            <option value="stock-20">Articles avec un stock < 20 </option>
+                            <option value="stock-50">Articles avec un stock < 50 </option>
+                            <option value="stock-0">Articles avec un stock de 0 </option>
                         </select>
                     </div>
                 </div>
@@ -95,6 +109,7 @@
             var table = $('#t-data');
             var groupchange = $('.groupe-change');
             var catechange = $('.cat-change');
+            var filtre2 = $('[name=filtre2]');
             groupchange.change(function() {
                 $(this).attr('disabled', true);
                 catechange.attr('disabled', true);
@@ -104,6 +119,9 @@
             catechange.change(function() {
                 $(this).attr('disabled', true);
                 groupchange.attr('disabled', true);
+                getData();
+            });
+            filtre2.change(function() {
                 getData();
             })
 
@@ -116,7 +134,7 @@
                     timeout: 20000,
                 }).done(function(res) {
                     data = res.data;
-                    str = '<option value="">Toutes les catégories d\'articles</option>';
+                    str = '<option value="">Toutes les catégories</option>';
                     str2 = '';
                     $(data).each(function(i, e) {
                         if (e.par_defaut == 1) {
@@ -137,11 +155,18 @@
 
             function getData() {
                 table.find('tbody').html(spin);
+                var data = {
+                    categorie: catechange.val(),
+                    filtre2: filtre2.val()
+                };
+
+                catechange.attr('disabled', true);
+                groupchange.attr('disabled', true);
+                filtre2.attr('disabled', true);
+
                 $.ajax({
                     url: '{{ route('articles.index') }}',
-                    data: {
-                        categorie: catechange.val()
-                    },
+                    data: data,
                     timeout: 20000,
                 }).done(function(res) {
                     var data = res.data;
@@ -201,6 +226,7 @@
                     });
                     catechange.attr('disabled', false);
                     groupchange.attr('disabled', false);
+                    filtre2.attr('disabled', false);
                     table.find('tbody').html(
                         '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
                     );

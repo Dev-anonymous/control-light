@@ -12,8 +12,8 @@
         </div>
         <div class="main-content">
             <div class="card ">
-                <div class="card-header">
-                    <h4>Factures supprimées</h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Factures supprimées</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">

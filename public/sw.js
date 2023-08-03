@@ -1,4 +1,4 @@
-const VERSION = "v2";
+const VERSION = "v3";
 const BASE_URL = location.protocol + "//" + location.host;
 
 self.addEventListener("install", event => {
@@ -6,7 +6,7 @@ self.addEventListener("install", event => {
     event.waitUntil(
         (async () => {
             const cache = await caches.open(VERSION);
-            await cache.addAll(["/assets/img/offline.png", "/assets/css/app.min.css", "/offline"]);
+            await cache.addAll(["/offline"]);
         })()
     );
 });
@@ -22,6 +22,8 @@ self.addEventListener("activate", event => {
                     }
                 })
             );
+            const cache = await caches.open(VERSION);
+            await cache.addAll(["/offline"]);
         })()
     );
 });

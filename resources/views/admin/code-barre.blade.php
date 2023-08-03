@@ -18,9 +18,9 @@
                 <div class="card-header">
                     <h4>Code barre des articles</h4>
                 </div>
-                <div class="card-header d-flex justify-content-center">
+                <div class="card-header">
                     <div class="form-group d-block mr-1">
-                        <select class="custom-select groupe-change">
+                        <select class="select2 custom-select groupe-change">
                             <option value="">Tous les groupes d'articles</option>
                             @foreach ($groupe as $e)
                                 <option value="{{ $e->id }}">
@@ -29,7 +29,7 @@
                         </select>
                     </div>
                     <div class="form-group d-block ml-1">
-                        <select class="custom-select cat-change" disabled>
+                        <select class="select2 custom-select cat-change" disabled>
                             <option value="">Toutes les catégories d'articles</option>
                         </select>
                     </div>
@@ -133,7 +133,7 @@
                     timeout: 20000,
                 }).done(function(res) {
                     data = res.data;
-                    str = '<option value="">Toutes les catégories d\'articles</option>';
+                    str = '<option value="">Toutes les catégories</option>';
                     $(data).each(function(i, e) {
                         str += `<option  value="${e.id}">${e.categorie}</option>`;
                     });
@@ -188,7 +188,7 @@
                         table.DataTable(opt);
                     } else {
                         str =
-                            '<tr><td colspan="2" class="text-danger font-weight-bolder text-center">Aucun article</td></tr>';
+                            '<tr><td colspan="3" class="text-danger font-weight-bolder text-center">Aucun article</td></tr>';
                         table.find('tbody').html(str);
                     }
                 })

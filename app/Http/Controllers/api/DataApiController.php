@@ -225,6 +225,7 @@ class DataApiController extends Controller
             $article = $data['articles'];
             $d = now('Africa/Lubumbashi');
             $fac =  Facture::create([
+                'numero_facture' => numero_facture(),
                 'users_id' => auth()->user()->id,
                 'client' => $data['client'],
                 'caissier' => auth()->user()->name,
@@ -244,7 +245,7 @@ class DataApiController extends Controller
             return [$fac, $d->format('Y-m-d H:i:s')];
         });
         $d = $rep[1];
-        $num = numero_facture($rep[0]->id);
+        $num = $rep[0]->numero_facture;
         $tot = montant($tot, $devise);
 
         return $this->success(['numero_facture' => $num, 'date' => $d], "Facture $num enregistrée, pour un total de $tot, $d");

@@ -1,0 +1,56 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1_0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h2>Hey</h2>
+
+    <p>Entreprise : __ENTREPRISE_NOM__</p>
+    <p>ADRESEE : __ENTREPRISE_ADRESSE__</p>
+    <p>EMAIL : __ENTREPRISE_EMAIL__</p>
+    <p>TELEPHONE : __ENTREPRISE_TELEPHONE__</p>
+
+    <HR></HR>
+    <p>CLIENT : __CLIENT_NOM__</p>
+    <p>ADRESEE : __CLIENT_ADRESSE__</p>
+    <p>EMAIL : __CLIENT_EMAIL__</p>
+    <p>TELEPHONE : __CLIENT_TELEPHONE__</p>
+
+    <hr>
+
+    <p>MODE_REGLEMENT : __MODE_REGLEMENT__</p>
+    <p>CONDITION_REGLEMENT : __CONDITION_REGLEMENT__</p>
+    <p>DATE_REGLEMENT : __DATE_REGLEMENT__</p>
+    <p>NOTE_REGLEMENT : __NOTE_REGLEMENT__</p>
+
+
+
+    <b>__NUMERO_PROFORMA__</b>
+    <p>Article</p>
+
+    <table>
+        <tr>
+            <th>#</th>
+            <th>ARTICLE</th>
+            <th>PU</th>
+            <th>QTE</th>
+            <th>UNITE MESURE</th>
+            <th>TOT</th>
+        </tr>
+
+        <tbody>
+            __ARTICLE_PROFORMA__
+        </tbody>
+    </table>
+
+<b>TOTAL : __TOTAL__</b>
+
+</body>
+
+</html>

@@ -54,7 +54,7 @@ class FactureApiController extends Controller
         $tab = $tab2 = [];
 
         $tot = $factures;
-        $factures = $factures->get(['id', 'caissier', 'client', 'total', 'date', 'devise']);
+        $factures = $factures->get(['id', 'numero_facture', 'caissier', 'client', 'total', 'date', 'devise']);
 
         $tot = $tot->groupBy('devise')->selectRaw('sum(total) as total, devise')->get();
 
@@ -68,7 +68,6 @@ class FactureApiController extends Controller
             $e = (object) (array) $el->toArray();
             $e->date = $el->date->format('Y-m-d H:i:s');
             $e->total = montant($e->total, $e->devise);
-            $e->numero_facture = numero_facture($e->id);
             unset($e->devise);
             array_push($tab, $e);
         }
@@ -107,7 +106,6 @@ class FactureApiController extends Controller
         $fac = (object) (array) $fac->toArray();
         $fac->date = $facture->date->format('Y-m-d H:i:s');
         $fac->total = montant($facture->total, $facture->devise);
-        $fac->numero_facture = numero_facture($fac->id);
 
         $ventes = $facture->ventes()->get();
         foreach ($ventes as $el) {
@@ -172,7 +170,7 @@ class FactureApiController extends Controller
                 $art = substr($art, 0, -1);
 
                 FactureSupprimee::create([
-                    'numero_facture' => numero_facture($facture->id),
+                    'numero_facture' => $facture->numero_facture,
                     'client' => $facture->client,
                     'caissier' => $facture->caissier,
                     'total' => "$facture->total $facture->devise",

@@ -21,8 +21,8 @@
                 </div>
             </div>
             <div class="card ">
-                <div class="card-header">
-                    <h4>Devise et taux</h4>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Devise et taux</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -108,6 +108,41 @@
                     </div>
                 </div>
             </div>
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="h4 font-weight-bold">Taux en temp réel</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-secondary font-weight-bold text-dark">
+                        @php
+                            $tauxO = (array) explode('#', @$cur_taux->taux);
+                            $date = @$cur_taux->maj;
+                        @endphp
+                        <p>Les taux actuels sont de : </p>
+                        @foreach ($tauxO as $el)
+                            <b>{{ $el }}</b> <br>
+                        @endforeach
+                        <p>Dernière mise à jour : {{ $date }}</p>
+                    </div>
+                    <p class="text-danger">
+                        <b>
+                            <i class="fa fa-info-circle"></i>
+                            Vous pouvez accepter que vos taux soient mis à jour automatiquement par le système en cochant la
+                            case ci-dessous.
+                        </b>
+                    </p>
+                    <div class="p-15">
+                        <label class="m-b-0">
+                            <input type="checkbox" id="devise_auto" name="devise_auto"
+                                {{ $devise_auto ? 'checked="checked"' : '' }} class="custom-switch-input">
+                            <span class="custom-switch-indicator"></span>
+                            <span class="control-label p-l-10 text-dark">J'accepte que mes taux soient mis à jour
+                                automatiquement</span>
+                        </label>
+                    </div>
+                    <div id="rep2"></div>
+                </div>
+            </div>
 
             <div class="card ">
                 <div class="card-body">
@@ -190,6 +225,34 @@
                     }, 2000);
                     btn.attr('disabled', false);
                     btn.find('span').removeClass();
+                });
+            })
+
+            $('#devise_auto').change(function() {
+                var dev = this.checked ? 1 : 0;
+                var rep = $('#rep2');
+                rep.slideUp();
+
+                $.ajax({
+                    url: '{{ route('config.api') }}',
+                    type: 'post',
+                    data: {
+                        devise_auto: dev
+                    },
+                    timeout: 20000,
+                }).done(function(res) {
+                    data = res.data;
+                    if (res.success == true) {
+                        rep.removeClass().addClass('alert alert-success').html(res.message);
+                    } else {
+                        rep.removeClass().addClass('alert alert-danger').html(res.message);
+                    }
+                    rep.slideDown();
+                    setTimeout(() => {
+                        rep.slideUp();
+                    }, 5000);
+                }).fail(function() {
+                    alert("Une erreur s'est produite");
                 });
             })
         })

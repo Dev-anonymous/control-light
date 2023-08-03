@@ -308,7 +308,7 @@
                         <div class="form-group" style="display: none" id="rep"></div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal">
+                        <button class="btn btn-dark" data-dismiss="modal">
                             Fermer
                         </button>
                         <button class="btn btn-danger " type="submit">
@@ -364,7 +364,7 @@
                         <div class="form-group" style="display: none" id="rep"></div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal">
+                        <button class="btn btn-dark" data-dismiss="modal">
                             Fermer
                         </button>
                         <button class="btn btn-danger " type="submit">
@@ -395,7 +395,7 @@
                     </div>
                     <div class="modal-footer">
                         <input type="hidden" name="id" value="{{ $article->id }}">
-                        <button class="btn btn-secondary" data-dismiss="modal">
+                        <button class="btn btn-dark" data-dismiss="modal">
                             Fermer
                         </button>
                         <button class="btn btn-danger " type="submit">
@@ -425,7 +425,7 @@
     <script>
         $(function() {
             $('.datepicker').daterangepicker({
-                minYear: 2022,
+                minYear: '{{ date('Y') }}',
                 showDropdowns: true,
                 locale: {
                     format: 'YYYY/MM/DD'
@@ -434,7 +434,7 @@
             });
 
             $('.datepicker2').daterangepicker({
-                minYear: 2022,
+                minYear: '{{ date('Y') }}',
                 showDropdowns: true,
                 locale: {
                     format: 'YYYY/MM/DD'

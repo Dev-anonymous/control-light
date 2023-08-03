@@ -7441,6 +7441,14 @@ body:not(.sidebar-mini)
   font-weight: bolder !important;
   /* couleur */
 }
+.light-sidebar .main-sidebar .sidebar-menu li.active a:hover {
+    background-color: #ED1B24;
+    color: white !important;
+    /* couleur */
+  }
+.main-sidebar .sidebar-menu li a:hover {
+	color: #ED1B24 !important;
+}
 .light-sidebar .main-sidebar .sidebar-menu li ul.dropdown-menu li.active > a {
   color: #454546;
   font-weight: 600;

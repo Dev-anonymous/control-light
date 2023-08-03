@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class Facture
  *
  * @property int $id
+ * @property string|null $numero_facture
  * @property int|null $users_id
  * @property string|null $client
  * @property string|null $caissier
@@ -43,6 +44,7 @@ class Facture extends Model
     ];
 
     protected $fillable = [
+        'numero_facture',
         'users_id',
         'client',
         'caissier',
