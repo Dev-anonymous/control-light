@@ -82,19 +82,20 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/super-admin', [SuperAdmin::class, 'index'])->name('accueil.super-admin');
 });
 
-Route::get('fac', function () {
+// Route::get('fac', function () {
 
-    $fa = \App\Models\Facture::where(['compte_id' => compte_id(), 'numero_facture' => null])->get();
+//     $fa = \App\Models\Facture::where(['compte_id' => compte_id(), 'numero_facture' => null])->get();
+//     \Artisan::call('taux:update');
 
-    foreach ($fa as $k => $el) {
-        $num = $k + 1;
-        if ($num <= 9) {
-            $num = "000$num";
-        } else if ($num >= 10 and $num <= 99) {
-            $num = "00$num";
-        } else if ($num >= 100 and $num <= 999) {
-            $num = "0$num";
-        }
-        $el->update(['numero_facture' => $num]);
-    }
-});
+//     foreach ($fa as $k => $el) {
+//         $num = $k + 1;
+//         if ($num <= 9) {
+//             $num = "000$num";
+//         } else if ($num >= 10 and $num <= 99) {
+//             $num = "00$num";
+//         } else if ($num >= 100 and $num <= 999) {
+//             $num = "0$num";
+//         }
+//         $el->update(['numero_facture' => $num]);
+//     }
+// });

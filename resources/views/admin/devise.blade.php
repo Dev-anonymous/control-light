@@ -110,7 +110,7 @@
             </div>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="h4 font-weight-bold">Taux en temp réel</h5>
+                    <h3 class="h4 font-weight-bold">Taux en temps réel</h5>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-secondary font-weight-bold text-dark">
