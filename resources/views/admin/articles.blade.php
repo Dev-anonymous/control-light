@@ -354,6 +354,10 @@
             var groupchange = $('.groupe-change');
             var catechange = $('.cat-change');
             var filtre2 = $('[name=filtre2]');
+            var filtre = '{{ request()->filtre }}';
+            if (filtre.length > 0) {
+                filtre2.val(filtre).change();
+            }
             groupchange.change(function() {
                 $(this).attr('disabled', true);
                 catechange.attr('disabled', true);

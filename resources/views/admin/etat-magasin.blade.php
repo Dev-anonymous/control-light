@@ -44,7 +44,7 @@
                         </a>
                     </div>
                     <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                        <a no-under href="{{ route('articles.admin') }}">
+                        <a no-under href="{{ route('articles.admin', ['filtre'=>'stock-20']) }}">
                             <div class="card ombre p-3 @if ($stock > 0) error @endif" style="height:200px">
                                 <div class="d-flex justify-content-end">
                                     <i class="fa fa-database fa-3x text-info"></i>
@@ -62,7 +62,7 @@
                         </a>
                     </div>
                     <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                        <a no-under href="{{ route('articles.admin') }}">
+                        <a no-under href="{{ route('articles.admin', ['filtre'=>'expire-in60']) }}">
                             <div class="card ombre p-3 @if ($expMois > 0) error @endif" style="height:200px">
                                 <div class="d-flex justify-content-end">
                                     <i class="fa fa-exclamation-circle fa-3x text-warning"></i>
@@ -83,7 +83,7 @@
                         </a>
                     </div>
                     <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                        <a no-under href="{{ route('articles.admin') }}">
+                        <a no-under href="{{ route('articles.admin', ['filtre'=>'expired']) }}">
                             <div class="card ombre p-3 @if ($exp > 0) error @endif" style="height:200px">
                                 <div class="d-flex justify-content-end">
                                     <i class="fa fa-ban fa-3x text-danger"></i>

@@ -23,7 +23,7 @@
         } else {
             el.fadeIn();
             div.attr('style',
-                'position: sticky;top: 0px !important;z-index: 999999;background: rgba(255, 0, 0, .7);padding: 10px;'
+                'position: fixed;bottom: 0px !important; left:0; right:0;z-index: 999999;background: rgba(255, 0, 0, .5);padding: 10px;'
             );
         }
     }
