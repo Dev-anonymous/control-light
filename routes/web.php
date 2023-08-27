@@ -6,12 +6,12 @@ use App\Http\Controllers\app\CaissierController;
 use App\Http\Controllers\app\SuperAdmin;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\CommonController;
-use App\Models\Config;
-use App\Models\Devise;
-use App\Models\Taux;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+
+Route::get('test', function(){
+    return view('test');
+});
 
 Route::get('/offline', function () {
     return view("offline");
@@ -78,6 +78,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/common/proforma/modele-proforma', [CommonController::class, 'modele_proforma'])->name('proforma.modele');
         Route::get('/common/proforma/facture-proforma/{id}', [CommonController::class, 'facture_proforma'])->name('proforma.facture');
         Route::get('/preview-proforma/{id}', [CommonController::class, 'preview_proforma'])->name('proforma.preview');
+        Route::get('/preview-proforma-html/{proforma}', [CommonController::class, 'preview_proforma_html'])->name('proforma.preview_html');
     });
     Route::get('/super-admin', [SuperAdmin::class, 'index'])->name('accueil.super-admin');
 });

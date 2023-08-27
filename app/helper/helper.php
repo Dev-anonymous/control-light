@@ -257,13 +257,15 @@ function build_proforma($proforma)
         '__NOTE_REGLEMENT__',
         '__NUMERO_PROFORMA__',
         '__ARTICLE_PROFORMA__',
-        '__TOTAL__'
+        '__TOTAL__',
+        '__DATEPRO__'
     ];
 
     $num_fac = numero_proforma();
     $t[] = $num_fac;
     $t[] = $tr;
     $t[] = montant($tg, $devise);
+    $t[] = now()->format('d-m-Y H:i');
 
     $temp = str_replace($keys, $t, $proforma);
     return (object) [

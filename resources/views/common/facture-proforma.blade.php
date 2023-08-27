@@ -155,8 +155,10 @@
                             <div class="w-100 text-center">
                                 <b spinner style="display: none" class="spinner-border spinner-boder text-danger"></b>
                             </div>
-                            <iframe src="" id="iframe" style="height: 31cm" width="100%"
-                                frameborder="0"></iframe>
+                            <div class="table-responsive" >
+                                <iframe src="" id="iframe" style="height: 31cm" width="100%"
+                                    frameborder="0"></iframe>
+                            </div>
                         </div>
                         <hr>
                         <div class="card-footer d-flex justify-content-end">

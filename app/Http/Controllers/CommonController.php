@@ -25,7 +25,6 @@ class CommonController extends Controller
             $img = encode("$pa/image.png");
             $models[] = (object) ['id' => $id, 'img' => $img];
         }
-        $models = [];//remove this
         return view('common.modele-proforma', compact('models'));
     }
     public function facture_proforma($id)
@@ -57,6 +56,11 @@ class CommonController extends Controller
         $path = $p[$id - 1];
         $pro = file_get_contents("$path/proforma");
         return build_proforma($pro)->proforma;
+    }
+
+    public function preview_proforma_html(Proforma $proforma)
+    {
+        return $proforma->html;
     }
 
     public function proforma()

@@ -17,7 +17,7 @@
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
                     <h3 class="h4 font-weight-bold">Facture proforma :
-                        {{ $proforma->numero . ' | ' . $proforma->montant . ' | ' . $proforma->date->format('Y-m-d H:i:s') }}
+                        {{ $proforma->numero . ' | ' . $proforma->montant . ' | ' . $proforma->date->format('d-m-Y H:i:s') }}
                     </h3>
                 </div>
                 <div class="collapse show" id="mycard-collapse0">
@@ -26,7 +26,8 @@
                             <div class="col-md-12">
                                 <div class="table-responsive">
                                     <div class="">
-                                        {!! $proforma->html !!}
+                                        <iframe src="{{ route('proforma.preview_html', $proforma->id) }}" frameborder="0"
+                                            width="100%" height="900vh"></iframe>
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +83,8 @@
                         </span>
                     </div>
                     <div class="modal-body text-center">
-                        <b>confirmez l'encaissement de la facture {{ $proforma->numero }} ? </b>
+                        <b>confirmez l'encaissement de la facture {{ $proforma->numero }} d'un montant de
+                            {{ $proforma->montant }} ? </b>
                         <div id="rep2"></div>
                         <div id="rep3" class="mt-2"></div>
                     </div>

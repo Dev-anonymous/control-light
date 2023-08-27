@@ -41,7 +41,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="alert alert-warning w-100">
-                                    <b>Aucum modèle de proforma</b>
+                                    <b>Aucun modèle de proforma</b>
                                 </div>
                             </div>
                         </div>
