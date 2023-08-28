@@ -265,7 +265,7 @@ function build_proforma($proforma)
     $t[] = $num_fac;
     $t[] = $tr;
     $t[] = montant($tg, $devise);
-    $t[] = now()->format('d-m-Y H:i');
+    $t[] = now('Africa/Lubumbashi')->format('d-m-Y H:i');
 
     $temp = str_replace($keys, $t, $proforma);
     return (object) [
