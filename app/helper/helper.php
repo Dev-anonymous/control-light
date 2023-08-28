@@ -143,7 +143,7 @@ function encode($url)
 
 function proforma_dir()
 {
-    return glob("../resources/views/templates/*", GLOB_ONLYDIR);
+    return glob(base_path() . DIRECTORY_SEPARATOR . "resources" . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR);
 }
 
 function shop()
