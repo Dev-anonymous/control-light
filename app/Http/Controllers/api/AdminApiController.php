@@ -16,6 +16,7 @@ class AdminApiController extends Controller
 
     public function update(Request $request)
     {
+        demo();
         $user = auth()->user();
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:45',
@@ -36,6 +37,7 @@ class AdminApiController extends Controller
 
     public function update_pass()
     {
+        demo();
         $user = auth()->user();
         $validator = Validator::make(request()->all(), [
             'password' => 'required|string',
@@ -59,6 +61,7 @@ class AdminApiController extends Controller
 
     public function shop(Request $request)
     {
+        demo();
         $validator = Validator::make($request->all(), [
             'shop' => 'required|string|max:128',
             'adresse' => 'required|string|max:128',

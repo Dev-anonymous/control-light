@@ -9,8 +9,22 @@ use App\Models\FactureSupprimee;
 use App\Models\Proforma;
 use App\Models\Shop;
 use App\Models\Taux;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
-use PhpParser\Node\Expr\Cast\Double;
+
+
+function demo()
+{
+    $user = auth()->user();
+    if ($user) {
+        $emails = User::where('compte_id', $user->compte_id)->whereNotNull('email')->pluck('email')->all();
+        foreach ($emails as $email) {
+            if (strpos($email, 'demo.com') !== false) {
+                abort(403, "ACTION NON AUTORISEE! CECI EST UN COMPTE TEST");
+            }
+        }
+    }
+}
 
 function montant($montant, $devise = '')
 {

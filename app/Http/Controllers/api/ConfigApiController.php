@@ -9,6 +9,7 @@ class ConfigApiController extends Controller
 {
     public function update()
     {
+        demo();
         $devise_auto = request()->devise_auto;
         $success = false;
         $message = 'Erreur';

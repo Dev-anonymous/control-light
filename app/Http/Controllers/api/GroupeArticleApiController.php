@@ -33,6 +33,7 @@ class GroupeArticleApiController extends Controller
      */
     public function store(Request $request)
     {
+        demo();
         if (auth()->user()->user_role != 'admin') {
             abort(401);
         }
@@ -101,6 +102,7 @@ class GroupeArticleApiController extends Controller
      */
     public function update(GroupeArticle $groupe_article)
     {
+        demo();
         if (auth()->user()->user_role != 'admin') {
             abort(401);
         }
@@ -152,6 +154,7 @@ class GroupeArticleApiController extends Controller
      */
     public function destroy(GroupeArticle $groupe_article)
     {
+        demo();
         if (auth()->user()->user_role != 'admin') {
             abort(401);
         }

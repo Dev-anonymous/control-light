@@ -388,7 +388,16 @@
                     rep.addClass('alert alert-danger w-100 text-left mt-2').html(
                         'Erreur, veuillez reessayer');
                     rep.slideDown();
-                });
+                }).always(function(res) {
+                    if (res.status == 403 || res.status == 401) {
+                        var json = res.responseJSON;
+                        var m = json.message ?? res.statusText;
+                        rep.addClass(`alert alert-danger w-100`).html(m);
+                        rep.slideDown();
+                        btn.find('span').removeClass();
+                        btn.attr('disabled', false);
+                    }
+                });;
             })
 
 

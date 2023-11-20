@@ -295,7 +295,7 @@
                     btn.attr('disabled', false);
                     btn.find('span').removeClass();
                     res = res.responseJSON;
-                    if (res.data.msg) {
+                    if (res.data?.msg) {
                         m = res.message + '<br>';
                         try {
                             m += res.data.msg.join('<br>');
@@ -306,6 +306,15 @@
                     rep.removeClass().addClass('alert alert-danger').html(
                             "une erreur s'est produite.")
                         .slideDown()
+                }).always(function(res) {
+                    if (res.status == 403 || res.status == 401) {
+                        var json = res.responseJSON;
+                        var m = json.message ?? res.statusText;
+                        rep.addClass(`alert alert-danger w-100`).html(m);
+                        rep.slideDown();
+                        btn.find('span').removeClass();
+                        btn.attr('disabled', false);
+                    }
                 })
             });
 
@@ -333,7 +342,7 @@
                     btn.attr('disabled', false);
                     btn.find('span').removeClass();
                     res = res.responseJSON;
-                    if (res.data.msg) {
+                    if (res.data?.msg) {
                         m = res.message + '<br>';
                         try {
                             m += res.data.msg.join('<br>');
@@ -344,6 +353,15 @@
                     rep.removeClass().addClass('alert alert-danger').html(
                             "une erreur s'est produite.")
                         .slideDown()
+                }).always(function(res) {
+                    if (res.status == 403 || res.status == 401) {
+                        var json = res.responseJSON;
+                        var m = json.message ?? res.statusText;
+                        rep.addClass(`alert alert-danger w-100`).html(m);
+                        rep.slideDown();
+                        btn.find('span').removeClass();
+                        btn.attr('disabled', false);
+                    }
                 })
             });
 
@@ -371,8 +389,17 @@
                     btn.find('span').removeClass();
                     res = res.responseJSON;
                     m = res.message + '<br>';
-                    m += res.data.msg.join('<br>')
+                    m += res.data?.msg.join('<br>')
                     rep.removeClass().addClass('alert alert-danger').html(m).slideDown()
+                }).always(function(res) {
+                    if (res.status == 403 || res.status == 401) {
+                        var json = res.responseJSON;
+                        var m = json.message ?? res.statusText;
+                        rep.addClass(`alert alert-danger w-100`).html(m);
+                        rep.slideDown();
+                        btn.find('span').removeClass();
+                        btn.attr('disabled', false);
+                    }
                 });
             })
         })

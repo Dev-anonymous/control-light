@@ -123,6 +123,7 @@ class ArticlesApiController extends Controller
      */
     public function store(Request $request)
     {
+        demo();
         if (auth()->user()->user_role != 'admin') {
             abort(401);
         }
@@ -191,6 +192,7 @@ class ArticlesApiController extends Controller
      */
     public function update(Article $article)
     {
+        demo();
         if (auth()->user()->user_role != 'admin') {
             abort(401);
         }
@@ -262,6 +264,7 @@ class ArticlesApiController extends Controller
      */
     public function destroy(Article $article)
     {
+        demo();
         if (auth()->user()->user_role != 'admin') {
             abort(401);
         }
@@ -274,6 +277,7 @@ class ArticlesApiController extends Controller
 
     public function import(Request $request)
     {
+        demo();
         if (auth()->user()->user_role != 'admin') {
             abort(401);
         }
@@ -305,7 +309,7 @@ class ArticlesApiController extends Controller
             $article = $sheet_data[$i]['0'];
             $qte = $sheet_data[$i]['1'];
             $prix = $sheet_data[$i]['2'];
-            $reduction = $sheet_data[$i]['3'];
+            $reduction = (float) $sheet_data[$i]['3'];
             $devise = $sheet_data[$i]['4'];
             $exp = trim($sheet_data[$i]['5']);
 
@@ -325,7 +329,7 @@ class ArticlesApiController extends Controller
                 $ni++;
                 continue;
             }
-            if (!(is_numeric($reduction) and $reduction >= 0 and $reduction <= 90)) {
+            if (!($reduction >= 0 and $reduction <= 90)) {
                 $err[] = "Ligne " . ($i + 1) . " : reduction invalide => \"$reduction\". La valeur doit etre entre 0 et 90.";
                 $ni++;
                 continue;
@@ -391,7 +395,7 @@ class ArticlesApiController extends Controller
         }
 
         if ($ni == count($sheet_data) - 1) {
-            $message = 'Aucun article importé';
+            $message .= '<br>Aucun article importé';
         }
 
         return response()->json([

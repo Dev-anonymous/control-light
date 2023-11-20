@@ -31,6 +31,7 @@ class UniteMesureApiController extends Controller
      */
     public function store()
     {
+        demo();
         $validator = Validator::make(request()->all(), [
             'unite' => "required"
         ]);
@@ -96,6 +97,7 @@ class UniteMesureApiController extends Controller
      */
     public function update(UniteMesure $unite_mesure)
     {
+        demo();
         if ($unite_mesure->compte_id !=  compte_id()) {
             abort(403);
         }
@@ -142,6 +144,7 @@ class UniteMesureApiController extends Controller
      */
     public function destroy(UniteMesure $unite_mesure)
     {
+        demo();
         if ($unite_mesure->compte_id != compte_id()) {
             abort(403);
         }

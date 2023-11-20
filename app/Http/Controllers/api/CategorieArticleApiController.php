@@ -45,6 +45,7 @@ class CategorieArticleApiController extends Controller
      */
     public function store(Request $request)
     {
+        demo();
         if (auth()->user()->user_role != 'admin') {
             abort(401);
         }
@@ -115,6 +116,7 @@ class CategorieArticleApiController extends Controller
      */
     public function update(CategorieArticle $categorie_article)
     {
+        demo();
         if (auth()->user()->user_role != 'admin') {
             abort(401);
         }
@@ -164,6 +166,7 @@ class CategorieArticleApiController extends Controller
      */
     public function destroy(CategorieArticle $categorie_article)
     {
+        demo();
         if (auth()->user()->user_role != 'admin') {
             abort(401);
         }

@@ -63,6 +63,7 @@ class ProformaApiController extends Controller
      */
     public function store(Request $request)
     {
+        demo();
         $rules = [
             'nom_entreprise' => 'required',
             'adresse_entreprise' => 'required',
@@ -147,6 +148,7 @@ class ProformaApiController extends Controller
      */
     public function destroy(Proforma $proforma)
     {
+        demo();
         abort_if($proforma->compte_id != compte_id(), 403, "uhm");
         $proforma->delete();
         return $this->success([], "Proforma supprimée");
@@ -154,6 +156,7 @@ class ProformaApiController extends Controller
 
     public function encaissement(Proforma $proforma)
     {
+        demo();
         $art = json_decode($proforma->article);
         $alerte = [];
 

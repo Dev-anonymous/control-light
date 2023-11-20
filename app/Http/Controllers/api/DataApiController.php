@@ -149,6 +149,7 @@ class DataApiController extends Controller
 
     public function nouvelle_facture()
     {
+        demo();
         $items = @json_decode(request()->items);
         $devise = strtoupper(request()->devise);
         $client = request()->client;
@@ -253,6 +254,7 @@ class DataApiController extends Controller
 
     public function taux()
     {
+        demo();
         $validator = Validator::make(request()->all(), ['cdf_usd' => 'required|numeric|min:0.000001', 'usd_cdf' => 'required|numeric|min:0.000001']);
 
         if ($validator->fails()) {
@@ -330,6 +332,7 @@ class DataApiController extends Controller
 
     public function daccord()
     {
+        demo();
         $item = (int) request()->item;
         FactureSupprimee::where('id', $item)->where('compte_id', compte_id())->delete();
     }

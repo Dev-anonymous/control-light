@@ -250,6 +250,14 @@
 
                         $('button', tr).attr('disabled', false);
                         btn.find('i').removeClass().addClass('fa fa-save');
+                    }).always(function(res) {
+                        if (res.status == 403 || res.status == 401) {
+                            var json = res.responseJSON;
+                            var m = json.message ?? res.statusText;
+                            span.addClass(`badge badge-danger w-100`).html(m);
+                            $('button', tr).attr('disabled', false);
+                            btn.find('i').removeClass().addClass('fa fa-save');
+                        }
                     });
                 });
 
@@ -284,6 +292,14 @@
                         }
                         btn.find('i').removeClass().addClass('fa fa-trash');
                         $('button', tr).attr('disabled', false);
+                    }).always(function(res) {
+                        if (res.status == 403 || res.status == 401) {
+                            var json = res.responseJSON;
+                            var m = json.message ?? res.statusText;
+                            span.addClass(`badge badge-danger w-100`).html(m);
+                            btn.find('i').removeClass().addClass('fa fa-trash');
+                            $('button', tr).attr('disabled', false);
+                        }
                     });
                 });
 
@@ -319,6 +335,13 @@
                             btn.find('i').removeClass().addClass('fa fa-check-circle');
                         }
                         $('button', tr).attr('disabled', false);
+                    }).always(function(res) {
+                        if (res.status == 403 || res.status == 401) {
+                            var json = res.responseJSON;
+                            var m = json.message ?? res.statusText;
+                            span.addClass(`badge badge-danger w-100`).html(m);
+                            $('button', tr).attr('disabled', false);
+                        }
                     });
 
                 });
@@ -356,6 +379,15 @@
                     rep.slideDown();
                     btn.attr('disabled', false);
                     btn.find('span').removeClass();
+                }).always(function(res) {
+                    if (res.status == 403 || res.status == 401) {
+                        var json = res.responseJSON;
+                        var m = json.message ?? res.statusText;
+                        rep.addClass(`alert alert-danger w-100`).html(m);
+                        rep.slideDown();
+                        btn.find('span').removeClass();
+                        btn.attr('disabled', false);
+                    }
                 });
 
             })

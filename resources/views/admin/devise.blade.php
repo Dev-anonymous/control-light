@@ -225,6 +225,15 @@
                     }, 2000);
                     btn.attr('disabled', false);
                     btn.find('span').removeClass();
+                }).always(function(res) {
+                    if (res.status == 403 || res.status == 401) {
+                        var json = res.responseJSON;
+                        var m = json.message ?? res.statusText;
+                        rep.addClass(`alert alert-danger w-100`).html(m);
+                        rep.slideDown();
+                        btn.find('span').removeClass();
+                        btn.attr('disabled', false);
+                    }
                 });
             })
 
@@ -251,8 +260,15 @@
                     setTimeout(() => {
                         rep.slideUp();
                     }, 5000);
-                }).fail(function() {
-                    alert("Une erreur s'est produite");
+                }).always(function(res) {
+                    if (res.status == 403 || res.status == 401) {
+                        var json = res.responseJSON;
+                        var m = json.message ?? res.statusText;
+                        rep.addClass(`alert alert-danger w-100`).html(m);
+                        rep.slideDown();
+                        btn.find('span').removeClass();
+                        btn.attr('disabled', false);
+                    }
                 });
             })
         })
