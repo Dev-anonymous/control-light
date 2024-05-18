@@ -361,7 +361,7 @@ class ArticlesApiController extends Controller
                 'reduction' => $reduction,
                 'prix' => $prix,
                 'devise_id' => Devise::where('devise', $devise)->first()->id,
-                'date_expiration' => $exp,
+                'date_expiration' => empty($exp) ? null: $exp,
                 'stock' => (int) $qte,
                 'code' => code_article()
             ];
