@@ -83,6 +83,11 @@
                                             }
                                         @endphp
                                         <tr>
+                                            <td>Prix d'achat </td>
+                                            <td>{{ montant($article->prix_achat, $article->devise_achat) }} par
+                                                {{ $article->unite_mesure->unite_mesure }}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Prix de vente </td>
                                             <td>{{ montant($article->prix, $article->devise->devise) }} par
                                                 {{ $article->unite_mesure->unite_mesure }}</td>
@@ -264,6 +269,28 @@
                             <label for="">Nom de l'article</label>
                             <input class="form-control" maxlength="128" required name="article"
                                 placeholder="Nom de l'article" value="{{ $article->article }}" />
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="">Prix d'achat unitaire par
+                                        {{ $article->unite_mesure->unite_mesure }}</label>
+                                    <input class="form-control w-100" name="prix_achat" required min="0.1" type="number"
+                                        step="0.000001" placeholder="Prix d'achat unitaire"
+                                        value="{{ $article->prix_achat }}" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Devise</label>
+                                    <select class="custom-select" name="devise_achat" required>
+                                        @foreach ($devise as $e)
+                                            <option @if ($e->devise == $article->devise_achat) selected @endif
+                                                value="{{ $e->devise }}">{{ $e->devise }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">

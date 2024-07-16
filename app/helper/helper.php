@@ -226,10 +226,20 @@ function build_proforma($proforma)
     $ids = (array) @$data['articles'];
     $qtes = (array) @$data['qtes'];
 
+    $shop = Shop::where('compte_id', compte_id())->first();
+
     $t = [];
     foreach ($rules as $k => $e) {
         if ($k == 'qtes' or $k == 'articles' or $k == 'articles.*' or $k == 'qtes.*' or $k == 'devise') continue;
-        $t[] = request()->$k ?? '-';
+        if($k == 'telephone_entreprise'){
+            if(request($k)){
+                $t[] = request()->$k . "<br>RCCM : ".($shop->rccm??'-')."<br>IDNAT : ".($shop->idnat ?? '-');
+            }else{
+                $t[]='-';
+            }
+        }else{
+            $t[] = request()->$k ?? '-';
+        }
     }
 
     $art = Article::whereIn('id', $ids)->get();
@@ -331,4 +341,28 @@ function setConfig($name, $value)
     } else {
         Config::create(['compte_id' => compte_id(), 'config' => $config]);
     }
+}
+
+function marge(Article $article)
+{
+    $devto = $article->devise_achat;
+    $pa = change($article->prix_achat, $article->devise_achat, $devto);
+    $pv = change($article->prix, $article->devise->devise, $devto);
+
+    $margeval = $pv - $pa;
+    $mont = montant($margeval, $devto);
+    $margtot = montant($margeval * $article->stock, $devto);
+
+    if ($pa == $pv) {
+        $margelabel = "Aucun bénéfice ne sera généré à la vente";
+        $result = 'solde';
+    } else if ($pa < $pv) {
+        $margelabel = "Un bénéfice de $mont sera généré sur chaque vente par {$article->unite_mesure->unite_mesure}. Le bénéfice total sera de $margtot";
+        $result = 'gain';
+    } else {
+        $margelabel = "Une perte de $mont sera générée sur chaque vente par {$article->unite_mesure->unite_mesure}. La perte totale sera de $margtot";
+        $result = 'perte';
+    }
+
+    return (object) ['marge' => $mont, 'margelabel' => $margelabel, 'result' => $result];
 }

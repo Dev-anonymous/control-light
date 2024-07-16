@@ -240,6 +240,13 @@ class DataApiController extends Controller
                 $v['facture_id'] = $fac->id;
                 $v['article_id'] = $e->ida;
                 $v['compte_id'] = compte_id();
+
+                $art = Article::where('id', $e->ida)->first();
+                $convertMar = change($art->prix_achat, $art->devise_achat, $e->devise);
+                $marge = $e->prix - $convertMar;
+                $v['marge_usd'] = change($marge, $e->devise, 'USD') * $e->qte;
+                $v['marge_cdf'] = change($marge, $e->devise, 'CDF') * $e->qte;
+
                 Vente::create($v);
                 Article::where('id', $v['ida'])->decrement('stock', $v['qte']);
             }

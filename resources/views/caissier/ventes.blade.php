@@ -1106,7 +1106,7 @@
                         str2 += `<tr>
                                     <td colspan='4' style="text-align: right; font-weight:bold; margin-top:10px;" >
                                         <h4>
-                                            Total à payé : <span class='badge badge-success' totfac style='border-radius:10px'>${facture.total}</span>
+                                            Total à payer : <span class='badge badge-success' totfac style='border-radius:10px'>${facture.total}</span>
                                         </h4>
                                     </td>
                                 </tr>`

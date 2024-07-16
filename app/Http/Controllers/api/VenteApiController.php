@@ -56,9 +56,16 @@ class VenteApiController extends Controller
             });
         }
 
+        $marge = clone $ventesTot;
+        $marge = $marge->selectRaw('sum(marge_cdf) as marge_cdf, sum(marge_usd) as marge_usd')->get();
+        $marge = [
+            'cdf' => montant($marge[0]->marge_cdf, 'CDF'),
+            'usd' => montant($marge[0]->marge_usd, 'USD'),
+        ];
+
         if ($groupall) {
             $tot = $ventesTot;
-            $ventesTot = $ventesTot->groupBy('article_id')->selectRaw('*,sum(qte) as qtevendue')->get();
+            $ventesTot = $ventesTot->groupBy('article_id')->selectRaw('*,sum(qte) as qtevendue, sum(marge_cdf) marge_cdf, sum(marge_usd) marge_usd')->get();
             $tot = $tot->groupBy('devise')->selectRaw('sum(qte*prix) as total, devise')->get();
 
             $tab = [];
@@ -79,6 +86,8 @@ class VenteApiController extends Controller
                 $a->qte = "$el->qtevendue $el->unite_mesure";
                 $a->prix = montant($el->prix, $el->devise);
                 $a->total = montant($el->prix * $el->qtevendue, $el->devise);
+                $a->marge = $el->devise == 'USD' ? montant($el->marge_usd, $el->devise) : montant($el->marge_cdf, $el->devise);
+                $a->marge_result = $el->marge_cdf == 0 ? 'solde' : ($el->marge_cdf > 0 ? 'gain' : 'perte');
                 array_push($tab, $a);
             }
 
@@ -121,6 +130,8 @@ class VenteApiController extends Controller
                 $a->prix = montant($el->prix, $el->devise);
                 $a->total = montant($el->prix * $el->qte, $el->devise);
                 $a->date = $el->facture->date->format('Y-m-d H:i:s');
+                $a->marge = $el->devise == 'USD' ? montant($el->marge_usd, $el->devise) : montant($el->marge_cdf, $el->devise);
+                $a->marge_result = $el->marge_cdf == 0 ? 'solde' : ($el->marge_cdf > 0 ? 'gain' : 'perte');
                 array_push($tab, $a);
             }
 
@@ -133,7 +144,8 @@ class VenteApiController extends Controller
 
         return $this->success([
             'ventes' => $tab,
-            'total' => $tab2
+            'total' => $tab2,
+            'marge' => $marge,
         ]);
     }
 

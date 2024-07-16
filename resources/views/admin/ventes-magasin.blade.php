@@ -16,7 +16,7 @@
         <div class="main-content">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="h4 font-weight-bold">Situation générale des ventes</h3>
+                    <h3 class="h4 font-weight-bold">Inventaire général des ventes</h3>
                     <div class="card-header-action">
                         <a data-collapse="#mycard-collapse0" class="btn btn-outline-danger btn-icon"
                             style="border-radius: 10px!important" href="#">
@@ -73,7 +73,8 @@
                                                 <th>Stock actuel</th>
                                                 <th>Qté tot. vendue</th>
                                                 <th>Prix</th>
-                                                <th>Total</th>
+                                                <th>Total Vente</th>
+                                                <th>Marge bénéficiaire</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -85,30 +86,44 @@
                     </div>
                     <div class="card-footer">
                         <div class="bg-whitesmoke p-3" id="z-vente0" style="display: none">
-                            <h5>Montant total
-                                <button data-toggle="pop" title="Information"
-                                    data-content="Ceci est le montant représentatif des ventes,
-                                    il indique la somme vendue sans conversion de devise,
-                                    c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
-                                    le montant de cet artcle en CDF sera converti en USD sur la facture,
-                                    donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
-                                    la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
-                                    si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
-                                    et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
-                                    et vous verrez que le montant X USD sera égale au montant Y USD"
-                                    class="btn">
-                                    <i class="fa fa-info-circle text-danger"></i>
-                                </button>
-                            </h5>
-                            <hr>
-                            <div class="" id="d-vente0"></div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Montant total (MT)
+                                    <button data-toggle="pop" title="Information"
+                                        data-content="Ceci est le montant représentatif des ventes,
+                                        il indique la somme vendue sans conversion de devise,
+                                        c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
+                                        le montant de cet artcle en CDF sera converti en USD sur la facture,
+                                        donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
+                                        la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
+                                        si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
+                                        et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
+                                        et vous verrez que le montant X USD sera égale au montant Y USD"
+                                        class="btn">
+                                        <i class="fa fa-info-circle text-danger"></i>
+                                    </button>
+                                    </h5>
+                                    <div class="" id="d-vente0"></div>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <h5>Marge bénéficiaire
+                                        <button data-toggle="pop" title="Information"
+                                            data-content="Ce montant est inclus dans le montant total(MT)"
+                                            class="btn">
+                                            <i class="fa fa-info-circle text-danger"></i>
+                                        </button>
+                                    </h5>
+                                    <div class="" id="d-marge0"></div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="h4 font-weight-bold">Ventes détaillées du magasin</h3>
+                    <h3 class="h4 font-weight-bold">Inventaire détaillé des ventes</h3>
                     <div class="card-header-action">
                         <a data-collapse="#mycard-collapse1" class="btn btn-outline-danger btn-icon"
                             style="border-radius: 10px!important" href="#">
@@ -165,7 +180,8 @@
                                                 <th>Code</th>
                                                 <th>Quantité vendue</th>
                                                 <th>Prix</th>
-                                                <th>Total</th>
+                                                <th>Total Vente</th>
+                                                <th>Marge bénéficiaire</th>
                                                 <th>Caissier</th>
                                                 <th>Date vente</th>
                                                 <th></th>
@@ -179,23 +195,37 @@
                     </div>
                     <div class="card-footer">
                         <div class="bg-whitesmoke p-3" id="z-vente" style="display: none">
-                            <h5>Montant total (A)
-                                <button data-toggle="pop" title="Information"
-                                    data-content="Ceci est le montant représentatif des ventes,
-                                    il indique la somme vendue sans conversion de devise,
-                                    c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
-                                    le montant de cet artcle en CDF sera converti en USD sur la facture,
-                                    donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
-                                    la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
-                                    si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
-                                    et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
-                                    et vous verrez que le montant X USD sera égale au montant Y USD"
-                                    class="btn">
-                                    <i class="fa fa-info-circle text-danger"></i>
-                                </button>
-                            </h5>
-                            <hr>
-                            <div class="" id="d-vente"></div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Montant total (A)
+                                    <button data-toggle="pop" title="Information"
+                                        data-content="Ceci est le montant représentatif des ventes,
+                                        il indique la somme vendue sans conversion de devise,
+                                        c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
+                                        le montant de cet artcle en CDF sera converti en USD sur la facture,
+                                        donc cet article sera listé ici avec sa vraie devise de CDF mais dans le tableau des factures en bas,
+                                        la facture aura le montant correspondant en USD. A la fin de journée après enregistrement de vos ventes,
+                                        si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
+                                        et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
+                                        et vous verrez que le montant X USD sera égale au montant Y USD"
+                                        class="btn">
+                                        <i class="fa fa-info-circle text-danger"></i>
+                                    </button>
+                                </h5>
+                                <div class="" id="d-vente"></div>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <h5>Marge bénéficiaire
+                                            <button data-toggle="pop" title="Information"
+                                                data-content="Ce montant est inclus dans le montant total(MT)"
+                                                class="btn">
+                                                <i class="fa fa-info-circle text-danger"></i>
+                                            </button>
+                                        </h5>
+                                        <div class="" id="d-marge1"></div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -461,8 +491,10 @@
                     var data = res.data;
                     var ventes = data.ventes;
                     var total = data.total;
+                    var marge = data.marge;
                     var str = '';
                     var str2 = '';
+                    var str3 = '';
                     $(ventes).each(function(i, e) {
                         if (e.id) {
                             var buto =
@@ -471,13 +503,22 @@
                             var buto =
                                 `<span class='text-danger' ><i class='fa fa-ban'></i> Article supprimé</span>`;
                         }
+                        if(e.marge_result=='solde'){
+                            mcl='warning'                            
+                        }else if(e.marge_result=='perte'){
+                            mcl='danger'
+                        }else{
+                            mcl='success'
+                        }
+                        
                         str += `<tr>
                                     <td>${i+1}</td>
                                     <td title="${e.categorie_article}(${e.groupe})">${e.article}</td>
                                     <td>${e.code}</td>
                                     <td>${e.qte}</td>
                                     <td>${e.prix}</td>
-                                    <td>${e.total}</td>
+                                    <td><span class="badge badge-info font-weight-bold">${e.total}</span></td>
+                                    <td><span class="badge badge-${mcl}">${e.marge}</span></td>
                                     <td>${e.caissier}</td>
                                     <td>${e.date}</td>
                                     <td class='d-flex justify-content-center'>${buto}</td>
@@ -486,14 +527,18 @@
                     $(total).each(function(i, e) {
                         str2 += `<h3 class="font-weight-bold">${e.montant }</h4>`;
                     });
+                    $(marge).each(function(i, e) {
+                        str3 += `<h3 class="font-weight-bold">${e.cdf } <br>soit ${e.usd}</h4>`;
+                    });
                     $('#d-vente').html(str2);
+                    $('#d-marge1').html(str3);
                     if (ventes.length > 0) {
                         $('#z-vente').slideDown();
                     } else {
                         $('#z-vente').slideUp();
                     }
                     table.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
                     );
                     table.DataTable().destroy();
                     if (str.length > 0) {
@@ -525,8 +570,10 @@
                     var data = res.data;
                     var ventes = data.ventes;
                     var total = data.total;
+                    var marge = data.marge;
                     var str = '';
                     var str2 = '';
+                    var str3 = '';
                     $(ventes).each(function(i, e) {
                         if (e.id) {
                             var buto =
@@ -535,6 +582,14 @@
                             var buto =
                                 `<span class='text-danger' ><i class='fa fa-ban'></i> Article supprimé</span>`;
                         }
+
+                        if(e.marge_result=='solde'){
+                            mcl='warning'                            
+                        }else if(e.marge_result=='perte'){
+                            mcl='danger'
+                        }else{
+                            mcl='success'
+                        }
                         str += `<tr>
                                     <td>${i+1}</td>
                                     <td title="${e.categorie_article}(${e.groupe})">${e.article}</td>
@@ -542,21 +597,26 @@
                                     <td>${e.stock}</td>
                                     <td>${e.qte}</td>
                                     <td>${e.prix}</td>
-                                    <td>${e.total}</td>
+                                    <td><span class="badge badge-info font-weight-bold">${e.total}</span></td>
+                                    <td><span class="badge badge-${mcl}">${e.marge}</span></td>
                                     <td class='d-flex justify-content-center'>${buto}</td>
                                 </tr>`;
                     });
                     $(total).each(function(i, e) {
                         str2 += `<h3 class="font-weight-bold">${e.montant }</h4>`;
                     });
+                    $(marge).each(function(i, e) {
+                        str3 += `<h3 class="font-weight-bold">${e.cdf } <br>soit ${e.usd}</h4>`;
+                    });
                     $('#d-vente0').html(str2);
+                    $('#d-marge0').html(str3);
                     if (ventes.length > 0) {
                         $('#z-vente0').slideDown();
                     } else {
                         $('#z-vente0').slideUp();
                     }
                     table0.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
                     );
                     table0.DataTable().destroy();
                     if (str.length > 0) {
@@ -681,8 +741,13 @@
                             <div style="margin-bottom:10px;">
                                 <div style="text-align: center; margin-bottom:10px;">
                                     <span>{{ @$shop->shop }}</span><br>
-                                    <span>{{ @$shop->adresse }}</span><br>
-                                    <span>{{ @$shop->contact }}</span>
+                                    <span>Addresse: {{ @$shop->adresse }}</span><br>
+                                    <span>Tel : {{ @$shop->contact }}</span><br>
+                                    <span>RCCM : {{ @$shop->rccm }}</span><br>
+                                    <span>IDNAT : {{ @$shop->idnat }}</span><br>
+                                </div>
+                                <div style="text-align: center; margin-bottom:10px;">
+                                    <span style="font-size:20px"># COPIE FACTURE #</span><br>
                                 </div>
                                 <div>
                                     <span>N° facture : ${facture.numero_facture}</span>

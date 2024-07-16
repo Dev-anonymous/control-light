@@ -71,6 +71,9 @@
                             <option value="stock-20">Articles avec un stock < 20 </option>
                             <option value="stock-50">Articles avec un stock < 50 </option>
                             <option value="stock-0">Articles avec un stock de 0 </option>
+                            <option value="solde">Articles avec une marge bénéficiaire de 0 </option>
+                            <option value="gain">Articles avec une marge bénéficiaire > 0 </option>
+                            <option value="perte">Articles avec une marge bénéficiaire < 0 </option>
                         </select>
                     </div>
                 </div>
@@ -85,8 +88,10 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Article</th>
+                                            <th>Prix d'achat/Unité de mesure</th>
                                             <th>Prix de vente/Unité de mesure</th>
                                             <th>Réduction</th>
+                                            <th>Marge bénéficiaire</th>
                                             <th>Qté Stock</th>
                                             <th>Code article</th>
                                             <th>Catégorie</th>
@@ -175,6 +180,25 @@
                                     placeholder="Quantité d'approvisionnement" aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                     <span class="input-group-text" id="basic-addon2"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="">Prix d'achat</label>
+                                    <input class="form-control w-100" name="prix_achat" required min="0.1"
+                                        type="number" step="0.000001" placeholder="Prix d'achat" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Devise</label>
+                                    <select class="custom-select" name="devise_achat" required>
+                                        @foreach ($devise as $e)
+                                            <option value="{{ $e->devise }}">{{ $e->devise }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -484,11 +508,21 @@
                                 .prix + ' lors de la vente';
                         }
 
+                        if(e.marge.result=='solde'){
+                            mcl='warning'                            
+                        }else if(e.marge.result=='perte'){
+                            mcl='danger'
+                        }else{
+                            mcl='success'
+                        }
+
                         str += `<tr>
                                     <td>${i+1}</td>
                                     <td title="${e.article}">${art}</td>
-                                    <td title="Prix de vente : ${e.prix} Par ${e.unite_mesure}">${e.prix}</td>
+                                    <td class='text-nowrap' title="Prix d'achat : ${e.prix_achat} Par ${e.unite_mesure}">${e.prix_achat}</td>
+                                    <td class='text-nowrap' title="Prix de vente : ${e.prix} Par ${e.unite_mesure}">${e.prix}</td>
                                     <td class="text-center" title="${redt}">${red}</td>
+                                    <td class='text-nowrap' title="${e.marge.margelabel}"> <span class="badge badge-${mcl}">${e.marge.marge}</span></td>
                                     <td class="${stCl}" title="${stTi}">${e.stock} ${e.unite_mesure}</td>
                                     <td>${e.code}</td>
                                     <td>${e.categorie}</td>
@@ -502,7 +536,7 @@
                     groupchange.attr('disabled', false);
                     filtre2.attr('disabled', false);
                     table.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
                     );
                     table.DataTable().destroy();
                     if (str.length > 0) {

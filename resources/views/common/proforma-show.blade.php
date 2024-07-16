@@ -26,7 +26,7 @@
                             <div class="col-md-12">
                                 <div class="table-responsive">
                                     <div class="">
-                                        <iframe src="{{ route('proforma.preview_html', $proforma->id) }}" frameborder="0"
+                                        <iframe fpro src="{{ route('proforma.preview_html', $proforma->id) }}" frameborder="0"
                                             width="100%" height="900vh"></iframe>
                                     </div>
                                 </div>
@@ -38,7 +38,11 @@
                             <i class="fa fa-trash"></i>
                             Supprimer la facture
                         </button>
-                        <button class="btn btn-dark bg-black" data-toggle="modal" data-target="#mdlenc">
+                        <button class="btn btn-info" bprint>
+                            <i class="fa fa-print"></i>
+                            Imprimer la facture
+                        </button>
+                        <button class="btn btn-dark bg-black" @if ($proforma->date_encaissement != null) disabled  @endif data-toggle="modal" data-target="#mdlenc">
                             <i class="fa fa-save"></i>
                             Encaisser la facture
                         </button>
@@ -117,11 +121,15 @@
     <script src="{{ asset('assets/js/daterangepicker/daterangepicker.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/js/daterangepicker/daterangepicker.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/print.css') }}" media="print">
-    <script src="{{ asset('assets/js/printThis.js') }}"></script>
+    <!-- <link rel="stylesheet" href="{{ asset('assets/css/print.css') }}" media="print"> -->
+    <!-- <script src="{{ asset('assets/js/printThis.js') }}"></script> -->
 
     <script>
         $(function() {
+
+            $('[bprint]').click(function(){
+                $("[fpro]").get(0).contentWindow.print();
+            })
 
             $('.bdel').click(function() {
                 event.preventDefault();

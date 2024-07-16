@@ -72,4 +72,13 @@ class CommonController extends Controller
     {
         return view('common.proforma-show', compact('proforma'));
     }
+
+    function proforma_default()
+    {
+        $p =  proforma_dir();
+        if (!count($p)) {
+            return redirect(route('proforma'));
+        }
+        return redirect(route('proforma.facture', 1));
+    }
 }

@@ -1,6 +1,6 @@
 @if (strpos(request()->url(), 'offline') === false)
     <div class="d-flex align-items-center justify-content-center" offline-div>
-        <h4 class="text-white font-weight-bold" offline style="display: none !important;">Vous n'êtes pas connecté
+        <h4 class="text-white font-weight-bold" offline style="display: none !important;">Vous n'êtes pas connecté à internet
         </h4>
     </div>
     <div class="w-100 text-center p-2 fixed-bottom" install-banner style="display: none !important;">

@@ -35,6 +35,15 @@
                         </form>
                     </div>
                 </div>
+                <div class="card-hearder d-flex justify-content-end">
+                    <div class="form-group m-2 d-block">
+                        <button class="btn btn-danger" onclick="javascript:location.assign('{{route('proforma_default')}}')"
+                            style="border-radius: 5px!important;">
+                            <i class="fa fa-plus-circle"></i>
+                            Nouvelle facture PF
+                        </button>
+                    </div>
+                </div>
                 <div class="collapse show" id="mycard-collapse0">
                     <div class="card-body">
                         <div class="row">

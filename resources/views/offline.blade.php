@@ -24,7 +24,7 @@
             <div class="col-12 text-center" style="margin-top: 25%">
                 <h3 class="text-muted">Connectez-vous à Internet</h3>
                 <p class="text-center text-muted mt-3 font-weight-bold">
-                    Vous n'êtes pas connecté. Vérifiez votre connexion.
+                    Vous n'êtes pas connecté à internet. Vérifiez votre connexion.
                     ! </p>
 
                 <section class="error-container">

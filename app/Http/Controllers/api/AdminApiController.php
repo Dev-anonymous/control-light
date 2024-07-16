@@ -66,6 +66,8 @@ class AdminApiController extends Controller
             'shop' => 'required|string|max:128',
             'adresse' => 'required|string|max:128',
             'contact' => 'required|string|max:128',
+            'rccm' => 'sometimes|string|max:128',
+            'idnat' => 'sometimes|string|max:128',
         ]);
         if ($validator->fails()) {
             return $this->error('Erreur de validation', ['msg' => $validator->errors()->all()], 400);

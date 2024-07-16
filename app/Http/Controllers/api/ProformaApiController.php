@@ -157,6 +157,9 @@ class ProformaApiController extends Controller
     public function encaissement(Proforma $proforma)
     {
         demo();
+        if ($proforma->date_encaissement != null) {
+            return $this->error("Cette facture proforma est déjà encaissée.");
+        }
         $art = json_decode($proforma->article);
         $alerte = [];
 

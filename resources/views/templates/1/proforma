@@ -150,9 +150,9 @@
                             <tr>
                                 <td>
                                     <b>__ENTREPRISE_NOM__</b> <br>
-                                    __ENTREPRISE_ADRESSE__<br>
-                                    __ENTREPRISE_EMAIL__<br>
-                                    __ENTREPRISE_TELEPHONE__<br>
+                                    Addresse: __ENTREPRISE_ADRESSE__<br>
+                                    Email : __ENTREPRISE_EMAIL__<br>
+                                    Tel : __ENTREPRISE_TELEPHONE__<br>
                                 </td>
                             </tr>
                         </table>

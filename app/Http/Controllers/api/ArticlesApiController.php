@@ -80,6 +80,8 @@ class ArticlesApiController extends Controller
             $articles = $articles->where('stock', '=', 0);
         }
 
+        $filtermarge = in_array($filtre2, ['solde', 'gain', 'perte']);
+
         $tab = [];
         foreach ($articles->get() as $e) {
             $a = new stdClass();
@@ -88,11 +90,14 @@ class ArticlesApiController extends Controller
             $a->categorie = $e->categorie_article->categorie;
             $a->groupe = $e->categorie_article->groupe_article->groupe;
             $a->prix = montant($e->prix, $e->devise->devise);
+            $a->prix_achat = montant($e->prix_achat, $e->devise_achat);
             $a->reduction = $red = (float) $e->reduction;
             $a->prix_min = $red > 0 ? montant(reduction($e->prix,  $red), $e->devise->devise) : $a->prix;
             $a->unite_mesure = $e->unite_mesure->unite_mesure;
             $a->stock = $e->stock;
             $a->code = $e->code;
+
+            $a->marge = marge($e);
 
             if (empty($e->date_expiration)) {
                 $a->date_expiration =  '-';
@@ -110,7 +115,13 @@ class ArticlesApiController extends Controller
                 $days = $days >= 0 ? ++$days : $days;
                 $a->jour_restant = $days;
             }
-            array_push($tab, $a);
+            if ($filtermarge) {
+                if ($filtre2 == $a->marge->result) {
+                    array_push($tab, $a);
+                }
+            } else {
+                array_push($tab, $a);
+            }
         }
         return $this->success($tab);
     }
@@ -134,7 +145,9 @@ class ArticlesApiController extends Controller
                 'categorie_article_id' => 'required|exists:categorie_article,id',
                 'unite_mesure_id' => 'required|exists:unite_mesure,id',
                 'devise_id' => 'required|exists:devise,id',
-                'prix' => 'required|numeric|min:1',
+                'prix' => 'required|numeric|min:0.1',
+                'prix_achat' => 'required|numeric|min:0.1',
+                'devise_achat' => 'required|string|in:CDF,USD',
                 'stock' => 'required|numeric|integer|min:1',
                 'reduction' => 'required|numeric|min:0|max:90',
             ]
@@ -243,7 +256,9 @@ class ArticlesApiController extends Controller
                 'article' => 'required|string|max:128',
                 'categorie_article_id' => 'required|exists:categorie_article,id',
                 'devise_id' => 'required|exists:devise,id',
-                'prix' => 'required|numeric|min:1',
+                'prix' => 'required|numeric|min:0.1',
+                'prix_achat' => 'required|numeric|min:0.1',
+                'devise_achat' => 'required|string|in:CDF,USD',
                 'reduction' => 'required|numeric|min:0|max:90',
                 'date_expiration' => 'sometimes|after:' . date('Y-m-d'),
             ]);
@@ -361,7 +376,7 @@ class ArticlesApiController extends Controller
                 'reduction' => $reduction,
                 'prix' => $prix,
                 'devise_id' => Devise::where('devise', $devise)->first()->id,
-                'date_expiration' => empty($exp) ? null: $exp,
+                'date_expiration' => empty($exp) ? null : $exp,
                 'stock' => (int) $qte,
                 'code' => code_article()
             ];

@@ -111,7 +111,7 @@
                         <div class="col-md-12">
                             <div class="card ">
                                 <div class="card-header d-flex justify-content-between">
-                                    <h3 class="h4 font-weight-bold">Mon magasin</h3>
+                                    <h3 class="h4 font-weight-bold">Mon Entreprise</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -123,8 +123,16 @@
                                                 <table class="table table-striped table-hover" style="width:100%;">
                                                     <tbody>
                                                         <tr>
-                                                            <th>Nom du magasin</th>
+                                                            <th>Nom de l'entreprise</th>
                                                             <th>{{ @$shop->shop }}</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>RCCM</th>
+                                                            <th>{{ @$shop->rccm }}</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>IDNAT</th>
+                                                            <th>{{ @$shop->idnat }}</th>
                                                         </tr>
                                                         <tr>
                                                             <th>Adresse</th>
@@ -161,6 +169,24 @@
                                                         <input class="form-control" type="text" name="shop"
                                                             value="{{ @$shop->shop }}" placeholder="Nom du magasin"
                                                             required>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>RCCM</label>
+                                                                <input class="form-control" type="text" name="rccm"
+                                                                    placeholder="RCCM" value="{{ @$shop->rccm }}"
+                                                                    >
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>IDNAT</label>
+                                                                <input class="form-control" placeholder="IDNAT"
+                                                                    name="idnat" value="{{ @$shop->idnat }}"
+                                                                    >
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-sm-6">

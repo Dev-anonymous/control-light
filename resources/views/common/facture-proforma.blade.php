@@ -17,7 +17,7 @@
                     <h3 class="h4 font-weight-bold">Nouvelle factures proforma : <b>Modèle #{{ $modele->id }}</b></h4>
                 </div>
             </div>
-            <form action="#" id="form1">
+            <form action="#" id="form1" class="was-validated">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -26,22 +26,22 @@
                                 <div class="form-group mb-1">
                                     <label for="">Entreprise</label>
                                     <input name="nom_entreprise" type="text" placeholder="Entreprise"
-                                        value="{{ $shop->shop }}" class="form-control form-control-sm">
+                                        value="{{ $shop->shop }}" class="form-control form-control-sm" required>
                                 </div>
                                 <div class="form-group mb-1">
                                     <label for="">Adresse</label>
                                     <input name="adresse_entreprise" type="text" placeholder="Adresse"
-                                        value="{{ $shop->adresse }}" class="form-control form-control-sm">
+                                        value="{{ $shop->adresse }}" class="form-control form-control-sm" required>
                                 </div>
                                 <div class="form-group mb-1">
                                     <label for="">Email</label>
                                     <input name="email_entreprise" type="email" placeholder="Email"
-                                        value="{{ $email }}" class="form-control form-control-sm">
+                                        value="{{ $email }}" class="form-control form-control-sm" required>
                                 </div>
                                 <div class="form-group mb-1">
                                     <label for="">Tel.</label>
                                     <input name="telephone_entreprise" type="tel" placeholder="Telephone"
-                                        value="{{ $shop->contact }}" class="form-control form-control-sm">
+                                        value="{{ $shop->contact }}" class="form-control form-control-sm" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -49,12 +49,12 @@
                                 <div class="form-group mb-1">
                                     <label for="">Client</label>
                                     <input name="nom_client" type="text" placeholder="Client"
-                                        class="form-control form-control-sm">
+                                        class="form-control form-control-sm" required>
                                 </div>
                                 <div class="form-group mb-1">
                                     <label for="">Adresse</label>
                                     <input name="adresse_client" type="text" placeholder="Adresse"
-                                        class="form-control form-control-sm">
+                                        class="form-control form-control-sm" required>
                                 </div>
                                 <div class="form-group mb-1">
                                     <label for="">Email</label>
@@ -64,7 +64,7 @@
                                 <div class="form-group mb-1">
                                     <label for="">Tel.</label>
                                     <input name="telephone_client" type="tel" placeholder="Telephone"
-                                        class="form-control form-control-sm">
+                                        class="form-control form-control-sm" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -350,6 +350,34 @@
 
             $('.bsave').click(function() {
                 event.preventDefault();
+
+                var stop = false
+                $(':input[required]', $('#form1')).each(function(i,e){
+                    if( $(this).val() == '' ){
+                        stop = true;
+                        return;
+                    }
+                });
+
+                if(stop){
+                    $('.modal.show').modal('hide');
+                    alert("Veuillez completer tous champs en rouge dans le formulaire");
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#form1").offset().top
+                    }, 2000);
+                    return;
+                }
+
+                stop = $(':input', $('#form2')).length ==0;
+
+                if(stop){
+                    $('.modal.show').modal('hide');
+                    alert("Veuillez ajouter au moins un article");
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#form2").closest('.card').offset().top - 100
+                    }, 2000);
+                    return;
+                }
 
                 var btn = $(this).attr('disabled', true);
                 btn.find('span').removeClass().addClass('spinner-border spinner-border-sm');
