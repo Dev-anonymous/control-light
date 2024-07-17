@@ -26,11 +26,20 @@
             </li>
             <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown">
-                    <i class="fas fa-shopping-basket"></i><span>Vente</span>
+                    <i class="fas fa-shopping-basket"></i><span>Gestion Production</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('ventes-magasin.admin') }}">Afficher les ventes</a></li>
+                    <li><a class="nav-link" href="{{ route('ventes-magasin.admin') }}">Inventaire</a></li>
                     <li><a class="nav-link" href="{{ route('ventes.admin') }}">Nouvelle vente</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="menu-toggle nav-link has-dropdown">
+                    <i class="fas fa-shopping-basket"></i><span>Gestion Caisse</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="{{ route('bonentree.admin') }}">Bons d'entréé</a></li>
+                    <li><a class="nav-link" href="{{ route('bonsortie.admin') }}">Bons de sortie</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -53,10 +62,10 @@
             </li>
             <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown">
-                    <i class="fa fa-users"></i><span>Caissiers</span>
+                    <i class="fa fa-users"></i><span>Utilisateurs</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('cassier.admin') }}">Afficher les caissiers</a></li>
+                    <li><a class="nav-link" href="{{ route('cassier.admin') }}">Afficher les utilisateurs</a></li>
                 </ul>
             </li>
             <li class="dropdown">

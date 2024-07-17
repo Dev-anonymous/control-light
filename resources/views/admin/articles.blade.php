@@ -509,7 +509,7 @@
                         }
 
                         if(e.marge.result=='solde'){
-                            mcl='warning'                            
+                            mcl='warning'
                         }else if(e.marge.result=='perte'){
                             mcl='danger'
                         }else{
@@ -544,7 +544,7 @@
                         table.DataTable(opt);
                     } else {
                         str =
-                            '<tr><td colspan="9" class="text-danger font-weight-bolder text-center">Aucun article</td></tr>';
+                            '<tr><td colspan="11" class="text-danger font-weight-bolder text-center">Aucun article</td></tr>';
                         table.find('tbody').html(str);
                     }
 

@@ -21,7 +21,7 @@ class CaissierApiController extends Controller
      */
     public function index()
     {
-        $user = User::where(['user_role' => 'caissier', 'compte_id' => compte_id()])->orderBy('id', 'desc')->get(['id', 'name', 'email', 'phone', 'derniere_activite', 'actif']);
+        $user = User::whereIn('user_role', ['caissier', 'gerant'])->where(['compte_id' => compte_id()])->orderBy('id', 'desc')->get(['id', 'name', 'user_role', 'email', 'phone', 'derniere_activite', 'actif']);
         $tab = [];
         foreach ($user as $e) {
             $a = (object) $e->toArray();
@@ -49,6 +49,7 @@ class CaissierApiController extends Controller
                 'email' => 'sometimes|email|max:255|unique:users',
                 'phone' => 'sometimes|min:10|numeric|regex:/(\+)[0-9]{10}/|unique:users,phone',
                 'password' => 'required|',
+                'user_role' => 'required|in:gerant,caissier',
             ]
         );
 
@@ -64,7 +65,6 @@ class CaissierApiController extends Controller
 
         $data = $validator->validate();
         $data['password'] = Hash::make($data['password']);
-        $data['user_role'] = 'caissier';
         $data['compte_id'] = compte_id();
         $user = User::create($data);
 
@@ -127,6 +127,7 @@ class CaissierApiController extends Controller
                     'name' => 'required|string|max:45',
                     'email' => 'sometimes|email|max:255|unique:users,email,' . $caissier->id,
                     'phone' => 'sometimes|min:10|numeric|regex:/(\+)[0-9]{10}/|unique:users,phone,' . $caissier->id,
+                    'user_role' => 'required|in:gerant,caissier',
                 ]
             );
 

@@ -60,11 +60,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/admin/ventes/ventes-magasin', [AdminController::class, 'ventesMagasin'])->name('ventes-magasin.admin');
             Route::get('/admin/ventes/ventes', [AdminController::class, 'ventes'])->name('ventes.admin');
 
+            Route::get('/admin/bon-dentree', [AdminController::class, 'bonentree'])->name('bonentree.admin');
+            Route::get('/admin/bon-desortie', [AdminController::class, 'bonsortie'])->name('bonsortie.admin');
+
             Route::get('/admin/articles/code-barre', [AdminController::class, 'code_barre'])->name('code-barre.admin');
             Route::get('/admin/articles/articles', [AdminController::class, 'articles'])->name('articles.admin');
             Route::get('/admin/articles/details/{article}', [AdminController::class, 'article_detail'])->name('detail-article.admin');
 
-            Route::get('/admin/cassier', [AdminController::class, 'cassier'])->name('cassier.admin');
+            Route::get('/admin/utilisateurs', [AdminController::class, 'cassier'])->name('cassier.admin');
 
             Route::get('/admin/params/groupe-articles', [AdminController::class, 'groupe_article'])->name('groupe-article.admin');
             Route::get('/admin/params/categorie-articles', [AdminController::class, 'categorie_article'])->name('categore-article.admin');

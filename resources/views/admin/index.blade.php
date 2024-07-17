@@ -60,29 +60,6 @@
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <a no-under href="{{ route('cassier.admin') }}">
-                            <div class="card ombre" style="min-height: 200px" data-toggle="tooltip" title="Comptes caissiers">
-                                <div class="card-statistic-4">
-                                    <div class="align-items-center justify-content-between">
-                                        <div class="row ">
-                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 pr-0 pt-3">
-                                                <div class="card-content">
-                                                    <h5 class="font-30 text-muted">Caissiers</h5>
-                                                    <h2 class="mb-3 font-30 text-muted">{{ $tc }}</h2>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pl-0">
-                                                <div class="h-100 d-flex justify-content-center align-items-center">
-                                                    <i class="fas fa-users text-muted" style="font-size: 4em;"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <a no-under href="{{ route('articles.admin') }}">
                             <div class="card ombre" style="min-height: 200px" data-toggle="tooltip" title="Total articles dans votre magasin">
                                 <div class="card-statistic-4">
@@ -121,6 +98,29 @@
                                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pl-0">
                                                 <div class="h-100 d-flex justify-content-center align-items-center">
                                                     <i class="fa fa-file text-muted" style="font-size: 4em;"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <a no-under href="{{ route('cassier.admin') }}">
+                            <div class="card ombre" style="min-height: 200px" data-toggle="tooltip" title="Utilisateurs">
+                                <div class="card-statistic-4">
+                                    <div class="align-items-center justify-content-between">
+                                        <div class="row ">
+                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 pr-0 pt-3">
+                                                <div class="card-content">
+                                                    <h5 class="font-30 text-muted">Utilisateurs</h5>
+                                                    <h2 class="mb-3 font-30 text-muted">{{ $tc }}</h2>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pl-0">
+                                                <div class="h-100 d-flex justify-content-center align-items-center">
+                                                    <i class="fas fa-users text-muted" style="font-size: 4em;"></i>
                                                 </div>
                                             </div>
                                         </div>

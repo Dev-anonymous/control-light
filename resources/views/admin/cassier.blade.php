@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'Cassiers')
+@section('title', 'Utilisateurs')
 
 @section('body')
     <div class="loader"></div>
@@ -14,12 +14,12 @@
         <div class="main-content">
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="h4 font-weight-bold">Cassiers</h3>
+                    <h3 class="h4 font-weight-bold">Utilisateurs</h3>
                     <div class="card-header-action">
                         <div class="form-group m-2 d-block">
                             <button class="btn btn-danger" data-toggle='modal' data-target='#mdl-add'
                                 style="border-radius: 5px!important;">
-                                Ajouter un cassier
+                                Ajouter un compte
                             </button>
                         </div>
                     </div>
@@ -28,14 +28,16 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table id="t-unite" class="table table-condensed table-bordered table-hover font-weight-bold"
+                                <table id="t-unite"
+                                    class="table table-condensed table-bordered table-hover font-weight-bold"
                                     style="width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Nom du caissier</th>
+                                            <th>Nom</th>
                                             <th>Email</th>
                                             <th>Téléphone</th>
+                                            <th>Role</th>
                                             <th>Date dernière activité</th>
                                             <th>Etat</th>
                                             <th>#</th>
@@ -83,7 +85,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content ">
                 <div class="modal-header bg-danger text-white font-weight-bold d-flex justify-content-between">
-                    <b>Ajouter un caissier</b>
+                    <b>Ajouter un compte</b>
                     <span style="cursor: pointer" data-dismiss="modal">
                         <i class="fa fa-times-circle p-2 "></i>
                     </span>
@@ -91,8 +93,8 @@
                 <form id="f-add" class="was-validated">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="">Nom du caisssier</label>
-                            <input class="form-control" required name="name" placeholder="Nom du caissier" />
+                            <label for="">Nom</label>
+                            <input class="form-control" required name="name" placeholder="Nom" />
                         </div>
                         <div class="form-group">
                             <label for="">Email</label>
@@ -101,6 +103,13 @@
                         <div class="form-group">
                             <label for="">Téléphone</label>
                             <input class="form-control phone" id="phone" placeholder="Telephone" />
+                        </div>
+                        <div class="form-group">
+                            <label for="">Role</label>
+                            <select name="user_role" id="" class="form-control">
+                                <option value="caissier">Caissier</option>
+                                <option value="gerant">Gérant</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="">Mot de passe</label>
@@ -134,8 +143,8 @@
                     <input type="hidden" name="id">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="">Nom du caisssier</label>
-                            <input class="form-control" required name="name" placeholder="Nom du caissier" />
+                            <label for="">Nom</label>
+                            <input class="form-control" required name="name" placeholder="Nom" />
                         </div>
                         <div class="form-group">
                             <label for="">Email</label>
@@ -144,6 +153,13 @@
                         <div class="form-group">
                             <label for="">Téléphone</label>
                             <input class="form-control phone" id="phone2" placeholder="Telephone" />
+                        </div>
+                        <div class="form-group">
+                            <label for="">Role</label>
+                            <select name="user_role" id="" class="form-control">
+                                <option value="caissier">Caissier</option>
+                                <option value="gerant">Gérant</option>
+                            </select>
                         </div>
                         <div class="form-group" style="display: none" id="rep"></div>
                     </div>
@@ -182,7 +198,6 @@
         .iti--separate-dial-code {
             width: 100% !important
         }
-
     </style>
     <script>
         $(function() {
@@ -229,20 +244,21 @@
                                     '<i class="font-weight-bold text-muted"><span class="fa fa-check-circle text-success"></span> Actif</i>';
                                 var v = 0;
                                 var btn =
-                                    `<button data-toggle='tooltip' title='Bloqué le compte du caissier ${e.name}' class='btn text-muted mr-3 btn-default' value='${e.id}' to='${v}'><i class='fa fa-ban text-danger'></i></button>`;
+                                    `<button data-toggle='tooltip' title='Bloquer le compte ${e.name}' class='btn text-muted mr-3 btn-default' value='${e.id}' to='${v}'><i class='fa fa-ban text-danger'></i></button>`;
                             } else {
                                 var def =
                                     '<i class="font-weight-bold text-danger"><span class="fa fa-ban text-danger"></span> Bloqué</i>';
                                 var v = 1;
                                 var btn =
-                                    `<button data-toggle='tooltip' title='Débloqué le compte du caissier ${e.name}' class='btn text-muted mr-3 btn-default' value='${e.id}' to='${v}'><i class='fa fa-ban text-success'></i></button>`;
+                                    `<button data-toggle='tooltip' title='Débloquer le compte ${e.name}' class='btn text-muted mr-3 btn-default' value='${e.id}' to='${v}'><i class='fa fa-ban text-success'></i></button>`;
                             }
 
                             var json = {
                                 id: e.id,
                                 name: e.name,
                                 phone: e.phone ?? '',
-                                email: e.email ?? ''
+                                email: e.email ?? '',
+                                user_role: e.user_role ?? '',
                             };
                             json = JSON.stringify(json);
 
@@ -254,6 +270,7 @@
                                         </td>
                                         <td>${e.email ?? '-'}</td>
                                         <td>${e.phone??'-'}</td>
+                                        <td>${e.user_role??'-'}</td>
                                         <td>${e.derniere_activite??'-'}</td>
                                         <td>${def}</td>
                                         <td class='d-flex justify-content-center'>
@@ -271,7 +288,8 @@
                                     </tr>`;
                         });
                         table.find('tbody').html(
-                            '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
+                            '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+                            );
                         table.DataTable().destroy();
                         table.find('tbody').html(str);
                         $('[data-toggle=tooltip]').off('tooltip').tooltip();
@@ -284,7 +302,7 @@
                         table.DataTable(opt);
                     } else {
                         str =
-                            '<tr><td colspan="7" class="text-danger font-weight-bolder text-center">Aucun compte caissier</td></tr>';
+                            '<tr><td colspan="7" class="text-danger font-weight-bolder text-center">Aucun compte</td></tr>';
                         table.find('tbody').html(
                             '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
                         table.DataTable().destroy();
@@ -308,6 +326,7 @@
                     $('input[name=name]', form).val(data.name);
                     $('input[id=email]', form).val(data.email);
                     $('input[id=phone2]', form).val(data.phone);
+                    $('[name=user_role]', form).val(data.user_role).change();
                     iti = intlTelInput($("#phone2")[0], {
                         preferredCountries: ["cd"],
                         separateDialCode: true

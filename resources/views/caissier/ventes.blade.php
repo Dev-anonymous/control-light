@@ -382,17 +382,17 @@
 
             cancelFunc = undefined;
 
-            $.fn.Blink = function(interval = 500, iterate = 2) {
-                var el = $(this);
-                $(el).stop(true, true);
+            // $.fn.Blink = function(interval = 500, iterate = 2) {
+            //     var el = $(this);
+            //     $(el).stop(true, true);
 
-                for (i = 1; i <= iterate; i++) {
-                    el.addClass('bg-success');
-                    el.fadeTo('slow', 0.5).fadeTo('slow', 1.0, function() {
-                        el.removeClass('bg-success');
-                    });
-                }
-            }
+            //     for (i = 1; i <= iterate; i++) {
+            //         el.addClass('bg-success');
+            //         el.fadeTo('slow', 0.5).fadeTo('slow', 1.0, function() {
+            //             el.removeClass('bg-success');
+            //         });
+            //     }
+            // }
             spin =
                 `<tr><td class="text-center" colspan="9"><span class="spinner-border text-danger"></span></td></tr>`;
             spin2 =

@@ -78,6 +78,18 @@
     $('.select2').select2({
         // theme: 'bootstrap3'
     });
+
+    $.fn.Blink = function(interval = 500, iterate = 2) {
+        var el = $(this);
+        $(el).stop(true, true);
+
+        for (i = 1; i <= iterate; i++) {
+            el.addClass('bg-success');
+            el.fadeTo('slow', 0.5).fadeTo('slow', 1.0, function() {
+                el.removeClass('bg-success');
+            });
+        }
+    }
 </script>
 
 @include('files.pwa-js')

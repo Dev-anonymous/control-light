@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Devise $devise
  * @property UniteMesure $unite_mesure
  * @property Collection|Approvisionnement[] $approvisionnements
+ * @property Collection|Bonentree[] $bonentrees
  * @property Collection|Vente[] $ventes
  *
  * @package App\Models
@@ -88,6 +89,12 @@ class Article extends Model
 	public function approvisionnements()
 	{
 		return $this->hasMany(Approvisionnement::class);
+	}
+
+	public function bonentrees()
+	{
+		return $this->belongsToMany(Bonentree::class)
+					->withPivot('id', 'article', 'prix_achat', 'devise_achat', 'prix_vente', 'devise_vente', 'qte', 'date_exiparation');
 	}
 
 	public function ventes()

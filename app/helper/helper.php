@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Article;
+use App\Models\Bonentree;
 use App\Models\Compte;
 use App\Models\Config;
 use App\Models\Devise;
@@ -231,13 +232,13 @@ function build_proforma($proforma)
     $t = [];
     foreach ($rules as $k => $e) {
         if ($k == 'qtes' or $k == 'articles' or $k == 'articles.*' or $k == 'qtes.*' or $k == 'devise') continue;
-        if($k == 'telephone_entreprise'){
-            if(request($k)){
-                $t[] = request()->$k . "<br>RCCM : ".($shop->rccm??'-')."<br>IDNAT : ".($shop->idnat ?? '-');
-            }else{
-                $t[]='-';
+        if ($k == 'telephone_entreprise') {
+            if (request($k)) {
+                $t[] = request()->$k . "<br>RCCM : " . ($shop->rccm ?? '-') . "<br>IDNAT : " . ($shop->idnat ?? '-');
+            } else {
+                $t[] = '-';
             }
-        }else{
+        } else {
             $t[] = request()->$k ?? '-';
         }
     }
@@ -357,12 +358,35 @@ function marge(Article $article)
         $margelabel = "Aucun bénéfice ne sera généré à la vente";
         $result = 'solde';
     } else if ($pa < $pv) {
-        $margelabel = "Un bénéfice de $mont sera généré sur chaque vente par {$article->unite_mesure->unite_mesure}. Le bénéfice total sera de $margtot";
+        $margelabel = "Un bénéfice de $mont sera généré sur chaque vente par {$article->unite_mesure->unite_mesure}. Le bénéfice total sera de $margtot si tout le sock actuel est vendu.";
         $result = 'gain';
     } else {
-        $margelabel = "Une perte de $mont sera générée sur chaque vente par {$article->unite_mesure->unite_mesure}. La perte totale sera de $margtot";
+        $margelabel = "Une perte de $mont sera générée sur chaque vente par {$article->unite_mesure->unite_mesure}. La perte totale sera de $margtot si tout le sock actuel est vendu.";
         $result = 'perte';
     }
 
     return (object) ['marge' => $mont, 'margelabel' => $margelabel, 'result' => $result];
+}
+
+function numbon($type = 'entre')
+{
+    if ($type == 'entre') {
+        $n = Bonentree::count() + 1;
+        $pr = 'BE';
+    } elseif ($type == 'sortie') {
+        $n = Bonentree::count() + 1;
+        $pr = 'BS';
+    } else {
+        throw new Exception("uhm numbon()");
+    }
+
+    if ($n < 9) {
+        $c = "$pr-00$n";
+    } elseif ($n > 9 && $n < 100) {
+        $c = "$pr-0$n";
+    } else {
+        $c = "$pr-$n";
+    }
+
+    return $c;
 }

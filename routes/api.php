@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\AdminApiController;
 use App\Http\Controllers\api\ArticlesApiController;
+use App\Http\Controllers\api\BonentreeApiControoler;
 use App\Http\Controllers\api\Caissier2ApiController;
 use App\Http\Controllers\api\CaissierApiController;
 use App\Http\Controllers\api\CategorieArticleApiController;
@@ -43,6 +44,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::resource('ventes', VenteApiController::class);
         Route::get('/statistique', [DataApiController::class, 'statistique'])->name('statistique.api');
         Route::resource('caissier', CaissierApiController::class);
+
+        Route::resource('bonentree', BonentreeApiControoler::class);
+        Route::post('bonentree-tot', [BonentreeApiControoler::class, 'totbonentree'])->name('totbonentree');
 
         Route::resource('/proforma', ProformaApiController::class);
         Route::post('/proforma/encaissement/{proforma}', [ProformaApiController::class, 'encaissement'])->name('proforma.encaissement');
