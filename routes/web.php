@@ -91,7 +91,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 // Route::get('fac', function () {
-
 //     $fa = \App\Models\Facture::where(['compte_id' => compte_id(), 'numero_facture' => null])->get();
 //     \Artisan::call('taux:update');
 
