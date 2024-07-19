@@ -246,7 +246,8 @@
                     url: '{{ route('config.api') }}',
                     type: 'post',
                     data: {
-                        devise_auto: dev
+                        devise_auto: dev,
+                        'action':'devise'
                     },
                     timeout: 20000,
                 }).done(function(res) {

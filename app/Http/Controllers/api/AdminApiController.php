@@ -7,6 +7,7 @@ use App\Models\Shop;
 use App\Models\User;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -68,17 +69,30 @@ class AdminApiController extends Controller
             'contact' => 'required|string|max:128',
             'rccm' => 'sometimes|string|max:128',
             'idnat' => 'sometimes|string|max:128',
+            'numeroimpot' => 'sometimes|string|max:128',
+            'siegesocial' => 'sometimes|string|max:500',
+            'detailsbancaire' => 'sometimes|string|max:500',
+            'autresinfo' => 'sometimes|string|max:500',
+            'logo' => 'sometimes|mimes:jpg,jpeg,png',
         ]);
         if ($validator->fails()) {
             return $this->error('Erreur de validation', ['msg' => $validator->errors()->all()], 400);
         }
         $data = $validator->validate();
+        unset($data['logo']);
 
         $shop  = Shop::where(['compte_id' => compte_id()])->first();
+        $oldlogo = $shop->logo;
         if ($shop) {
             $shop->update($data);
         } else {
-            Shop::create($data);
+            $shop = Shop::create($data);
+        }
+
+        if (request()->hasFile('logo')) {
+            @File::delete("storage/$oldlogo");
+            $logo = request()->logo->store('logo', 'public');
+            $shop->update(['logo' => $logo]);
         }
         return $this->success([
             'data' => $data

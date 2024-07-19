@@ -11,6 +11,7 @@ use App\Models\Proforma;
 use App\Models\Shop;
 use App\Models\Taux;
 use App\Models\User;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -389,4 +390,20 @@ function numbon($type = 'entre')
     }
 
     return $c;
+}
+
+
+function templatepath()
+{
+    $role = auth()->user()->user_role;
+    if (in_array($role, ['caissier', 'admin', 'client'])) {
+        $cid = compte_id();
+        $sep = DIRECTORY_SEPARATOR;
+        $path = base_path() . "{$sep}ressources{$sep}" . "views{$sep}templates{$sep}$cid";
+        if (!file_exists($path)) {
+            // mkdir($path, 0777, true);
+        }
+        // dd($path, File::makeDirectory($path, 0777, true, true));
+        return $path;
+    }
 }

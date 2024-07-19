@@ -10,12 +10,21 @@ class ConfigApiController extends Controller
     public function update()
     {
         demo();
-        $devise_auto = request()->devise_auto;
+        $action = request('action');
         $success = false;
         $message = 'Erreur';
 
-        if ($devise_auto  === "1" or  $devise_auto === "0") {
-            setConfig('devise_auto', $devise_auto);
+        if ('devise' == $action) {
+            $devise_auto = request()->devise_auto;
+            if ($devise_auto  === "1" or  $devise_auto === "0") {
+                setConfig('devise_auto', $devise_auto);
+                $success = true;
+                $message = "Votre configuration a été sauvegardée.";
+            }
+        }
+        if ('facture' == $action) {
+            $id = request('id');
+            setConfig('facture_zero', $id);
             $success = true;
             $message = "Votre configuration a été sauvegardée.";
         }

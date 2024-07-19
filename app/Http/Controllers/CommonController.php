@@ -79,6 +79,8 @@ class CommonController extends Controller
         if (!count($p)) {
             return redirect(route('proforma'));
         }
-        return redirect(route('proforma.facture', 1));
+        $id = getConfig('facture_zero');
+        $id ??= 1;
+        return redirect(route('proforma.facture', $id));
     }
 }

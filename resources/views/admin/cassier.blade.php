@@ -361,6 +361,8 @@
                         } else {
                             var m = res.message;
                             span.addClass('ml-2 text-danger').html(m);
+                            btn.find('i').removeClass().addClass(
+                                        'fa fa-trash text-danger');
                         }
                         $('button', tr).attr('disabled', false);
                     });

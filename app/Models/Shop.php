@@ -20,6 +20,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $compte_id
  * @property string|null $rccm
  * @property string|null $idnat
+ * @property string|null $logo
+ * @property string|null $numeroimpot
+ * @property string|null $detailsbancaire
+ * @property string|null $siegesocial
+ * @property string|null $autresinfo
  *
  * @package App\Models
  */
@@ -44,6 +49,11 @@ class Shop extends Model
 		'date_creation',
 		'compte_id',
 		'rccm',
-		'idnat'
+		'idnat',
+		'logo',
+		'numeroimpot',
+		'detailsbancaire',
+		'siegesocial',
+		'autresinfo'
 	];
 }

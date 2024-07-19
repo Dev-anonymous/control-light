@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Approvisionnement;
 use App\Models\Article;
 use App\Models\ArticleBonentree;
 use App\Models\Bonentree;
+use App\Models\Devise;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -143,7 +145,39 @@ class BonentreeApiControoler extends Controller
      */
     public function update(Request $request, Bonentree $bonentree)
     {
-        //
+        if ($bonentree->status != 0) {
+            abort(403);
+        }
+        $action = request('action');
+        if ($action == 'valider') {
+            DB::beginTransaction();
+            $bonentree->update(['status' => 1, 'valider_par' => auth()->user()->name]);
+
+            $items = ArticleBonentree::where('bonentree_id', $bonentree->id)->get();
+            foreach ($items as $el) {
+                $article = Article::where('id', $el->article_id)->first();
+                $article->update($e = [
+                    'stock' => $article->stock + $el->qte,
+                    'prix_achat' => $el->prix_achat,
+                    'devise_achat' => $el->devise_achat,
+                    'prix' => $el->prix_vente,
+                    'devise_id' => Devise::where('devise', $el->devise_vente)->first()->id,
+                ]);
+                Approvisionnement::create([
+                    'article_id' => $article->id,
+                    'qte' => $el->qte,
+                    'date' => now('Africa/Lubumbashi'),
+                    'compte_id' => compte_id()
+                ]);
+            }
+            DB::commit();
+            return $this->success([], "Le bon {$bonentree->numero} a été validé avec succès. Le stock, le prix d'achat et vente des articles correspondants ont été également mis à jour.  ");
+        } else if ($action = 'rejeter') {
+            DB::beginTransaction();
+            $bonentree->update(['status' => 2, 'rejeter_par' => auth()->user()->name]);
+            DB::commit();
+            return $this->success([], "Le bon {$bonentree->numero} a été rejeté avec succès.");
+        }
     }
 
     /**
@@ -154,6 +188,8 @@ class BonentreeApiControoler extends Controller
      */
     public function destroy(Bonentree $bonentree)
     {
-        //
+        abort_if(!in_array(auth()->user()->user_role, ['admin']), 403);
+        $bonentree->delete();
+        return $this->success([], "Le bon {$bonentree->numero} a été supprimé.");
     }
 }

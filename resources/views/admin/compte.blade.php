@@ -127,6 +127,15 @@
                                                             <th>{{ @$shop->shop }}</th>
                                                         </tr>
                                                         <tr>
+                                                            <th>Logo</th>
+                                                            <th>
+                                                                @if ($shop->logo)
+                                                                    <img src="{{ asset( 'storage/'. $shop->logo) }}"
+                                                                        class="img-thumbnail" alt="" width="80px" height="80px">
+                                                                @endif
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
                                                             <th>RCCM</th>
                                                             <th>{{ @$shop->rccm }}</th>
                                                         </tr>
@@ -135,12 +144,28 @@
                                                             <th>{{ @$shop->idnat }}</th>
                                                         </tr>
                                                         <tr>
+                                                            <th>Numéro impot</th>
+                                                            <th>{{ @$shop->numeroimpot }}</th>
+                                                        </tr>
+                                                        <tr>
                                                             <th>Adresse</th>
                                                             <th>{{ @$shop->adresse }}</th>
                                                         </tr>
                                                         <tr>
+                                                            <th>Siège social</th>
+                                                            <th>{{ @$shop->siegesocial }}</th>
+                                                        </tr>
+                                                        <tr>
                                                             <th>Contact</th>
                                                             <th>{{ @$shop->contact }}</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Détails bancaires</th>
+                                                            <th>{{ @$shop->detailsbancaire }}</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Autres infos</th>
+                                                            <th>{{ @$shop->autresinfo }}</th>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -165,9 +190,9 @@
                                             <form id="f-up-2" class="was-validated">
                                                 <div class="ps-form__content">
                                                     <div class="form-group">
-                                                        <label>Nom du magasin</label>
+                                                        <label>Nom de l'entreprise</label>
                                                         <input class="form-control" type="text" name="shop"
-                                                            value="{{ @$shop->shop }}" placeholder="Nom du magasin"
+                                                            value="{{ @$shop->shop }}" placeholder="Nom de l'entreprise"
                                                             required>
                                                     </div>
                                                     <div class="row">
@@ -175,16 +200,14 @@
                                                             <div class="form-group">
                                                                 <label>RCCM</label>
                                                                 <input class="form-control" type="text" name="rccm"
-                                                                    placeholder="RCCM" value="{{ @$shop->rccm }}"
-                                                                    >
+                                                                    placeholder="RCCM" value="{{ @$shop->rccm }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="form-group">
                                                                 <label>IDNAT</label>
                                                                 <input class="form-control" placeholder="IDNAT"
-                                                                    name="idnat" value="{{ @$shop->idnat }}"
-                                                                    >
+                                                                    name="idnat" value="{{ @$shop->idnat }}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -203,6 +226,41 @@
                                                                 <input class="form-control" placeholder="Contact"
                                                                     name="contact" value="{{ @$shop->contact }}"
                                                                     required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Numero impot</label>
+                                                                <input class="form-control" type="text"
+                                                                    name="numeroimpot" placeholder="Numero impot"
+                                                                    value="{{ @$shop->numeroimpot }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Siège social</label>
+                                                                <textarea class="form-control" rows="3" name="siegesocial" placeholder="Siège social">{{ @$shop->siegesocial }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Détails bancaires</label>
+                                                                <textarea class="form-control" rows="3" name="detailsbancaire" placeholder="Détails bancaires">{{ @$shop->detailsbancaire }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Autres infos</label>
+                                                                <textarea class="form-control" rows="3" name="autresinfo" placeholder="Autres infos">{{ @$shop->autresinfo }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Logo</label>
+                                                                <input type="file" accept=".png,.jpg,.jpeg"
+                                                                    name="logo" class="form-control">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -354,8 +412,10 @@
                 $.ajax({
                     url: '{{ route('admin.shop.update.api') }}',
                     type: 'post',
-                    data: f.serialize(),
+                    data: new FormData(f[0]),
                     timeout: 20000,
+                    contentType: false,
+                    processData: false,
                 }).done(function(res) {
                     btn.attr('disabled', false);
                     btn.find('span').removeClass().addClass('fa fa-check mr-3');

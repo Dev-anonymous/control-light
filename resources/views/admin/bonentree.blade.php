@@ -152,57 +152,62 @@
         </div>
     </div>
 
-    <div class="modal fade" id="mdl-up" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal fade" id="mdl-up" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content ">
                 <div class="modal-header bg-danger text-white font-weight-bold d-flex justify-content-between">
-                    <b>Modification des information</b>
+                    <b>Aperçu</b>
                     <span style="cursor: pointer" data-dismiss="modal">
                         <i class="fa fa-times-circle p-2 "></i>
                     </span>
                 </div>
-                <form id="f-up" class="was-validated">
-                    <input type="hidden" name="id">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="">Nom</label>
-                            <input class="form-control" required name="name" placeholder="Nom" />
-                        </div>
-                        <div class="form-group">
-                            <label for="">Email</label>
-                            <input class="form-control" id="email" placeholder="Email" />
-                        </div>
-                        <div class="form-group">
-                            <label for="">Téléphone</label>
-                            <input class="form-control phone" id="phone2" placeholder="Telephone" />
-                        </div>
-                        <div class="form-group">
-                            <label for="">Role</label>
-                            <select name="user_role" id="" class="form-control">
-                                <option value="caissier">Caissier</option>
-                                <option value="gerant">Gérant</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="display: none" id="rep"></div>
-                    </div>
-                    <div class="modal-footer d-flex justify-content-between">
-                        <div class="">
-                            <button class="btn btn-dark btn-reset" type="button">
-                                <span></span>
-                                Réinitialiser le mot de passe
-                            </button>
-                        </div>
-                        <div class="">
-                            <button class="btn btn-dark" data-dismiss="modal">
-                                Fermer
-                            </button>
-                            <button class="btn btn-danger " type="submit">
-                                <span></span>
-                                Modifier
-                            </button>
+                <input type="hidden" name="id">
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div id="bonentree" estyle="width: 21cm !important">
+                            <div style="width: 100% !important">
+                                <h2 class="text-center mt-3">BON ENTREE N° : <span numbon></span></h2>
+                                <h6 class="text-center">Emis par : <span emispar></span></h6>
+                                <h6 class="text-center">Date : <span datebon></span></h6>
+                                <h6 class="text-center">Status : <span statusbon></span></h6>
+                                <h6 class="text-center"><span validation></span></h6>
+                                <div class="mt-3">
+                                    <table class="table table-striped table-hover w-100">
+                                        <thead>
+                                            <tr>
+                                                <th>ARTICLE</th>
+                                                <th>QTE</th>
+                                                <th>PRIX D'ACHAT</th>
+                                                <th class='text-right'>PRIX DE VENTE</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody titems></tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </form>
+                    <div class="form-group" style="display: none" id="rep11"></div>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <div class="">
+                        <button class="btn mb-2 btn-info mr-2" btnvalide type="button" action="valider">
+                            <span></span>
+                            Valider ce bon
+                        </button>
+                        <button class="btn mb-2 btn-danger" btnvalide type="button" action="rejeter">
+                            <span></span>
+                            Rejeter ce bon
+                        </button>
+                        <button class="btn mb-2 btn-success ml-2" bprint>
+                            <i class="fa fa-print"></i>
+                            Imprimer
+                        </button>
+                    </div>
+                    <button class="btn mb-2 btn-dark" data-dismiss="modal">
+                        Fermer
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -236,6 +241,8 @@
     <script src="{{ asset('assets/datatables/vfs_fonts.js') }}"></script>
     <script src="{{ asset('assets/datatables/datatables.min.js') }}"></script>
 
+    <script src="{{ asset('assets/js/printThis.js') }}"></script>
+
     <script>
         $(function() {
             opt = {
@@ -249,6 +256,25 @@
                     [10, 25, 50, 100, "All"]
                 ],
             };
+
+            $('[bprint]').click(function() {
+                $("#bonentree").printThis();
+
+                // var div = $('#bonentree')[0];
+                // var mywindow = window.open('', 'PRINT', 'height=500,width=800');
+                // mywindow.document.write(
+                //     `<html><head><style> file_get_contents('assets/css/style.css') }}</style>`
+                // );
+                // mywindow.document.write('</head><body >');
+                // mywindow.document.write(div.innerHTML);
+                // mywindow.document.write('</body></html>');
+                // mywindow.document.close();
+                // mywindow.focus();
+                // mywindow.print();
+                // setTimeout(function() {
+                //     mywindow.close();
+                // }, 1000);
+            })
 
             var items = $('[items]');
             $('tr[value]').click(function() {
@@ -356,7 +382,7 @@
                     if (data.length > 0) {
                         $(data).each(function(i, e) {
                             var stat = '',
-                            disabled = '';
+                                disabled = '';
                             if (e.status == 0) {
                                 stat =
                                     `<span style="cursor:pointer" title="ce bon d\'entrée est en attente de validation." class="badge badge-warning"><span class="fa fa-check-circle"></span> EN ATTENTE</i>`;
@@ -373,7 +399,7 @@
                             }
 
 
-                            var json = escape(e);
+                            var json = escape(JSON.stringify(e));
                             str += `<tr>
                                         <td>${i+1}</td>
                                         <td>
@@ -383,14 +409,17 @@
                                         <td>${stat}</td>
                                         <td>${e.emetteur}</td>
                                         <td>${e.date}</td>
-                                        <td class='d-flex justify-content-center'>
-                                            <button class='btn text-muted mr-3' data='${json}'><i class='fa fa-eye'></i></button>
-                                            <div class="dropdown ml-2">
-                                                <button ${disabled} title="Supprimer : ${e.numero}" class="btn text-danger btn-del dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class='fa fa-trash'></i>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="">
-                                                    <button class="dropdown-item delete btn"  value='${e.id}'>Supprimer</button>
+                                        <td>
+                                            <span app-label-msg='${e.id}' class='ml-3 text-nowrap'></span>
+                                            <div class='d-flex justify-content-center'>
+                                                <button class='btn text-muted mr-3 bdetail' data='${json}'><i class='fa fa-eye'></i></button>
+                                                <div class="dropdown ml-2">
+                                                    <button ${disabled} title="Supprimer : ${e.numero}" class="btn text-danger btn-del dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class='fa fa-trash'></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="">
+                                                        <button class="dropdown-item delete btn"  value='${e.id}'>Supprimer</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -407,7 +436,82 @@
                         }).click(function() {
                             $('[data-toggle="tooltip"]').tooltip("hide");
                         });
-                        // init();
+                        $('.bdetail').off('click').click(function() {
+                            var data = JSON.parse(unescape($(this).attr('data')));
+                            var mdl = $('#mdl-up');
+                            $('#rep11').html('');
+                            var titem = $('[titems]');
+                            var tr = '';
+                            $(data.articles).each(function(i, e) {
+                                tr += `
+                                <tr>
+                                    <td>${e.article}</td>
+                                    <td>${e.pivot.qte}</td>
+                                    <td>${e.pivot.prix_achat} ${e.pivot.devise_achat}</td>
+                                    <td class='text-right'>${e.pivot.prix_vente} ${e.pivot.devise_vente}</td>
+                                </tr>
+                                `;
+                            });
+                            tr += `
+                                <tr title="Somme Prix d'achat * Qte">
+                                    <td class="text-nowrap">
+                                        TOTAL BON
+                                    </td>
+                                    <td colspan="3" class="text-right text-nowrap">
+                                        <span class="badge badge-success" style="font-size: 18px">${data.total_cdf}</span>
+                                    </td>
+                                </tr>
+                                `;
+                            titem.html(tr);
+                            $('span[numbon]').html(data?.numero);
+                            $('span[datebon]').html(data?.date);
+                            $('span[emispar]').html(data?.emetteur);
+                            var st = data.status;
+                            $('span[statusbon]').html(st == 0 ? 'EN ATTENTE' : (st == 1 ? 'VALIDE' :
+                                'REJETE'));
+                            var b = $('[btnvalide]');
+                            b.val(data.id);
+                            if (st == 0) {
+                                b.attr('disabled', false);
+                            } else {
+                                b.attr('disabled', true);
+                            }
+                            mdl.modal();
+                        });
+                        $('.delete').off('click').click(function() {
+                            var id = this.value;
+                            var val = $('[app-input=' + id + ']').val();
+                            var btn = $(this)
+                            btn = $(btn).closest('.dropdown');
+                            btn = $(btn).find('.btn-del');
+                            btn.find('i').removeClass().addClass(
+                                'spinner-border spinner-border-sm');
+
+                            var tr = btn.closest('tr');
+                            $('button', tr).attr('disabled', true);
+                            var span = $('[app-label-msg=' + id + ']').removeClass().html('');
+                            $.ajax({
+                                url: '{{ route('bonentree.destroy', '') }}/' + id,
+                                type: 'delete',
+                                timeout: 20000,
+                            }).done(function(res) {
+                                data = res.data;
+                                if (res.success == true) {
+                                    var m = res.message;
+                                    span.addClass('ml-2 text-success').html(m);
+                                    $('[app-label=' + id + ']').html(val);
+                                    setTimeout(() => {
+                                        getData();
+                                    }, 2000);
+                                } else {
+                                    var m = res.message;
+                                    span.addClass('ml-2 text-danger').html(m);
+                                    btn.find('i').removeClass().addClass(
+                                        'fa fa-trash text-danger');
+                                }
+                                $('button', tr).attr('disabled', false);
+                            });
+                        });
                         table.DataTable(opt);
                     } else {
                         str =
@@ -458,8 +562,43 @@
                     btn.find('span').removeClass();
                     btn.attr('disabled', false);
                 });
-            })
+            });
 
+            $('[btnvalide]').click(function() {
+                var rep = $('#rep11');
+                var id = this.value;
+                rep.removeClass().slideUp();
+
+                var btn = $(this);
+                btn.find('span').removeClass().addClass('spinner-border spinner-border-sm');
+                btn.attr('disabled', true);
+                var action = $(this).attr('action');
+
+                $.ajax({
+                    url: '{{ route('bonentree.update', '') }}/' + id,
+                    type: 'put',
+                    data: {
+                        'action': action
+                    },
+                    timeout: 20000,
+                }).done(function(res) {
+                    btn.attr('disabled', false);
+                    if (res.success == true) {
+                        var m = res.message;
+                        rep.addClass('ml-2 text-success').html(m).slideDown();
+                        getData();
+                        setTimeout(() => {
+                            $('.modal').modal('hide');
+                        }, 8000);
+                    } else {
+                        var m = res.message;
+                        rep.addClass('ml-2 text-danger').html(m).slideDown();
+                    }
+                }).always(function() {
+                    btn.find('span').removeClass();
+                    btn.attr('disabled', false);
+                });
+            });
 
         })
     </script>
