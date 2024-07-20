@@ -38,7 +38,7 @@
                     <i class="fas fa-shopping-basket"></i><span>Gestion Caisse</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('bonentree.admin') }}">Bons d'entréé</a></li>
+                    <li><a class="nav-link" href="{{ route('bonentree.admin') }}">Bons d'entrée</a></li>
                     <li><a class="nav-link" href="{{ route('bonsortie.admin') }}">Bons de sortie</a></li>
                 </ul>
             </li>

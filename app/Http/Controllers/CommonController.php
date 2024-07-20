@@ -55,7 +55,7 @@ class CommonController extends Controller
         }
         $path = $p[$id - 1];
         $pro = file_get_contents("$path/proforma");
-        return build_proforma($pro)->proforma;
+        return build_proforma($pro, $id)->proforma;
     }
 
     public function preview_proforma_html(Proforma $proforma)

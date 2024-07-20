@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'Bon d\'entrée ')
+@section('title', 'Bon de sortie')
 
 @section('body')
     <div class="loader"></div>
@@ -14,12 +14,16 @@
         <div class="main-content">
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="h4 font-weight-bold">Bons d'entrée</h3>
+                    <h3 class="h4 font-weight-bold">Bons de sortie</h3>
                     <div class="card-header-action">
                         <div class="form-group m-2 d-block">
                             <button class="btn btn-danger" data-toggle='modal' data-target='#mdl-add'
                                 style="border-radius: 5px!important;">
-                                Ajouter un bon
+                                Ajouter un bon de sortie Articles
+                            </button>
+                            <button class="btn btn-dark" data-toggle='modal' data-target='#mdl-add2'
+                                style="border-radius: 5px!important;">
+                                Ajouter un bon de sortie fonds
                             </button>
                         </div>
                     </div>
@@ -62,8 +66,7 @@
                         <div class="col-md-12">
                             <p class="text-muted">
                                 <i class="fa fa-exclamation-triangle text-warning"></i>
-                                Une fois le bon d'entrée validé, le stock, le prix d'achat et le prix de vente des articles
-                                correspondants seront mis à jour
+                                Une fois le bon de sortie validé, le solde de la caisse sera mis à jour
                             </p>
                         </div>
                     </div>
@@ -76,7 +79,7 @@
         <div class="modal-dialog modal-dialog-centered fullscreen" role="document">
             <div class="modal-content ">
                 <div class="modal-header bg-danger text-white font-weight-bold d-flex justify-content-between">
-                    <b>Ajouter un bon d'entrée</b>
+                    <b>Ajouter un bon de sortie article</b>
                     <span style="cursor: pointer" data-dismiss="modal">
                         <i class="fa fa-times-circle p-2 "></i>
                     </span>
@@ -85,7 +88,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h4>Articles en stock</h4>
-                            <p class="text-danger">Cliquez sur un article pour l'ajouter au bon d'entrée.</p>
+                            <p class="text-danger">Cliquez sur un article pour l'ajouter au bon de sortie.</p>
                             <div class="table-responsive">
                                 <table table class="table table-striped table-hover" style="width: 100%">
                                     <thead>
@@ -110,30 +113,71 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <h4>Bon d'entrée</h4>
+                            <h4>Bon de sortie</h4>
                             <div class="table-responsive">
-                                <form action="#" id="f-bon">
-                                    <input type="hidden" name="type" value="entree" id="">
+                                <form action="#" id="f-bon" class="was-validated">
+                                    <input type="hidden" name="type" value="sortie" id="">
                                     <table tbon class="table table-striped table-hover" style="width: 100%">
                                         <thead>
                                             <th>ARTICLE</th>
                                             <th>QTE</th>
-                                            <th>PRIX D'ACHAT</th>
                                             <th>PRIX DE VENTE</th>
                                             <th></th>
                                         </thead>
                                         <tbody items></tbody>
                                         <tfoot class="font-weight-bolder">
-                                            <tr title="Somme Prix d'achat * Qte">
+                                            <tr title="Somme Prix de vente * Qte">
                                                 <td class="text-nowrap">
                                                     TOTAL BON
                                                 </td>
-                                                <td colspan="4" class="text-right text-nowrap">
+                                                <td colspan="3" class="text-right text-nowrap">
                                                     <span totbon class="badge badge-success" style="font-size: 18px"></span>
                                                 </td>
                                             </tr>
                                         </tfoot>
                                     </table>
+
+                                    <h5>Bon de livraison</h5>
+                                    <input type="hidden" name="typebon" value="article" id="">
+                                    <div class="form-group">
+                                        <label for="">Nom du client</label>
+                                        <input type="text" class="form-control" name="nomclient" required
+                                            placeholder="Nom du client">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Tel. du client</label>
+                                        <input type="text" class="form-control" name="telephoneclient" required
+                                            placeholder="Tel. du client">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Adresse du client</label>
+                                        <input type="text" class="form-control" name="adresseclient"
+                                            placeholder="Adresse du client">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Adresse de livraison</label>
+                                        <input type="text" class="form-control" name="adresselivraison" required
+                                            placeholder="Adresse de livraison">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Nom du chauffeur</label>
+                                        <input type="text" class="form-control" name="chauffeur"
+                                            placeholder="Nom du chauffeur">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Numéro vehicule</label>
+                                        <input type="text" class="form-control" name="numerovehicule"
+                                            placeholder="Numero vehicule">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Date de livraison</label>
+                                        <input type="datetime-local" class="form-control" name="datelivraison" required
+                                            placeholder="Date de elivraison" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Motif de sortie</label>
+                                        <textarea name="motif" class="form-control" name="motif" id="" rows="5"></textarea>
+                                    </div>
                                 </form>
                             </div>
                             <div class="form-group" style="display: none" id="rep00"></div>
@@ -153,6 +197,7 @@
         </div>
     </div>
 
+
     <div class="modal fade" id="mdl-up" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content ">
@@ -167,7 +212,7 @@
                     <div class="table-responsive">
                         <div id="bonentree" estyle="width: 21cm !important">
                             <div style="width: 100% !important">
-                                <h2 class="text-center mt-3">BON ENTREE N° : <span numbon></span></h2>
+                                <h2 class="text-center mt-3">BON DE SORTIE N° : <span numbon></span></h2>
                                 <h6 class="text-center">Emis par : <span emispar></span></h6>
                                 <h6 class="text-center">Date : <span datebon></span></h6>
                                 <h6 class="text-center">Status : <span statusbon></span></h6>
@@ -178,7 +223,6 @@
                                             <tr>
                                                 <th>ARTICLE</th>
                                                 <th>QTE</th>
-                                                <th>PRIX D'ACHAT</th>
                                                 <th class='text-right'>PRIX DE VENTE</th>
                                             </tr>
                                         </thead>
@@ -201,6 +245,116 @@
                             Rejeter ce bon
                         </button>
                         <button class="btn mb-2 btn-success ml-2" bprint>
+                            <i class="fa fa-print"></i>
+                            Imprimer
+                        </button>
+                    </div>
+                    <button class="btn mb-2 btn-dark" data-dismiss="modal">
+                        Fermer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @php
+        $shop = \App\Models\Shop::where('compte_id', compte_id())->first();
+    @endphp
+
+    <div class="modal fade" id="mdl-up2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content ">
+                <div class="modal-header bg-danger text-white font-weight-bold d-flex justify-content-between">
+                    <b>Bon de livraison</b>
+                    <span style="cursor: pointer" data-dismiss="modal">
+                        <i class="fa fa-times-circle p-2 "></i>
+                    </span>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div id="bonsortie" estyle="width: 21cm !important">
+                            <div style="width: 100% !important">
+                                <div class="mt-3 p-3">
+                                    <table class="table-table-striped -table-borderless table-hover w-100" border="1">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th colspan="5">BON DE LIVRAISON</th>
+                                            </tr>
+                                        </thead>
+                                        <tr>
+                                            <td colspan="2"><b>{{ $shop->shop }}</b></td>
+                                            <td>BDL N0</td>
+                                            <td colspan="2">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" rowspan="6">
+                                                @if ($shop->adresse)
+                                                    {{ $shop->adresse }} <br>
+                                                @endif
+                                                @if ($shop->contact)
+                                                    {{ $shop->contact }} <br>
+                                                @endif
+                                                @if ($shop->email)
+                                                    {{ $shop->email }} <br>
+                                                @endif
+                                                @if ($shop->telephone)
+                                                    {{ $shop->telephone }} <br>
+                                                @endif
+                                                @if ($shop->siegesocial)
+                                                    {{ $shop->siegesocial }} <br>
+                                                @endif
+                                            </td>
+                                            <td>Date livraison</td>
+                                            <td colspan="2"> <span datelivraison>-</span> </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1">N° Bon</td>
+                                            <td colspan="2"><span numbonsortie></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1">Date facture</td>
+                                            <td colspan="2"><span datefacture>-</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1">Délivré par</td>
+                                            <td colspan="2"><span emetteurnom>-</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1">BDC Number</td>
+                                            <td colspan="2"><span bdc>-</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1">Location</td>
+                                            <td colspan="2"><span location>-</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="5">Client : <span nomclient></span></th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">Contact : <span telephoneclient></span></th>
+                                            <th colspan="3">Email : <span emailclient></span></th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="5">Adresse : <span adresseclient></span></th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">Chauffeur : <span nomchauffeur></span></th>
+                                            <th colspan="3">N° vehicule : <span numerovehicule></span></th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2" class="font-weight-bold">Description article</th>
+                                            <th colspan="3" class="font-weight-bold text-right">Prix * Qte</th>
+                                        </tr>
+                                        <tbody articleslist></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <div class="">
+                        <button class="btn mb-2 btn-success ml-2" bprint2>
                             <i class="fa fa-print"></i>
                             Imprimer
                         </button>
@@ -260,21 +414,9 @@
 
             $('[bprint]').click(function() {
                 $("#bonentree").printThis();
-
-                // var div = $('#bonentree')[0];
-                // var mywindow = window.open('', 'PRINT', 'height=500,width=800');
-                // mywindow.document.write(
-                //     `<html><head><style> file_get_contents('assets/css/style.css') }}</style>`
-                // );
-                // mywindow.document.write('</head><body >');
-                // mywindow.document.write(div.innerHTML);
-                // mywindow.document.write('</body></html>');
-                // mywindow.document.close();
-                // mywindow.focus();
-                // mywindow.print();
-                // setTimeout(function() {
-                //     mywindow.close();
-                // }, 1000);
+            });
+            $('[bprint2]').click(function() {
+                $("#bonsortie").printThis();
             })
 
             var items = $('[items]');
@@ -297,24 +439,9 @@
                                 <input qte type="number" style="min-width: 100px" value="1" min="1" name="qte[]" class="form-control">
                             </td>
                             <td>
-                                <div class="d-flex">
-                                    <input type="number" name="prix_achat[]" min="0.1" step="0.01" value="${data.prix_achat}"
-                                    class="form-control" style="min-width: 120px">
-                                    <select name="devise_achat[]" devise_achat style="min-width: 80px" id="" class="form-control w-100">
-                                        <option>CDF</option>
-                                        <option>USD</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex">
-                                    <input type="number" name="prix_vente[]" min="0.1" step="0.01" value="${data.prix}"
-                                    class="form-control" style="min-width: 120px">
-                                    <select name="devise_vente[]" devise_vente style="min-width: 80px" id="" class="form-control w-100">
-                                        <option>CDF</option>
-                                        <option>USD</option>
-                                    </select>
-                                </div>
+                                <b class="">
+                                    ${data.prix} ${data.devise.devise}
+                                </b>
                             </td>
                             <td>
                                 <button value="${data.id}"
@@ -326,9 +453,6 @@
                     `;
                     tr = $(tr);
                     items.append(tr);
-
-                    $(`[devise_achat]`, tr).val(data.devise_achat);
-                    $(`[devise_vente]`, tr).val(data.devise.devise);
                 }
 
                 btn.Blink(100, 1);
@@ -375,7 +499,7 @@
             function getData() {
                 table.find('tbody').html(spin);
                 $.ajax({
-                    url: '{{ route('bonentree.index') }}',
+                    url: '{{ route('bonsortie.index') }}',
                     timeout: 20000,
                 }).done(function(res) {
                     data = res.data;
@@ -386,17 +510,17 @@
                                 disabled = '';
                             if (e.status == 0) {
                                 stat =
-                                    `<span style="cursor:pointer" title="ce bon d\'entrée est en attente de validation." class="badge badge-warning"><span class="fa fa-check-circle"></span> EN ATTENTE</i>`;
+                                    `<span style="cursor:pointer" title="ce bon de sortie est en attente de validation." class="badge badge-warning"><span class="fa fa-check-circle"></span> EN ATTENTE</i>`;
                             }
                             if (e.status == 1) {
                                 disabled = `disabled`;
                                 stat =
-                                    `<span style="cursor:pointer" title="ce bon d\'entrée est validé par ${e.valide_par}." class="badge badge-success"><span class="fa fa-check-circle"></span> VALIDE</i>`;
+                                    `<span style="cursor:pointer" title="ce bon de sortie est validé par ${e.valide_par}." class="badge badge-success"><span class="fa fa-check-circle"></span> VALIDE</i>`;
                             }
                             if (e.status == 2) {
                                 disabled = `disabled`;
                                 stat =
-                                    `<span style="cursor:pointer" title="ce bon d\'entrée est rejeté par ${e.rejete_par}." class="badge badge-danger"><span class="fa fa-check-circle"></span> REJETE</i>`;
+                                    `<span style="cursor:pointer" title="ce bon de sortie est rejeté par ${e.rejete_par}." class="badge badge-danger"><span class="fa fa-check-circle"></span> REJETE</i>`;
                             }
 
 
@@ -413,7 +537,12 @@
                                         <td>
                                             <span app-label-msg='${e.id}' class='ml-3 text-nowrap'></span>
                                             <div class='d-flex justify-content-center'>
-                                                <button class='btn text-muted mr-3 bdetail' data='${json}'><i class='fa fa-eye'></i></button>
+                                                <div>
+                                                    <button class='btn text-muted mr-3 bdetail text-nowrap' data='${json}'><i class='fa fa-file'></i> Bon de sortie</button>
+                                                </div>
+                                                <div>
+                                                    <button class='btn text-black-50 mr-3 bdetail2 text-nowrap' data='${json}'><i class='fa fa-file-archive'></i> Bon de livraison</button>
+                                                </div>
                                                 <div class="dropdown ml-2">
                                                     <button ${disabled} title="Supprimer : ${e.numero}" class="btn text-danger btn-del dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class='fa fa-trash'></i>
@@ -448,17 +577,16 @@
                                 <tr>
                                     <td>${e.article}</td>
                                     <td>${e.pivot.qte}</td>
-                                    <td>${e.pivot.prix_achat} ${e.pivot.devise_achat}</td>
                                     <td class='text-right'>${e.pivot.prix_vente} ${e.pivot.devise_vente}</td>
                                 </tr>
                                 `;
                             });
                             tr += `
-                                <tr title="Somme Prix d'achat * Qte">
+                                <tr>
                                     <td class="text-nowrap">
                                         TOTAL BON
                                     </td>
-                                    <td colspan="3" class="text-right text-nowrap">
+                                    <td colspan="2" class="text-right text-nowrap">
                                         <span class="badge badge-success" style="font-size: 18px">${data.total_cdf}</span>
                                     </td>
                                 </tr>
@@ -479,6 +607,47 @@
                             }
                             mdl.modal();
                         });
+                        $('.bdetail2').off('click').click(function() {
+                            var data = JSON.parse(unescape($(this).attr('data')));
+                            var mdl = $('#mdl-up2');
+                            var bonlivr = data.bon_livraisons[0];
+
+                            $('[datelivraison]').html(bonlivr?.datelivraison);
+                            $('[numbonsortie]').html(data?.numero);
+                            $('[datefacture]').html(data?.date);
+                            $('[emetteurnom]').html(data?.emetteur);
+                            $('[nomclient]').html(bonlivr?.nomclient);
+                            $('[telephoneclient]').html(bonlivr?.telephoneclient);
+                            $('[emailclient]').html(bonlivr?.emailclient);
+                            $('[adresseclient]').html(bonlivr?.adresseclient);
+                            $('[nomchauffeur]').html(bonlivr?.chauffeur);
+                            $('[numerovehicule]').html(bonlivr?.numerovehicule);
+
+                            var articles = data.articles;
+                            var txt = '';
+
+                            $(articles).each(function(i, e) {
+                                txt +=
+                                    `<tr>
+                                        <th colspan="2">${e.article}</th>
+                                        <th colspan="3" class='text-right'> ${e.pivot.prix_vente} ${e.pivot.devise_vente} * ${e.pivot.qte} </th>
+                                    </tr>
+                                    `;
+                            });
+
+                            txt +=
+                                    `<tr>
+                                        <th colspan="2">TOTAL BON</th>
+                                        <th colspan="3" class='text-right'> ${data.total_cdf}</th>
+                                    </tr>
+                                    `
+
+                            $('[articleslist]').html(txt);
+
+                            mdl.modal();
+
+                        });
+
                         $('.delete').off('click').click(function() {
                             var id = this.value;
                             var val = $('[app-input=' + id + ']').val();
@@ -492,7 +661,7 @@
                             $('button', tr).attr('disabled', true);
                             var span = $('[app-label-msg=' + id + ']').removeClass().html('');
                             $.ajax({
-                                url: '{{ route('bonentree.destroy', '') }}/' + id,
+                                url: '{{ route('bonsortie.destroy', '') }}/' + id,
                                 type: 'delete',
                                 timeout: 20000,
                             }).done(function(res) {
@@ -529,11 +698,28 @@
             $('[savebon]').click(function() {
                 var rep = $('#rep00');
                 var data = $('#f-bon').serialize();
-                if (data.length == 0) {
-                    rep.removeClass().addClass('text-danger').html(
-                        "Veuillez ajouter au moins un article au bon d'entrée").slideDown();
+
+
+                if ($('[items]').children().length == 0) {
+                    alert("Veuillez ajouter au moins un article au bon");
+                    // rep.removeClass().addClass('text-danger').html(
+                    //     "Veuillez ajouter au moins un article au bon").slideDown();
                     return;
                 }
+
+                var stop = false
+                $(':input[required]', $('#f-bon')).each(function(i, e) {
+                    if ($(this).val() == '') {
+                        stop = true;
+                        return;
+                    }
+                });
+
+                if (stop) {
+                    alert("Veuillez completer tous champs en rouge dans le formulaire");
+                    return;
+                }
+
                 rep.removeClass().slideUp();
 
                 var btn = $(this);
@@ -541,7 +727,7 @@
                 btn.attr('disabled', true);
 
                 $.ajax({
-                    url: '{{ route('bonentree.store') }}',
+                    url: '{{ route('bonsortie.store') }}',
                     type: 'post',
                     data: data,
                     timeout: 20000,
@@ -576,7 +762,7 @@
                 var action = $(this).attr('action');
 
                 $.ajax({
-                    url: '{{ route('bonentree.update', '') }}/' + id,
+                    url: '{{ route('bonsortie.update', '') }}/' + id,
                     type: 'put',
                     data: {
                         'action': action

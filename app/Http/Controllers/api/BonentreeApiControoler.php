@@ -35,21 +35,33 @@ class BonentreeApiControoler extends Controller
         return $this->success($tab);
     }
 
-    function totbonentree()
+    function totbon()
     {
-        // $article_ids = request('article_id');
+        $type = request('type');
+        $article_ids = (array)  request('article_id');
         $qte = (array) request('qte');
         $prix_achat = (array) request('prix_achat');
         $devise_achat = (array) request('devise_achat');
         // $prix_vente = request('prix_vente');
         // $devise_vente = request('devise_vente');
 
-        $tot = 0;
-        foreach ($prix_achat as $i => $p) {
-            $tot += change($p, $devise_achat[$i], 'CDF') * $qte[$i];
+        if ($type == 'entree') {
+            $tot = 0;
+            foreach ($prix_achat as $i => $p) {
+                $tot += change($p, $devise_achat[$i], 'CDF') * $qte[$i];
+            }
+            $tot = montant($tot, 'CDF');
+            return response(['total' => $tot]);
         }
-        $tot = montant($tot, 'CDF');
-        return response(['total' => $tot]);
+        if ($type == 'sortie') {
+            $tot = 0;
+            foreach ($article_ids as $i => $p) {
+                $article = Article::where('id', $p)->first();
+                $tot += change($article->prix, $article->devise->devise, 'CDF') * $qte[$i];
+            }
+            $tot = montant($tot, 'CDF');
+            return response(['total' => $tot]);
+        }
     }
 
     /**
@@ -122,7 +134,7 @@ class BonentreeApiControoler extends Controller
 
         DB::commit();
 
-        return $this->success(null, "Le bon d'entré $numerbon a été créé, veuiller attendre la validation du gérant.");;
+        return $this->success(null, "Le bon d'entré $numerbon a été créé, veuiller attendre la validation du gérant.");
     }
 
     /**
@@ -188,7 +200,7 @@ class BonentreeApiControoler extends Controller
      */
     public function destroy(Bonentree $bonentree)
     {
-        abort_if(!in_array(auth()->user()->user_role, ['admin']), 403);
+        abort_if(!in_array(auth()->user()->user_role, ['admin', 'gerant']), 403);
         $bonentree->delete();
         return $this->success([], "Le bon {$bonentree->numero} a été supprimé.");
     }

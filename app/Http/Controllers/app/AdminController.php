@@ -93,7 +93,8 @@ class AdminController extends Controller
 
     function bonsortie()
     {
-        return view('admin.bonsortie');
+        $articles = Article::orderBy('article')->with('devise')->where('compte_id', compte_id())->get();
+        return view('admin.bonsortie', compact('articles'));
     }
 
 }

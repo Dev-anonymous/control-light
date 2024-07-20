@@ -2,6 +2,7 @@
 
 use App\Models\Article;
 use App\Models\Bonentree;
+use App\Models\Bonsortie;
 use App\Models\Compte;
 use App\Models\Config;
 use App\Models\Devise;
@@ -194,7 +195,7 @@ function numero_proforma()
     return $num;
 }
 
-function build_proforma($proforma)
+function build_proforma($proforma, $id)
 {
     $rules =  [
         'nom_entreprise' => 'sometimes',
@@ -235,7 +236,11 @@ function build_proforma($proforma)
         if ($k == 'qtes' or $k == 'articles' or $k == 'articles.*' or $k == 'qtes.*' or $k == 'devise') continue;
         if ($k == 'telephone_entreprise') {
             if (request($k)) {
-                $t[] = request()->$k . "<br>RCCM : " . ($shop->rccm ?? '-') . "<br>IDNAT : " . ($shop->idnat ?? '-');
+                if ($id == 2) {
+                    $t[] = request()->$k . "<br>RCCM : " . ($shop->rccm ?? '-') . ", IDNAT : " . ($shop->idnat ?? '-') . ", N° Impot : " . ($shop->numeroimpot ?? '-');
+                } else {
+                    $t[] = request()->$k . "<br>RCCM : " . ($shop->rccm ?? '-') . "<br>IDNAT : " . ($shop->idnat ?? '-') . "<br>N° Impot : " . ($shop->numeroimpot ?? '-');
+                }
             } else {
                 $t[] = '-';
             }
@@ -268,6 +273,12 @@ function build_proforma($proforma)
     }
     $tg = change($tg, 'CDF', $devise);
 
+    if (!$shop->logo) {
+        $logo = fileToBase64('assets/img/logo.png');
+    } else {
+        $logo = fileToBase64('storage/' . $shop->logo);
+    }
+
     $keys = [
         '__ENTREPRISE_NOM__',
         '__ENTREPRISE_ADRESSE__',
@@ -284,14 +295,31 @@ function build_proforma($proforma)
         '__NUMERO_PROFORMA__',
         '__ARTICLE_PROFORMA__',
         '__TOTAL__',
-        '__DATEPRO__'
+        '__DATEPRO__',
+        '__ENTREPRISE_LOGO__',
+        '__ENTREPRISE_RCCMS__',
+        '__ENTREPRISE_CONTACT__',
+        '__EMIS_PAR__',
     ];
+
 
     $num_fac = numero_proforma();
     $t[] = $num_fac;
     $t[] = $tr;
     $t[] = montant($tg, $devise);
     $t[] = now('Africa/Lubumbashi')->format('d-m-Y H:i');
+    $t[] = $logo;
+    $t[] = "RCCM : " . ($shop->rccm ?? '-') . ", IDNAT : " . ($shop->idnat ?? '-') . ", N° Impot : " . ($shop->numeroimpot ?? '-');
+    $t[] = "Contact : " . (request('email_entreprise') ?? '-') . ", Tel : " . (request('telephone_entreprise') ?? '-');
+    $t[] = auth()->user()->name;
+
+    if ($id == 2) {
+        // adress
+        if ($shop->siegesocial) {
+            $t[1]  = $t[1] . ", Siège social : {$shop->siegesocial}";
+        }
+    }
+
 
     $temp = str_replace($keys, $t, $proforma);
     return (object) [
@@ -375,7 +403,7 @@ function numbon($type = 'entre')
         $n = Bonentree::count() + 1;
         $pr = 'BE';
     } elseif ($type == 'sortie') {
-        $n = Bonentree::count() + 1;
+        $n = Bonsortie::count() + 1;
         $pr = 'BS';
     } else {
         throw new Exception("uhm numbon()");
@@ -399,11 +427,21 @@ function templatepath()
     if (in_array($role, ['caissier', 'admin', 'client'])) {
         $cid = compte_id();
         $sep = DIRECTORY_SEPARATOR;
-        $path = base_path() . "{$sep}ressources{$sep}" . "views{$sep}templates{$sep}$cid";
+        $path = base_path() . "{$sep}resources{$sep}" . "views{$sep}templates{$sep}$cid";
         if (!file_exists($path)) {
             // mkdir($path, 0777, true);
         }
-        // dd($path, File::makeDirectory($path, 0777, true, true));
         return $path;
+    }
+}
+
+function fileToBase64($path)
+{
+    try {
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        return $base64;
+    } catch (\Throwable $th) {
     }
 }

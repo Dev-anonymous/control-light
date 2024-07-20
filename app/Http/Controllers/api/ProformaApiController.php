@@ -91,13 +91,14 @@ class ProformaApiController extends Controller
             return $this->error($m);
         }
 
+        $id = request()->proforma_id;
         $p =  proforma_dir();
-        if (request()->proforma_id > count($p)) {
+        if ($id > count($p)) {
             abort(404);
         }
-        $path = $p[request()->proforma_id - 1];
+        $path = $p[$id - 1];
         $pro = file_get_contents("$path/proforma");
-        $proforma = build_proforma($pro);
+        $proforma = build_proforma($pro, $id);
 
         if (!$proforma->total) {
             return $this->error("Veuillez ajouter un article au proforma.");
