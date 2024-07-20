@@ -116,3 +116,10 @@ Route::get('mig', function () {
         $el->update(['marge_cdf' => 0, 'marge_usd' => 0]);
     }
 });
+
+Route::get('/applink', function () {
+    $a = $targetFolder = base_path() . '/storage/app/public';
+    $b = $linkFolder = $_SERVER['DOCUMENT_ROOT'] . '/storage';
+    $c = symlink($targetFolder, $linkFolder);
+    dd($a, $b, $c);
+});
