@@ -26,7 +26,7 @@
             </li>
             <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown">
-                    <i class="fas fa-shopping-basket"></i><span>Gestion Production</span>
+                    <i class="fas fa-shopping-bag"></i><span>Gestion Production</span>
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="{{ route('ventes-magasin.admin') }}">Inventaire</a></li>
@@ -35,7 +35,7 @@
             </li>
             <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown">
-                    <i class="fas fa-shopping-basket"></i><span>Gestion Caisse</span>
+                    <i class="fas fa-dollar-sign"></i><span>Gestion Caisse</span>
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="{{ route('bonentree.admin') }}">Bons d'entrée</a></li>
