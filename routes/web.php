@@ -25,6 +25,8 @@ Route::get('', function () {
             $url = route('accueil.admin');
         } else if ($user->user_role == 'caissier') {
             $url = route('accueil.caissier');
+        } else if ($user->user_role == 'gerant') {
+            $url = route('accueil.admin');
         } else {
             $url = route('accueil.super-admin');
         }
@@ -60,9 +62,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/admin/ventes/ventes-magasin', [AdminController::class, 'ventesMagasin'])->name('ventes-magasin.admin');
             Route::get('/admin/ventes/ventes', [AdminController::class, 'ventes'])->name('ventes.admin');
 
-            Route::get('/admin/bon-dentree', [AdminController::class, 'bonentree'])->name('bonentree.admin');
-            Route::get('/admin/bon-desortie', [AdminController::class, 'bonsortie'])->name('bonsortie.admin');
-
             Route::get('/admin/articles/code-barre', [AdminController::class, 'code_barre'])->name('code-barre.admin');
             Route::get('/admin/articles/articles', [AdminController::class, 'articles'])->name('articles.admin');
             Route::get('/admin/articles/details/{article}', [AdminController::class, 'article_detail'])->name('detail-article.admin');
@@ -86,6 +85,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/preview-proforma-html/{proforma}', [CommonController::class, 'preview_proforma_html'])->name('proforma.preview_html');
         Route::get('/common/default', [CommonController::class, 'proforma_default'])->name('proforma_default');
 
+        Route::get('/common/bon-dentree', [CommonController::class, 'bonentree'])->name('bonentree.common');
+        Route::get('/common/bon-desortie', [CommonController::class, 'bonsortie'])->name('bonsortie.common');
     });
     Route::get('/super-admin', [SuperAdmin::class, 'index'])->name('accueil.super-admin');
 });

@@ -192,14 +192,17 @@
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                     <div class="">
-                        <button class="btn mb-2 btn-info mr-2" btnvalide type="button" action="valider">
-                            <span></span>
-                            Valider ce bon
-                        </button>
-                        <button class="btn mb-2 btn-danger" btnvalide type="button" action="rejeter">
-                            <span></span>
-                            Rejeter ce bon
-                        </button>
+                        @if (in_array(auth()->user()->user_role, ['admin', 'gerant']))
+                            <button class="btn mb-2 btn-info mr-2" btnvalide type="button" action="valider">
+                                <span></span>
+                                Valider ce bon
+                            </button>
+                            <button class="btn mb-2 btn-danger" btnvalide type="button" action="rejeter">
+                                <span></span>
+                                Rejeter ce bon
+                            </button>
+                        @endif
+
                         <button class="btn mb-2 btn-success ml-2" bprint>
                             <i class="fa fa-print"></i>
                             Imprimer
@@ -414,14 +417,16 @@
                                             <span app-label-msg='${e.id}' class='ml-3 text-nowrap'></span>
                                             <div class='d-flex justify-content-center'>
                                                 <button class='btn text-muted mr-3 bdetail' data='${json}'><i class='fa fa-eye'></i></button>
-                                                <div class="dropdown ml-2">
-                                                    <button ${disabled} title="Supprimer : ${e.numero}" class="btn text-danger btn-del dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class='fa fa-trash'></i>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="">
-                                                        <button class="dropdown-item delete btn"  value='${e.id}'>Supprimer</button>
+                                                @if (in_array(auth()->user()->user_role, ['admin', 'gerant']))
+                                                    <div class="dropdown ml-2">
+                                                        <button ${disabled} title="Supprimer : ${e.numero}" class="btn text-danger btn-del dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class='fa fa-trash'></i>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="">
+                                                            <button class="dropdown-item delete btn"  value='${e.id}'>Supprimer</button>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>`;

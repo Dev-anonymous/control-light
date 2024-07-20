@@ -85,16 +85,5 @@ class AdminController extends Controller
         return view('admin.facture-supprimee', compact('factures'));
     }
 
-    function bonentree()
-    {
-        $articles = Article::orderBy('article')->with('devise')->where('compte_id', compte_id())->get();
-        return view('admin.bonentree', compact('articles'));
-    }
-
-    function bonsortie()
-    {
-        $articles = Article::orderBy('article')->with('devise')->where('compte_id', compte_id())->get();
-        return view('admin.bonsortie', compact('articles'));
-    }
 
 }

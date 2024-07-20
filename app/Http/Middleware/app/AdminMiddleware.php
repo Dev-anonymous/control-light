@@ -16,7 +16,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->user_role != 'admin') {
+        if (!in_array(auth()->user()->user_role, ['admin', 'gerant'])) {
             if (request()->wantsJson()) {
                 return response(["message" => "Vous n'etes pas autorisé à acceder à cette ressource."], 401);
             }

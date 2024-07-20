@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Proforma;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class CommonController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            abort_if(!in_array(auth()->user()->user_role, ['admin', 'caissier']), 503);
+            abort_if(!in_array(auth()->user()->user_role, ['admin', 'caissier', 'gerant']), 503);
             return $next($request);
         });
     }
@@ -82,5 +83,17 @@ class CommonController extends Controller
         $id = getConfig('facture_zero');
         $id ??= 1;
         return redirect(route('proforma.facture', $id));
+    }
+
+    function bonentree()
+    {
+        $articles = Article::orderBy('article')->with('devise')->where('compte_id', compte_id())->get();
+        return view('common.bonentree', compact('articles'));
+    }
+
+    function bonsortie()
+    {
+        $articles = Article::orderBy('article')->with('devise')->where('compte_id', compte_id())->get();
+        return view('common.bonsortie', compact('articles'));
     }
 }

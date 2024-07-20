@@ -5,7 +5,7 @@
         </a>
     </div>
     <ul class="sidebar-menu">
-        @if (auth()->user()->user_role == 'admin')
+        @if (in_array(auth()->user()->user_role, ['admin', 'gerant']))
             <li class="dropdown">
                 <a href="{{ route('accueil.admin') }}" class="nav-link">
                     <i class="fa fa-home"></i><span>Accueil</span>
@@ -38,8 +38,8 @@
                     <i class="fas fa-dollar-sign"></i><span>Gestion Caisse</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('bonentree.admin') }}">Bons d'entrée</a></li>
-                    <li><a class="nav-link" href="{{ route('bonsortie.admin') }}">Bons de sortie</a></li>
+                    <li><a class="nav-link" href="{{ route('bonentree.common') }}">Bons d'entrée</a></li>
+                    <li><a class="nav-link" href="{{ route('bonsortie.common') }}">Bons de sortie</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -100,19 +100,28 @@
                 </ul>
             </li>
         @elseif (auth()->user()->user_role == 'caissier')
-            <li class="dropdown">
+            {{-- <li class="dropdown">
                 <a href="{{ route('accueil.caissier') }}" class="nav-link">
                     <i class="fa fa-home"></i><span>Accueil</span>
                 </a>
+            </li> --}}
+            <li class="dropdown">
+                <a href="#" class="menu-toggle nav-link has-dropdown">
+                    <i class="fas fa-shopping-basket"></i><span>Gestion Production</span>
+                </a>
+                <ul class="dropdown-menu">
+                    {{-- <li><a class="nav-link" href="{{ route('ventes-magasin.caissier') }}">Inventaire</a>
+                    </li> --}}
+                    <li><a class="nav-link" href="{{ route('ventes.caissier') }}">Nouvelle vente</a></li>
+                </ul>
             </li>
             <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown">
-                    <i class="fas fa-shopping-basket"></i><span>Vente</span>
+                    <i class="fas fa-dollar-sign"></i><span>Gestion Caisse</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('ventes-magasin.caissier') }}">Afficher les ventes</a>
-                    </li>
-                    <li><a class="nav-link" href="{{ route('ventes.caissier') }}">Nouvelle vente</a></li>
+                    <li><a class="nav-link" href="{{ route('bonentree.common') }}">Bons d'entrée</a></li>
+                    <li><a class="nav-link" href="{{ route('bonsortie.common') }}">Bons de sortie</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -132,14 +141,14 @@
                     <li><a class="nav-link" href="{{ route('proforma.modele') }}">Modèles des proforma</a></li>
                 </ul>
             </li>
-            <li class="dropdown">
+            {{-- <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown">
                     <i class="fa fa-users"></i><span>Caissiers</span>
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="{{ route('cassier.caissier') }}">Afficher les caissiers</a></li>
                 </ul>
-            </li>
+            </li> --}}
             <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown">
                     <i class="fa fa-cog"></i><span>Parametres</span>

@@ -25,7 +25,7 @@
             </div>
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="h4 font-weight-bold">Nouvelle facture</h3>
+                    <h3 class="h4 font-weight-bold">Nouvelle facture (Panier)</h3>
                     <div class="card-header-action">
                         <div class="d-flex">
                             <div class="form-group mr-1">
@@ -597,8 +597,13 @@
                             `<div style="margin-bottom:10px;">
                                 <div style="text-align: center; margin-bottom:10px;">
                                     <span>{{ @$shop->shop }}</span><br>
-                                    <span>{{ @$shop->adresse }}</span><br>
-                                    <span>{{ @$shop->contact }}</span>
+                                    <span>Addresse: {{ @$shop->adresse }}</span><br>
+                                    <span>Tel : {{ @$shop->contact }}</span><br>
+                                    <span>RCCM : {{ @$shop->rccm }}</span><br>
+                                    <span>IDNAT : {{ @$shop->idnat }}</span><br>
+                                </div>
+                                <div style="text-align: center; margin-bottom:10px;">
+                                    <span style="font-size:20px"># COPIE FACTURE #</span><br>
                                 </div>
                                 <div>
                                     <span>N° facture : ${facture.numero_facture}</span>
@@ -1068,8 +1073,10 @@
                             <div style="margin-bottom:10px;">
                                 <div style="text-align: center; margin-bottom:10px;">
                                     <span>{{ @$shop->shop }}</span><br>
-                                    <span>{{ @$shop->adresse }}</span><br>
-                                    <span>{{ @$shop->contact }}</span>
+                                    <span>Addresse: {{ @$shop->adresse }}</span><br>
+                                    <span>Tel : {{ @$shop->contact }}</span><br>
+                                    <span>RCCM : {{ @$shop->rccm }}</span><br>
+                                    <span>IDNAT : {{ @$shop->idnat }}</span><br>
                                 </div>
                                 <div>
                                     <span>N° facture : <span numero-facture>-</span></span>

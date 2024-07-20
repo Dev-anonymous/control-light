@@ -60,7 +60,7 @@ class AuthController extends Controller
         /** @var \App\Models\User $user **/
         $user = auth()->user();
         User::where(['id' => $user->id])->update(['derniere_activite' => now()]);
-        if ($user->user_role == 'admin') {
+        if ($user->user_role == 'admin' || $user->user_role == 'gerant') {
             $url = route('accueil.admin');
         } else if ($user->user_role == 'caissier') {
             $url = route('accueil.caissier');
