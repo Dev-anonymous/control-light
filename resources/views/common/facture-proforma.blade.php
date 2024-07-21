@@ -155,9 +155,11 @@
                             <div class="w-100 text-center">
                                 <b spinner style="display: none" class="spinner-border spinner-boder text-danger"></b>
                             </div>
-                            <div class="table-responsive" >
-                                <iframe src="" id="iframe" style="height: 31cm" width="100%"
-                                    frameborder="0"></iframe>
+                            <div class="table-responsive">
+                                <div style="width: 21cm !important">
+                                    <iframe src="" id="iframe" style="height: 31cm" width="100%"
+                                        frameborder="0"></iframe>
+                                </div>
                             </div>
                         </div>
                         <hr>
@@ -352,14 +354,14 @@
                 event.preventDefault();
 
                 var stop = false
-                $(':input[required]', $('#form1')).each(function(i,e){
-                    if( $(this).val() == '' ){
+                $(':input[required]', $('#form1')).each(function(i, e) {
+                    if ($(this).val() == '') {
                         stop = true;
                         return;
                     }
                 });
 
-                if(stop){
+                if (stop) {
                     $('.modal.show').modal('hide');
                     alert("Veuillez completer tous champs en rouge dans le formulaire");
                     $([document.documentElement, document.body]).animate({
@@ -368,9 +370,9 @@
                     return;
                 }
 
-                stop = $(':input', $('#form2')).length ==0;
+                stop = $(':input', $('#form2')).length == 0;
 
-                if(stop){
+                if (stop) {
                     $('.modal.show').modal('hide');
                     alert("Veuillez ajouter au moins un article");
                     $([document.documentElement, document.body]).animate({
