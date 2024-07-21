@@ -67,12 +67,12 @@ class AdminApiController extends Controller
             'shop' => 'required|string|max:128',
             'adresse' => 'required|string|max:128',
             'contact' => 'required|string|max:128',
-            'rccm' => 'sometimes|string|max:128',
-            'idnat' => 'sometimes|string|max:128',
-            'numeroimpot' => 'sometimes|string|max:128',
-            'siegesocial' => 'sometimes|string|max:500',
-            'detailsbancaire' => 'sometimes|string|max:500',
-            'autresinfo' => 'sometimes|string|max:500',
+            'rccm' => 'sometimes|max:128',
+            'idnat' => 'sometimes|max:128',
+            'numeroimpot' => 'sometimes|max:128',
+            'siegesocial' => 'sometimes|max:500',
+            'detailsbancaire' => 'sometimes|max:500',
+            'autresinfo' => 'sometimes|max:500',
             'logo' => 'sometimes|mimes:jpg,jpeg,png',
         ]);
         if ($validator->fails()) {
