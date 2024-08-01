@@ -4,8 +4,8 @@
         </h4>
     </div>
     <div class="w-100 text-center p-2 fixed-bottom" install-banner style="display: none !important;">
-        <p click-zone class="text-white font-weight-bold">Installer l'application {{ config('app.name') }} sur votre
-            bureau ?
+        <p class="text-white font-weight-bold">
+            Installer l'application {{ config('app.name') }} sur votre bureau ?
         </p>
         <div class="d-flex justify-content-center">
             <button class="btn btn-lg btn-outline-light mr-2 btn-noinstall">Non</button>
@@ -40,7 +40,7 @@
     var no = localStorage.getItem('noinstall');
     no = Number(no);
     var ibanner = $('[install-banner]');
-    $('.btn-noinstall,[click-zone]').click(function() {
+    $('.btn-noinstall,[install-banner]').click(function() {
         ibanner.slideUp();
         localStorage.setItem('noinstall', no + 1);
     });
