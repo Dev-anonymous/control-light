@@ -25,9 +25,9 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <div class="">
-                                        <iframe fpro src="{{ route('proforma.preview_html', $proforma->id) }}" frameborder="0"
-                                            width="100%" height="900vh"></iframe>
+                                    <div style="width: 21cm !important">
+                                        <iframe fpro src="{{ route('proforma.preview_html', $proforma->id) }}"
+                                            frameborder="0" width="100%" height="900vh"></iframe>
                                     </div>
                                 </div>
                             </div>
@@ -42,7 +42,8 @@
                             <i class="fa fa-print"></i>
                             Imprimer la facture
                         </button>
-                        <button class="btn btn-dark bg-black" @if ($proforma->date_encaissement != null) disabled  @endif data-toggle="modal" data-target="#mdlenc">
+                        <button class="btn btn-dark bg-black" @if ($proforma->date_encaissement != null) disabled @endif
+                            data-toggle="modal" data-target="#mdlenc">
                             <i class="fa fa-save"></i>
                             Encaisser la facture
                         </button>
@@ -127,7 +128,7 @@
     <script>
         $(function() {
 
-            $('[bprint]').click(function(){
+            $('[bprint]').click(function() {
                 $("[fpro]").get(0).contentWindow.print();
             })
 
