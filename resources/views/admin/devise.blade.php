@@ -150,7 +150,7 @@
                         <div class="col-md-12">
                             <p class="text-muted">
                                 <i class="fa fa-exclamation-triangle text-warning"></i>
-                                Il ne pas recommandé de modifier les taux de vos devises pendant qu'un caissier est entrain
+                                Il n'est pas recommandé de modifier les taux de vos devises pendant qu'un caissier est entrain
                                 d'enregistrer des ventes, rassurez vous que lors de la modification des taux, vous etes le
                                 seul à utiliser l'application ou aucun de vos caissier n'est entrain d'enregistrer les
                                 ventes, au cas contraire, demandez à votre caissier d'actualiser sa page de vente pour
