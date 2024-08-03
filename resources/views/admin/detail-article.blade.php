@@ -53,9 +53,11 @@
                                             $cl2 = $cl = '';
 
                                             if ($article->stock < 20) {
-                                                $cl = "<span class='text-danger p-2 ml-3'><i class='fa fa-exclamation-triangle text-danger'></i> Pensez à réapprovisionner ce stock</span>";
+                                                $cl =
+                                                    "<span class='text-danger p-2 ml-3'><i class='fa fa-exclamation-triangle text-danger'></i> Pensez à réapprovisionner ce stock</span>";
                                             } else {
-                                                $cl = "<span class='text-success p-2 ml-3'><i class='fa fa-check-circle text-success'></i> Stock disponible</span>";
+                                                $cl =
+                                                    "<span class='text-success p-2 ml-3'><i class='fa fa-check-circle text-success'></i> Stock disponible</span>";
                                             }
 
                                             if (!empty($article->date_expiration)) {
@@ -69,9 +71,12 @@
                                                 if ($days <= 60) {
                                                     if ($days >= 0 && $days <= 60) {
                                                         $m = "Cet article expire dans $days jour(s),  pensez à le réapprovisionner ou à modifier sa date d'expiration.";
-                $cl2 = "<span class='text-warning p-2 ml-3'><i class='fa fa-exclamation-triangle text-warning'></i> $m</span>";
-            } else {
-                $m = 'Cet article a déjà expiré depuis ' . abs($days) . " jour(s),  pensez à le réapprovisionner ou à modifier sa date d'expiration.";
+                                                        $cl2 = "<span class='text-warning p-2 ml-3'><i class='fa fa-exclamation-triangle text-warning'></i> $m</span>";
+                                                    } else {
+                                                        $m =
+                                                            'Cet article a déjà expiré depuis ' .
+                                                            abs($days) .
+                                                            " jour(s),  pensez à le réapprovisionner ou à modifier sa date d'expiration.";
                                                         $cl2 = "<span class='text-danger p-2 ml-3'><i class='fa fa-exclamation-triangle text-danger'></i> $m</span>";
                                                     }
                                                 } else {
@@ -131,10 +136,13 @@
                         <i class="fa fa-edit"></i>
                         Modifier
                     </button>
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#mdl-del">
-                        <i class="fa fa-trash"></i>
-                        Supprimer cet article
-                    </button>
+                    @if (in_array(auth()->user()->user_role, ['admin']))
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#mdl-del">
+                            <i class="fa fa-trash"></i>
+                            Supprimer cet article
+                        </button>
+                    @endif
+
                 </div>
             </div>
             <div class="card ">
@@ -211,10 +219,7 @@
                                     <tbody>
                                         @php
                                             $n = 1;
-                                            $appro = $article
-                                                ->approvisionnements()
-                                                ->orderBy('id', 'desc')
-                                                ->get();
+                                            $appro = $article->approvisionnements()->orderBy('id', 'desc')->get();
                                         @endphp
                                         @foreach ($appro as $el)
                                             <tr>
@@ -251,7 +256,10 @@
                     <input type="hidden" name="action" value="">
                     @php
                         $devise = \App\Models\Devise::all();
-                        $categorie = \App\Models\CategorieArticle::where('groupe_article_id', $article->categorie_article->groupe_article_id)
+                        $categorie = \App\Models\CategorieArticle::where(
+                            'groupe_article_id',
+                            $article->categorie_article->groupe_article_id,
+                        )
                             ->where('compte_id', compte_id())
                             ->get();
                     @endphp
@@ -275,8 +283,8 @@
                                 <div class="form-group">
                                     <label class="">Prix d'achat unitaire par
                                         {{ $article->unite_mesure->unite_mesure }}</label>
-                                    <input class="form-control w-100" name="prix_achat" required min="0.1" type="number"
-                                        step="0.000001" placeholder="Prix d'achat unitaire"
+                                    <input class="form-control w-100" name="prix_achat" required min="0.1"
+                                        type="number" step="0.000001" placeholder="Prix d'achat unitaire"
                                         value="{{ $article->prix_achat }}" />
                                 </div>
                             </div>
@@ -297,8 +305,8 @@
                                 <div class="form-group">
                                     <label class="">Prix de vente unitaire par
                                         {{ $article->unite_mesure->unite_mesure }}</label>
-                                    <input class="form-control w-100" name="prix" required min="1" type="number"
-                                        step="0.000001" placeholder="Prix de vente unitaire"
+                                    <input class="form-control w-100" name="prix" required min="1"
+                                        type="number" step="0.000001" placeholder="Prix de vente unitaire"
                                         value="{{ $article->prix }}" />
                                 </div>
                             </div>
@@ -318,8 +326,8 @@
                             <label for="">Réduction en %</label>
                             <div class="input-group mb-3">
                                 <input class="form-control" name="reduction" required type="number"
-                                    placeholder="Reduction en %" value="{{ $article->reduction }}" min="0" step="0.01"
-                                    max="90" aria-describedby="basic-addon2">
+                                    placeholder="Reduction en %" value="{{ $article->reduction }}" min="0"
+                                    step="0.01" max="90" aria-describedby="basic-addon2">
                             </div>
                         </div>
                         @empty($article->date_expiration)
@@ -329,7 +337,8 @@
                             @endphp
                             <div class="form-group">
                                 <label for="">Date d'expiration</label>
-                                <input class="form-control datepicker2" name="date_expiration" value="{{ $dat }}" />
+                                <input class="form-control datepicker2" name="date_expiration"
+                                    value="{{ $dat }}" />
                             </div>
                         @endempty
                         <div class="form-group" style="display: none" id="rep"></div>
@@ -385,7 +394,8 @@
                             @endphp
                             <div class="form-group" id="e-zone2" style="display: none">
                                 <label for="">Date d'expiration</label>
-                                <input class="form-control datepicker2" name="date_expiration" value="{{ $dat }}" />
+                                <input class="form-control datepicker2" name="date_expiration"
+                                    value="{{ $dat }}" />
                             </div>
                         @endempty
                         <div class="form-group" style="display: none" id="rep"></div>
@@ -447,7 +457,7 @@
     <script src="{{ asset('assets/js/daterangepicker/daterangepicker.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/js/daterangepicker/daterangepicker.css') }}">
     @php
-    $d = empty($article->date_expiration) ? date('Y-m-d') : $article->date_expiration->format('Y-m-d');
+        $d = empty($article->date_expiration) ? date('Y-m-d') : $article->date_expiration->format('Y-m-d');
     @endphp
     <script>
         $(function() {
@@ -457,7 +467,7 @@
                 locale: {
                     format: 'YYYY/MM/DD'
                 },
-                maxDate: "{{ date('Y-m-d') }}"
+                maxDate: "{{ now()->addDays(1)->format('Y-m-d') }}"
             });
 
             $('.datepicker2').daterangepicker({
@@ -474,7 +484,6 @@
                 buttons: [
                     'pageLength', 'excel', 'pdf', 'print'
                 ],
-                stateSave: !0,
                 "lengthMenu": [
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]

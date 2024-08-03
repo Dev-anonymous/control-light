@@ -44,7 +44,7 @@
                                         <div class="p-15 border-bottom">
                                             <div class="theme-setting-options">
                                                 <label class="m-b-0">
-                                                    <input type="checkbox" name="remember-me"
+                                                    <input type="checkbox" name="remember-me" checked
                                                         class="custom-switch-input" id="mini_sidebar_setting">
                                                     <span class="custom-switch-indicator"></span>
                                                     <span class="control-label p-l-10">Resté connecté</span>

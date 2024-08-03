@@ -173,15 +173,15 @@
             </div>
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="h4 font-weight-bold">Mes factures enregistrées</h3>
+                    <h3 class="h4 font-weight-bold">Mes factures journalières</h3>
                     <div class="card-header-action">
                         <form id="f-change-2">
                             <input type="hidden" name="filtre" value="true">
                             <div class="d-flex">
-                                <div class="form-group ml-1 mr-1">
+                                {{-- <div class="form-group ml-1 mr-1">
                                     <input class="form-control datepicker p-3 rounded-sm" name="date"
                                         value="{{ date('Y-m-d') }}" style="padding: 20px !important; width:200px" />
-                                </div>
+                                </div> --}}
                                 <div class="form-group ml-1">
                                     <select class="select2 form-control rounded-0 p-0" name="devise" style="width:80px">
                                         <option value="">Toutes</option>
@@ -366,14 +366,13 @@
                 locale: {
                     format: 'YYYY/MM/DD'
                 },
-                maxDate: "{{ date('Y-m-d') }}"
+                maxDate: "{{ now()->addDays(1)->format('Y-m-d') }}"
             });
             opt = {
                 dom: 'Bfrtip',
                 buttons: [
                     'pageLength', 'excel', 'pdf', 'print'
                 ],
-                stateSave: !0,
                 "lengthMenu": [
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]

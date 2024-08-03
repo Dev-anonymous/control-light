@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class Bonsortie
  * 
  * @property int $id
+ * @property int|null $proforma_id
  * @property float|null $total_cdf
  * @property string|null $numero
  * @property int|null $status
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $type
  * @property string|null $motif
  * 
+ * @property Proforma|null $proforma
  * @property Collection|Article[] $articles
  * @property Collection|BonLivraison[] $bon_livraisons
  *
@@ -36,6 +38,7 @@ class Bonsortie extends Model
 	public $timestamps = false;
 
 	protected $casts = [
+		'proforma_id' => 'int',
 		'total_cdf' => 'float',
 		'status' => 'int',
 		'compte_id' => 'int'
@@ -46,6 +49,7 @@ class Bonsortie extends Model
 	];
 
 	protected $fillable = [
+		'proforma_id',
 		'total_cdf',
 		'numero',
 		'status',
@@ -57,6 +61,11 @@ class Bonsortie extends Model
 		'type',
 		'motif'
 	];
+
+	public function proforma()
+	{
+		return $this->belongsTo(Proforma::class);
+	}
 
 	public function articles()
 	{

@@ -39,15 +39,18 @@ class FactureApiController extends Controller
         if ($devise) {
             $factures = $factures->where('devise', $devise);
         }
+
+        $from = $to = date('Y-m-d');
         if ($date) {
             $date = explode('-', $date);
             if (count($date) == 2) {
                 $from = trim(str_replace('/', '-', $date[0]));
                 $to = trim(str_replace('/', '-', $date[1]));
-                $factures = $factures->where('date', '>=', $from)->whereDate('date', '<=', $to);
             }
         }
-        if (auth()->user()->user_role != 'admin') {
+        $factures = $factures->where('date', '>=', $from)->whereDate('date', '<=', $to);
+
+        if (!in_array(auth()->user()->user_role, ['admin', 'gerant'])) {
             $factures = $factures->where('users_id', auth()->user()->id);
         }
 

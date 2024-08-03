@@ -179,7 +179,8 @@ function numero_proforma()
         $num = "0$num";
     }
 
-    $num = "FPRO-$num";
+    $pr = getConfig('prefixe_facture') ?? '';
+    $num = "$pr-$num";
 
     $f = Proforma::where(['compte_id' => compte_id(), 'numero' => $num])->count();
     if ($f) {
@@ -195,36 +196,40 @@ function numero_proforma()
     return $num;
 }
 
-function build_proforma($proforma, $id)
+function build_proforma($proforma, $id, $data = [])
 {
-    $rules =  [
-        'nom_entreprise' => 'sometimes',
-        'adresse_entreprise' => 'sometimes',
-        'email_entreprise' => 'sometimes',
-        'telephone_entreprise' => 'sometimes',
-        'nom_client' => 'sometimes',
-        'adresse_client' => 'sometimes',
-        'email_client' => 'sometimes',
-        'telephone_client' => 'sometimes',
-        'mode_reglement' => 'sometimes',
-        'condition_reglement' => 'sometimes',
-        'date_reglement' => 'sometimes',
-        'note_reglement' => 'sometimes',
-        'articles' => 'sometimes|array',
-        'articles.*' => 'required|exists:article,id',
-        'qtes' => 'sometimes|array',
-        'qtes.*' => 'min:1',
-        'devise' => 'sometimes|in:CDF,USD'
-    ];
-    $validator = Validator::make(request()->all(), $rules);
+    if (!count($data)) {
+        $rules =  [
+            'nom_entreprise' => 'sometimes',
+            'adresse_entreprise' => 'sometimes',
+            'email_entreprise' => 'sometimes',
+            'telephone_entreprise' => 'sometimes',
+            'nom_client' => 'sometimes',
+            'adresse_client' => 'sometimes',
+            'email_client' => 'sometimes',
+            'telephone_client' => 'sometimes',
+            'mode_reglement' => 'sometimes',
+            'condition_reglement' => 'sometimes',
+            'date_reglement' => 'sometimes',
+            'note_reglement' => 'sometimes',
+            'articles' => 'sometimes|array',
+            'articles.*' => 'required|exists:article,id',
+            'qtes' => 'sometimes|array',
+            'qtes.*' => 'min:1',
+            'devise' => 'sometimes|in:CDF,USD'
+        ];
+        $validator = Validator::make(request()->all(), $rules);
 
-    if ($validator->fails()) {
-        return;
+        if ($validator->fails()) {
+            return;
+        }
+        $data = $validator->validated();
+        $devise = request()->devise ?? 'CDF';
+        unset($data['devise']);
+    } else {
+        $rules = $data;
+        $devise = $data['devise'];
     }
-    $data = $validator->validated();
-
-    $devise = request()->devise ?? 'CDF';
-    unset($data['devise']);
 
     $ids = (array) @$data['articles'];
     $qtes = (array) @$data['qtes'];
@@ -232,20 +237,20 @@ function build_proforma($proforma, $id)
     $shop = Shop::where('compte_id', compte_id())->first();
 
     $t = [];
-    foreach ($rules as $k => $e) {
+    foreach ($data as $k => $e) {
         if ($k == 'qtes' or $k == 'articles' or $k == 'articles.*' or $k == 'qtes.*' or $k == 'devise') continue;
         if ($k == 'telephone_entreprise') {
-            if (request($k)) {
+            if ($data[$k]) {
                 if ($id == 2) {
-                    $t[] = request()->$k . "<br>RCCM : " . ($shop->rccm ?? '-') . ", IDNAT : " . ($shop->idnat ?? '-') . ", N° Impot : " . ($shop->numeroimpot ?? '-');
+                    $t[] = $data[$k] . "<br>RCCM : " . ($shop->rccm ?? '-') . ", IDNAT : " . ($shop->idnat ?? '-') . ", N° Impot : " . ($shop->numeroimpot ?? '-');
                 } else {
-                    $t[] = request()->$k . "<br>RCCM : " . ($shop->rccm ?? '-') . "<br>IDNAT : " . ($shop->idnat ?? '-') . "<br>N° Impot : " . ($shop->numeroimpot ?? '-');
+                    $t[] = $data[$k] . "<br>RCCM : " . ($shop->rccm ?? '-') . "<br>IDNAT : " . ($shop->idnat ?? '-') . "<br>N° Impot : " . ($shop->numeroimpot ?? '-');
                 }
             } else {
                 $t[] = '-';
             }
         } else {
-            $t[] = request()->$k ?? '-';
+            $t[] = $data[$k] ?? '-';
         }
     }
 
@@ -263,7 +268,7 @@ function build_proforma($proforma, $id)
             <td>" . montant($v->prix) . " {$v->devise->devise}</td>
             <td>$qte</td>
             <td>{$v->unite_mesure->unite_mesure}</td>
-            <td>$tot {$v->devise->devise}</td>
+            <td class='text-right'>$tot {$v->devise->devise}</td>
         </tr>";
         $tg += change($tot, $v->devise->devise, 'CDF');
 
@@ -310,7 +315,7 @@ function build_proforma($proforma, $id)
     $t[] = now('Africa/Lubumbashi')->format('d-m-Y H:i');
     $t[] = $logo;
     $t[] = "RCCM : " . ($shop->rccm ?? '-') . ", IDNAT : " . ($shop->idnat ?? '-') . ", N° Impot : " . ($shop->numeroimpot ?? '-');
-    $t[] = "Contact : " . (request('email_entreprise') ?? '-') . ", Tel : " . (request('telephone_entreprise') ?? '-');
+    $t[] = "Contact : " . (@$data['email_entreprise'] ?? '-') . ", Tel : " . (@$data['telephone_entreprise'] ?? '-');
     $t[] = auth()->user()->name;
 
     if ($id == 2) {
@@ -327,10 +332,10 @@ function build_proforma($proforma, $id)
         'devise' => $devise,
         'numero' => $num_fac,
         'client' => [
-            'nom' => request()->nom_client,
-            'adresse' => request()->adresse_client,
-            'tel' => request()->telephone_client,
-            'email' => request()->email_client,
+            'nom' => @$data['nom_client'],
+            'adresse' => @$data['adresse_client'],
+            'tel' => @$data['telephone_client'],
+            'email' => @$data['email_client'],
         ],
         'articles' => $articles,
         'proforma' => $temp
@@ -401,10 +406,10 @@ function numbon($type = 'entre')
 {
     if ($type == 'entre') {
         $n = Bonentree::count() + 1;
-        $pr = 'BE';
+        $pr = getConfig('prefixe_be') ?? '';
     } elseif ($type == 'sortie') {
         $n = Bonsortie::count() + 1;
-        $pr = 'BS';
+        $pr = getConfig('prefixe_bs') ?? '';
     } else {
         throw new Exception("uhm numbon()");
     }

@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'Détails proforma ' . $proforma->numero)
+@section('title', 'Facture ' . $proforma->numero)
 
 @section('body')
     <div class="loader"></div>
@@ -16,7 +16,7 @@
         <div class="main-content">
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="h4 font-weight-bold">Facture proforma :
+                    <h3 class="h4 font-weight-bold">Facture :
                         {{ $proforma->numero . ' | ' . $proforma->montant . ' | ' . $proforma->date->format('d-m-Y H:i:s') }}
                     </h3>
                 </div>
@@ -34,19 +34,22 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between">
-                        <button class="btn btn-outline-danger" data-toggle="modal" data-target="#mdldel">
-                            <i class="fa fa-trash"></i>
-                            Supprimer la facture
-                        </button>
+                        @if (auth()->user()->user_role == 'admin')
+                            <button class="btn btn-outline-danger" data-toggle="modal" data-target="#mdldel">
+                                <i class="fa fa-trash"></i>
+                                Supprimer la facture
+                            </button>
+                        @endif
                         <button class="btn btn-info" bprint>
+                            <span></span>
                             <i class="fa fa-print"></i>
                             Imprimer la facture
                         </button>
-                        <button class="btn btn-dark bg-black" @if ($proforma->date_encaissement != null) disabled @endif
+                        {{-- <button class="btn btn-dark bg-black" @if ($proforma->date_encaissement != null) disabled @endif
                             data-toggle="modal" data-target="#mdlenc">
                             <i class="fa fa-save"></i>
                             Encaisser la facture
-                        </button>
+                        </button> --}}
                     </div>
                 </div>
             </div>
@@ -129,7 +132,29 @@
         $(function() {
 
             $('[bprint]').click(function() {
-                $("[fpro]").get(0).contentWindow.print();
+                var btn = $(this).attr('disabled', true);
+                btn.find('span').removeClass().addClass('spinner-border spinner-border-sm');
+                $.ajax({
+                    url: '{{ route('proforma.print') }}',
+                    type: 'post',
+                    data: {
+                        id: '{{ $proforma->id }}'
+                    },
+                    timeout: 20000,
+                    success: function(rep) {
+                        if (rep.success) {
+                            $("[fpro]").get(0).contentWindow.print();
+                        } else {
+                            alert("Erreur d'impression.");
+                        }
+                    },
+                    error: function() {
+                        alert("Erreur d'impression.");
+                    }
+                }).always(function() {
+                    btn.attr('disabled', false);
+                    btn.find('span').removeClass();
+                });
             })
 
             $('.bdel').click(function() {

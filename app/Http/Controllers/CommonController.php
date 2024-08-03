@@ -45,7 +45,10 @@ class CommonController extends Controller
         $articles = $resp->data;
         $shop = shop();
         $email = User::where(['user_role' => 'admin', 'compte_id' => compte_id()])->first()->email;
-        return view('common.facture-proforma', compact('modele', 'articles', 'shop', 'email', 'proforma_id'));
+
+        $clients = User::where('user_role', 'client')->where('compte_id', compte_id())->get();
+
+        return view('common.facture-proforma', compact('modele', 'articles', 'shop', 'email', 'proforma_id', 'clients'));
     }
 
     public function preview_proforma($id)
@@ -61,7 +64,13 @@ class CommonController extends Controller
 
     public function preview_proforma_html(Proforma $proforma)
     {
-        return $proforma->html;
+        $html = $proforma->html;
+        if ($proforma->isprint == 1) {
+            if (strpos($html, '<iscopie></iscopie>') != false) {
+                $html = str_replace('<iscopie></iscopie>', '<h5 style="font-weight: 500; color:red">#COPIE#</h5>', $html);
+            }
+        }
+        return $html;
     }
 
     public function proforma()
@@ -94,6 +103,7 @@ class CommonController extends Controller
     function bonsortie()
     {
         $articles = Article::orderBy('article')->with('devise')->where('compte_id', compte_id())->get();
-        return view('common.bonsortie', compact('articles'));
+        $clients = User::where('user_role', 'client')->where('compte_id', compte_id())->get();
+        return view('common.bonsortie', compact('articles', 'clients'));
     }
 }

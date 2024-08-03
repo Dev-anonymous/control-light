@@ -7,12 +7,15 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Proforma
  * 
  * @property int $id
+ * @property int|null $users_id
+ * @property int|null $client_id
  * @property string|null $numero
  * @property string|null $client
  * @property string|null $html
@@ -22,6 +25,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $montant
  * @property string|null $enregistrer_par
  * @property Carbon|null $date_encaissement
+ * @property int|null $isprint
+ * 
+ * @property User|null $user
+ * @property Collection|Bonsortie[] $bonsorties
  *
  * @package App\Models
  */
@@ -31,7 +38,10 @@ class Proforma extends Model
 	public $timestamps = false;
 
 	protected $casts = [
-		'compte_id' => 'int'
+		'users_id' => 'int',
+		'client_id' => 'int',
+		'compte_id' => 'int',
+		'isprint' => 'int'
 	];
 
 	protected $dates = [
@@ -40,6 +50,8 @@ class Proforma extends Model
 	];
 
 	protected $fillable = [
+		'users_id',
+		'client_id',
 		'numero',
 		'client',
 		'html',
@@ -48,6 +60,17 @@ class Proforma extends Model
 		'compte_id',
 		'montant',
 		'enregistrer_par',
-		'date_encaissement'
+		'date_encaissement',
+		'isprint'
 	];
+
+	public function user()
+	{
+		return $this->belongsTo(User::class, 'users_id');
+	}
+
+	public function bonsorties()
+	{
+		return $this->hasMany(Bonsortie::class);
+	}
 }

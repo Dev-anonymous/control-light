@@ -19,6 +19,9 @@
 
 <body>
     <div class="m-3">
+        <div class="text-center">
+        <iscopie></iscopie>
+        </div>
         <div class="row px-4" style="padding-top: 20px; height: 170px">
             <div class="col-6 d-flex align-items-center">
                 <img src="__ENTREPRISE_LOGO__" width="120px" height="120px" alt="" >
@@ -61,7 +64,9 @@
                 </div>
             </div>
         </div>
-
+        <div class="text-center">
+        <iscopie></iscopie>
+        </div>
         <div style="background-color: #112667" class="w-100 my-3">
             <p class="m-0 text-white font-weight-bold p-2">__NOTE_REGLEMENT__</p>
         </div>
@@ -73,9 +78,9 @@
                     <tr>
                         <th>#</th>
                         <th>Désignation</th>
+                        <th>Prix Unitaire</th>
                         <th>Qte</th>
                         <th>Unité</th>
-                        <th>Prix Unitaire</th>
                         <th class="text-right">Prix Total</th>
                     </tr>
                     <tbody>

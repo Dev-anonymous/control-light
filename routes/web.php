@@ -67,6 +67,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/admin/articles/details/{article}', [AdminController::class, 'article_detail'])->name('detail-article.admin');
 
             Route::get('/admin/utilisateurs', [AdminController::class, 'cassier'])->name('cassier.admin');
+            Route::get('/admin/clients', [AdminController::class, 'clients'])->name('clients.admin');
 
             Route::get('/admin/params/groupe-articles', [AdminController::class, 'groupe_article'])->name('groupe-article.admin');
             Route::get('/admin/params/categorie-articles', [AdminController::class, 'categorie_article'])->name('categore-article.admin');

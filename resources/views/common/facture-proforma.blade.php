@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'Modèles de factures proforma')
+@section('title', 'Modèles de factures')
 
 @section('body')
     <div class="loader"></div>
@@ -14,7 +14,7 @@
         <div class="main-content">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="h4 font-weight-bold">Nouvelle factures proforma : <b>Modèle #{{ $modele->id }}</b></h4>
+                    <h3 class="h4 font-weight-bold">Nouvelle factures : <b>Modèle #{{ $modele->id }}</b></h4>
                 </div>
             </div>
             <form action="#" id="form1" class="was-validated">
@@ -47,6 +47,15 @@
                             <div class="col-md-4">
                                 <p class="font-weight-bold">Information du client</p>
                                 <div class="form-group mb-1">
+                                    <label for="">Sélectionnez un Client</label>
+                                    <select name="client_id" class="select2 d-flex form-control rounded-0 p-0 selclient">
+                                        @foreach ($clients as $el)
+                                            <option value="{{ $el->id }}" client='{{ json_encode($el) }}'>
+                                                {{ $el->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group mb-1">
                                     <label for="">Client</label>
                                     <input name="nom_client" type="text" placeholder="Client"
                                         class="form-control form-control-sm" required>
@@ -71,8 +80,7 @@
                                 <p class="font-weight-bold">Autres informations</p>
                                 <div class="form-group mb-1">
                                     <label for="">Mode de règlement</label> <br>
-                                    <select name="mode_reglement" class="select2 form-control d-flex"
-                                        estyle="max-width: 270px !important">
+                                    <select name="mode_reglement" class="select2 form-control d-flex">
                                         <option value="">-</option>
                                         <option selected>CASH</option>
                                         <option>MOBILE MONEY</option>
@@ -149,7 +157,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
-                            <h3 class="h4 font-weight-bold">Facture proforma</h3>
+                            <h3 class="h4 font-weight-bold">Facture</h3>
                         </div>
                         <div class="card-body">
                             <div class="w-100 text-center">
@@ -166,7 +174,7 @@
                         <div class="card-footer d-flex justify-content-end">
                             <button class="btn btn-danger" data-toggle='modal' data-target='#mdl-save'>
                                 <i class="fa fa-save"></i>
-                                Enregistrer la facture
+                                Confirmer la facture
                             </button>
                         </div>
                     </div>
@@ -282,26 +290,59 @@
                     [10, 25, 50, 100, "All"]
                 ],
             };
+
+            var selclient = $('.selclient');
+            selclient.change(function() {
+                fillclient();
+            })
+
+            function fillclient() {
+                var v = JSON.parse($(':selected', selclient).attr('client'));
+                var form = $('#form1');
+                $('[name=nom_client]', form).val(v.name);
+                $('[name=telephone_client]', form).val(v.phone);
+                $('[name=email_client]', form).val(v.email);
+                $('[name=adresse_client]', form).val(v.adresselivraison);
+            }
+            fillclient();
             var items = $('[items]');
 
-            $('.badd').click(function() {
-                var btn = $(this);
-                var val = this.value;
-                var data = JSON.parse(val);
+            function insertItem(data, restrore = false) {
                 var id = data.id;
-
                 var tr = $(`tr[tr-${id}]`);
+
+                if (restrore) {
+                    var q = data.qte ?? 1;
+                    tr = `<tr tr-${data.id}>
+                            <input type="hidden" name="articles[]" value='${data.id}' />
+                            <input type="hidden" name="qtes[]" value='${q}' iqte-${data.id} />
+                            <td>${data.article}</td>
+                            <td>${data.prix}</td>
+                            <td tr-qte-${data.id}>${q}</td>
+                            <td>
+                                <button value="${data.id}"
+                                    class="btn btn-outline-danger bremove">
+                                    <i class="fa fa-times-circle"></i>
+                                </button>
+                            </td>
+                        </tr>`;
+                    tr = $(tr);
+                    items.append(tr);
+                    return false;
+                }
+
                 if (tr.length) {
                     var q = Number($(`[tr-qte-${data.id}]`, tr).html()) + 1;
                     $(`[tr-qte-${data.id}]`, tr).html(q);
                     $(`[iqte-${data.id}]`, tr).val(q);
                 } else {
+                    var q = 1;
                     tr = `<tr tr-${data.id}>
                             <input type="hidden" name="articles[]" value='${data.id}' />
-                            <input type="hidden" name="qtes[]" value='1' iqte-${data.id} />
+                            <input type="hidden" name="qtes[]" value='${q}' iqte-${data.id} />
                             <td>${data.article}</td>
                             <td>${data.prix}</td>
-                            <td tr-qte-${data.id}>1</td>
+                            <td tr-qte-${data.id}>${q}</td>
                             <td>
                                 <button value="${data.id}"
                                     class="btn btn-outline-danger bremove">
@@ -312,6 +353,53 @@
                     tr = $(tr);
                     items.append(tr);
                 }
+
+                var ar = localStorage.getItem('factureItems');
+                if (ar) {
+                    ar = JSON.parse(ar);
+                } else {
+                    ar = [data];
+                }
+                var tmp = [];
+                var find = false;
+                for (var e in ar) {
+                    e = ar[e];
+                    if (e.id == data.id) {
+                        e.qte = q;
+                        find = true;
+                    }
+                    tmp.push(e);
+                }
+
+                if (!find) {
+                    tmp.push(data);
+                }
+                ar = tmp;
+                localStorage.setItem('factureItems', JSON.stringify(ar));
+            }
+
+            function restoreInvoice() {
+                var ar = localStorage.getItem('factureItems');
+                if (ar) {
+                    ar = JSON.parse(ar);
+                } else {
+                    ar = [];
+                }
+                ar.forEach(function(e) {
+                    insertItem(e, true);
+                });
+                initRem();
+            }
+
+            restoreInvoice();
+
+            $('.badd').click(function() {
+                var btn = $(this);
+                var val = this.value;
+                var data = JSON.parse(val);
+
+                insertItem(data);
+
                 btn.find('i').removeClass().addClass('fa fa-check-circle fa-2x text-success');
                 setTimeout(() => {
                     btn.find('i').removeClass().addClass('fa fa-plus-circle');
@@ -324,6 +412,18 @@
                 $('.bremove').off('click').click(function() {
                     var id = this.value;
                     $(`tr[tr-${id}]`).remove();
+                    var ar = localStorage.getItem('factureItems');
+                    if (ar) {
+                        ar = JSON.parse(ar);
+                        var tmp = [];
+                        ar.forEach(function(e) {
+                            if (e.id != id) {
+                                tmp.push(e);
+                            }
+                        });
+                        localStorage.setItem('factureItems', JSON.stringify(tmp));
+                    }
+
                     preview();
                 })
             }
@@ -405,6 +505,8 @@
                         var a =
                             `<a class='btn btn-link' href='${url}'>Afficher ou imprimer la facture</a>`;
                         $('#rep3').html(a);
+                        localStorage.setItem('factureItems', '[]');
+
                     } else {
                         var m = res.message;
                         rep.addClass('alert alert-danger w-100 text-left mt-2').html(m);

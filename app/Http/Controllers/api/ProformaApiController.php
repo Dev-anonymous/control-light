@@ -4,10 +4,15 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\ArticleBonsortie;
+use App\Models\BonLivraison;
+use App\Models\Bonsortie;
 use App\Models\Proforma;
+use App\Models\User;
 use App\Traits\ApiResponser;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ProformaApiController extends Controller
@@ -36,6 +41,12 @@ class ProformaApiController extends Controller
 
         if ($devise) {
             $pro = $pro->where('montant', 'like', "%$devise%");
+        }
+
+        $user = auth()->user();
+
+        if ($user->user_role == 'caissier') {
+            $pro = $pro->where('users_id', $user->id);
         }
 
         $pro = $pro->get();
@@ -82,7 +93,8 @@ class ProformaApiController extends Controller
             'qtes' => 'required|array',
             'qtes.*' => 'min:1',
             'devise' => 'required|in:CDF,USD',
-            'proforma_id' => 'required|integer'
+            'proforma_id' => 'required',
+            'client_id' => 'required',
         ];
         $validator = Validator::make(request()->all(), $rules);
 
@@ -101,21 +113,75 @@ class ProformaApiController extends Controller
         $proforma = build_proforma($pro, $id);
 
         if (!$proforma->total) {
-            return $this->error("Veuillez ajouter un article au proforma.");
+            return $this->error("Veuillez ajouter un article à la facture.");
         }
 
-        Proforma::create([
+        $user = auth()->user();
+
+        DB::beginTransaction();
+        $artTab = [];
+        $article_ids = request('articles');
+        $qte = request('qtes');
+
+        $tot = 0;
+        foreach ($article_ids as $i => $el) {
+            $article = Article::where('id', $el)->first();
+            if ($article->stock < $qte[$i]) {
+                return $this->error("Le stock de l'article '{$article->article}' est de $article->stock, modifiez la qte sur votre bon SVP.");
+            }
+            $tot += change($article->prix, $article->devise->devise, 'CDF') * $qte[$i];
+            $artTab[] = $article;
+        }
+
+        $pro = Proforma::create([
+            'users_id' => $user->id,
             'numero' => $proforma->numero,
             'client' => json_encode($proforma->client),
             'html' => $proforma->proforma,
             'article' => json_encode($proforma->articles),
             'montant' => "$proforma->total $proforma->devise",
             'compte_id' => compte_id(),
-            'date' => (new DateTime('Africa/Lubumbashi')),
+            'date' =>  now('Africa/Lubumbashi'),
             'enregistrer_par' => auth()->user()->name
         ]);
 
-        return $this->success(['numero_facture' => $proforma->numero], "Votre facture proforma a été créée avec succès.");
+        $numerbon = numbon('sortie');
+        $bon = Bonsortie::create([
+            'proforma_id' => $pro->id,
+            'total_cdf' => $tot,
+            'numero' => $numerbon,
+            'status' => 0,
+            'emetteur' => auth()->user()->name,
+            'date' => now('Africa/Lubumbashi'),
+            'compte_id' => compte_id(),
+            'type' => 'article'
+        ]);
+
+        foreach ($artTab as $i => $article) {
+            ArticleBonsortie::create([
+                'article_id' => $article->id,
+                'bonsortie_id' => $bon->id,
+                'article' => ucfirst($article->article),
+                'prix_vente' => $article->prix,
+                'devise_vente' => $article->devise->devise,
+                'qte' => $qte[$i],
+            ]);
+        }
+
+        $client = User::where('id', request('client_id'))->first();
+        BonLivraison::create([
+            'bonsortie_id' => $bon->id,
+            'nomclient' => $client->name,
+            'telephoneclient' => $client->phone,
+            'adresseclient' => $client->adresse,
+            'adresselivraison' => $client->adresselivraison,
+            'chauffeur' => '', // request('chauffeur'),
+            'numerovehicule' => '', // request('numerovehicule'),
+            'datelivraison' => now('Africa/Lubumbashi'), // request('datelivraison'),
+        ]);
+        DB::commit();
+
+        return $this->success(['numero_facture' => $proforma->numero], "Votre facture a été créée avec succès.");
     }
 
     /**
@@ -152,14 +218,14 @@ class ProformaApiController extends Controller
         demo();
         abort_if($proforma->compte_id != compte_id(), 403, "uhm");
         $proforma->delete();
-        return $this->success([], "Proforma supprimée");
+        return $this->success([], "Facture supprimée");
     }
 
     public function encaissement(Proforma $proforma)
     {
         demo();
         if ($proforma->date_encaissement != null) {
-            return $this->error("Cette facture proforma est déjà encaissée.");
+            return $this->error("Cette facture est déjà encaissée.");
         }
         $art = json_decode($proforma->article);
         $alerte = [];
@@ -228,5 +294,19 @@ class ProformaApiController extends Controller
             $m = implode('<br>', $t);
             return $this->error($m);
         }
+    }
+
+    function print()
+    {
+        $id = request('id');
+        $success = false;
+        $pro = Proforma::where('id', $id)->first();
+        if ($pro) {
+            if ($pro->isprint != 1) {
+                $pro->update(['isprint' => 1]);
+            }
+            $success = true;
+        }
+        return response(['success' => $success]);
     }
 }

@@ -52,6 +52,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         Route::resource('/proforma', ProformaApiController::class);
         Route::post('/proforma/encaissement/{proforma}', [ProformaApiController::class, 'encaissement'])->name('proforma.encaissement');
+        Route::post('/proforma/print', [ProformaApiController::class, 'print'])->name('proforma.print');
 
         Route::middleware('caissier.mdlw')->group(function () {
             Route::post('/caissier/update', [Caissier2ApiController::class, 'update'])->name('caissier.update.api');

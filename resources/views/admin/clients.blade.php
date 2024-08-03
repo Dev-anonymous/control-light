@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'Utilisateurs')
+@section('title', 'Clients')
 
 @section('body')
     <div class="loader"></div>
@@ -14,12 +14,12 @@
         <div class="main-content">
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="h4 font-weight-bold">Utilisateurs</h3>
+                    <h3 class="h4 font-weight-bold">Clients</h3>
                     <div class="card-header-action">
                         <div class="form-group m-2 d-block">
                             <button class="btn btn-danger" data-toggle='modal' data-target='#mdl-add'
                                 style="border-radius: 5px!important;">
-                                Ajouter un compte
+                                Ajouter un client
                             </button>
                         </div>
                     </div>
@@ -34,12 +34,11 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Nom</th>
+                                            <th>Nom(Dénomination)</th>
                                             <th>Email</th>
                                             <th>Téléphone</th>
-                                            <th>Role</th>
-                                            <th>Date dernière activité</th>
-                                            <th>Etat</th>
+                                            <th>Adresse client</th>
+                                            <th>Adresse livraison</th>
                                             <th>#</th>
                                         </tr>
                                     </thead>
@@ -56,44 +55,22 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card ">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p class="text-muted">
-                                <i class="fa fa-exclamation-triangle text-warning"></i>
-                                Vous pouvez créé plusieurs comptes des cassiers, ils auront pour but d'enregistrer les
-                                ventes dans l'application.
-                            </p>
-                            <p class="text-muted">
-                                <i class="fa fa-exclamation-triangle text-warning"></i>
-                                Un caissier peut se connecter à l'application avec son email ou son numéro de téléphone.
-                            </p>
-                            <p class="text-muted">
-                                <i class="fa fa-exclamation-triangle text-warning"></i>
-                                Si l'état du compte du caissier est 'bloqué' cela veut dire qu'il ne peut pas se connecter à
-                                l'application.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <div class="modal fade" id="mdl-add" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content ">
                 <div class="modal-header bg-danger text-white font-weight-bold d-flex justify-content-between">
-                    <b>Ajouter un compte</b>
+                    <b>Ajouter un client</b>
                     <span style="cursor: pointer" data-dismiss="modal">
                         <i class="fa fa-times-circle p-2 "></i>
                     </span>
                 </div>
                 <form id="f-add" class="was-validated">
+                    <input type="hidden" name="type" value="client">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="">Nom</label>
+                            <label for="">Nom ou dénomination</label>
                             <input class="form-control" required name="name" placeholder="Nom" />
                         </div>
                         <div class="form-group">
@@ -102,18 +79,15 @@
                         </div>
                         <div class="form-group">
                             <label for="">Téléphone</label>
-                            <input class="form-control phone" id="phone" placeholder="Telephone" />
+                            <input class="form-control phone" required id="phone" placeholder="Telephone" />
                         </div>
                         <div class="form-group">
-                            <label for="">Role</label>
-                            <select name="user_role" id="" class="form-control">
-                                <option value="caissier">Caissier</option>
-                                <option value="gerant">Gérant</option>
-                            </select>
+                            <label for="">Adresse du client</label>
+                            <input class="form-control" required name="adresse" placeholder="Adresse" />
                         </div>
                         <div class="form-group">
-                            <label for="">Mot de passe</label>
-                            <input class="form-control" required name="password" placeholder="Mot de passe" />
+                            <label for="">Adresse de livraison</label>
+                            <input class="form-control" required name="adresselivraison" placeholder="Adresse de livraison" />
                         </div>
                         <div class="form-group" style="display: none" id="rep"></div>
                     </div>
@@ -141,9 +115,10 @@
                 </div>
                 <form id="f-up" class="was-validated">
                     <input type="hidden" name="id">
+                    <input type="hidden" name="type" value="client">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="">Nom</label>
+                            <label for="">Nom ou dénomination</label>
                             <input class="form-control" required name="name" placeholder="Nom" />
                         </div>
                         <div class="form-group">
@@ -152,24 +127,19 @@
                         </div>
                         <div class="form-group">
                             <label for="">Téléphone</label>
-                            <input class="form-control phone" id="phone2" placeholder="Telephone" />
+                            <input class="form-control phone" required id="phone2" placeholder="Telephone" />
                         </div>
                         <div class="form-group">
-                            <label for="">Role</label>
-                            <select name="user_role" id="" class="form-control">
-                                <option value="caissier">Caissier</option>
-                                <option value="gerant">Gérant</option>
-                            </select>
+                            <label for="">Adresse du client</label>
+                            <input class="form-control" required name="adresse" placeholder="Adresse" />
+                        </div>
+                        <div class="form-group">
+                            <label for="">Adresse de livraison</label>
+                            <input class="form-control" required name="adresselivraison" placeholder="Adresse de livraison" />
                         </div>
                         <div class="form-group" style="display: none" id="rep"></div>
                     </div>
                     <div class="modal-footer d-flex justify-content-between">
-                        <div class="">
-                            <button class="btn btn-dark btn-reset" type="button">
-                                <span></span>
-                                Réinitialiser le mot de passe
-                            </button>
-                        </div>
                         <div class="">
                             <button class="btn btn-dark" data-dismiss="modal">
                                 Fermer
@@ -232,32 +202,22 @@
                 table.find('tbody').html(spin);
                 $.ajax({
                     url: '{{ route('caissier.index') }}',
+                    data: {
+                        'user_role': 'client'
+                    },
                     timeout: 20000,
                 }).done(function(res) {
                     data = res.data;
                     str = '';
                     if (data.length > 0) {
                         $(data).each(function(i, e) {
-                            if (e.actif == 1) {
-                                var def =
-                                    '<i class="font-weight-bold text-muted"><span class="fa fa-check-circle text-success"></span> Actif</i>';
-                                var v = 0;
-                                var btn =
-                                    `<button data-toggle='tooltip' title='Bloquer le compte ${e.name}' class='btn text-muted mr-3 btn-default' value='${e.id}' to='${v}'><i class='fa fa-ban text-danger'></i></button>`;
-                            } else {
-                                var def =
-                                    '<i class="font-weight-bold text-danger"><span class="fa fa-ban text-danger"></span> Bloqué</i>';
-                                var v = 1;
-                                var btn =
-                                    `<button data-toggle='tooltip' title='Débloquer le compte ${e.name}' class='btn text-muted mr-3 btn-default' value='${e.id}' to='${v}'><i class='fa fa-ban text-success'></i></button>`;
-                            }
-
                             var json = {
                                 id: e.id,
                                 name: e.name,
                                 phone: e.phone ?? '',
                                 email: e.email ?? '',
-                                user_role: e.user_role ?? '',
+                                adresse: e.adresse ?? '',
+                                adresselivraison: e.adresselivraison ?? '',
                             };
                             json = JSON.stringify(json);
 
@@ -269,12 +229,10 @@
                                         </td>
                                         <td>${e.email ?? '-'}</td>
                                         <td>${e.phone??'-'}</td>
-                                        <td>${e.user_role??'-'}</td>
-                                        <td>${e.derniere_activite??'-'}</td>
-                                        <td>${def}</td>
+                                        <td>${e.adresse??'-'}</td>
+                                        <td>${e.adresselivraison??'-'}</td>
                                         <td class='d-flex justify-content-center'>
                                             <button data-toggle='tooltip' title='Modifier' class='btn text-muted mr-3 btn-edit' data='${json}' value='${e.id}'><i class='fa fa-edit'></i></button>
-                                            ${btn}
                                             <div class="dropdown ml-2">
                                                 <button title="Supprimer : ${e.name}" class="btn text-danger btn-del dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class='fa fa-trash'></i>
@@ -287,8 +245,8 @@
                                     </tr>`;
                         });
                         table.find('tbody').html(
-                            '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-                            );
+                            '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+                        );
                         table.DataTable().destroy();
                         table.find('tbody').html(str);
                         $('[data-toggle=tooltip]').off('tooltip').tooltip();
@@ -301,9 +259,9 @@
                         table.DataTable(opt);
                     } else {
                         str =
-                            '<tr><td colspan="7" class="text-danger font-weight-bolder text-center">Aucun compte</td></tr>';
+                            '<tr><td colspan="7" class="text-danger font-weight-bolder text-center">Aucune donnée</td></tr>';
                         table.find('tbody').html(
-                            '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
+                            '<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
                         table.DataTable().destroy();
                         table.find('tbody').html(str);
                     }
@@ -325,7 +283,9 @@
                     $('input[name=name]', form).val(data.name);
                     $('input[id=email]', form).val(data.email);
                     $('input[id=phone2]', form).val(data.phone);
-                    $('[name=user_role]', form).val(data.user_role).change();
+                    $('[name=adresse]', form).val(data.adresse);
+                    $('[name=adresselivraison]', form).val(data.adresselivraison);
+                    console.log(data);
                     iti = intlTelInput($("#phone2")[0], {
                         preferredCountries: ["cd"],
                         separateDialCode: true
@@ -361,7 +321,7 @@
                             var m = res.message;
                             span.addClass('ml-2 text-danger').html(m);
                             btn.find('i').removeClass().addClass(
-                                        'fa fa-trash text-danger');
+                                'fa fa-trash text-danger');
                         }
                         $('button', tr).attr('disabled', false);
                     });

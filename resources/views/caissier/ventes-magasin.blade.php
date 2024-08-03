@@ -71,7 +71,6 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Article</th>
-                                                <th>Code</th>
                                                 <th>Stock actuel</th>
                                                 <th>Qté tot. vendue</th>
                                                 <th>Prix</th>
@@ -165,7 +164,6 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Article</th>
-                                                <th>Code</th>
                                                 <th>Quantité vendue</th>
                                                 <th>Prix</th>
                                                 <th>Total</th>
@@ -364,14 +362,13 @@
                 locale: {
                     format: 'YYYY/MM/DD'
                 },
-                maxDate: "{{ date('Y-m-d') }}"
+                maxDate: "{{ now()->addDays(1)->format('Y-m-d') }}"
             });
             opt = {
                 dom: 'Bfrtip',
                 buttons: [
                     'pageLength', 'excel', 'pdf', 'print'
                 ],
-                stateSave: !0,
                 "lengthMenu": [
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]
@@ -449,10 +446,9 @@
                         str += `<tr>
                                     <td>${i+1}</td>
                                     <td title="${e.categorie_article}(${e.groupe})">${e.article}</td>
-                                    <td>${e.code}</td>
                                     <td>${e.qte}</td>
-                                    <td>${e.prix}</td>
-                                    <td>${e.total}</td>
+                                    <td class="text-nowrap">${e.prix}</td>
+                                    <td class="text-nowrap">${e.total}</td>
                                     <td>${e.caissier}</td>
                                     <td>${e.date}</td>
                                 </tr>`;
@@ -467,7 +463,7 @@
                         $('#z-vente').slideUp();
                     }
                     table.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
                     );
                     table.DataTable().destroy();
                     if (str.length > 0) {
@@ -505,11 +501,10 @@
                         str += `<tr>
                                     <td>${i+1}</td>
                                     <td title="${e.categorie_article}(${e.groupe})">${e.article}</td>
-                                    <td>${e.code}</td>
                                     <td>${e.stock}</td>
                                     <td>${e.qte}</td>
-                                    <td>${e.prix}</td>
-                                    <td>${e.total}</td>
+                                    <td class="text-nowrap">${e.prix}</td>
+                                    <td class="text-nowrap">${e.total}</td>
                                 </tr>`;
                     });
                     $(total).each(function(i, e) {
@@ -521,9 +516,7 @@
                     } else {
                         $('#z-vente0').slideUp();
                     }
-                    table0.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-                    );
+                    table0.find('tbody').html('');
                     table0.DataTable().destroy();
                     if (str.length > 0) {
                         table0.find('tbody').html(str);
@@ -574,9 +567,7 @@
                     } else {
                         $('#z-vente-2').slideUp();
                     }
-                    table2.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-                    );
+                    table2.find('tbody').html('');
                     table2.DataTable().destroy();
                     if (str.length > 0) {
                         table2.find('tbody').html(str);

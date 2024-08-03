@@ -39,6 +39,11 @@ class AdminController extends Controller
         return view('admin.cassier');
     }
 
+    public function clients()
+    {
+        return view('admin.clients');
+    }
+
     public function articles()
     {
         return view('admin.articles');

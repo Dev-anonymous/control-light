@@ -11,15 +11,13 @@
             </div>
         </div>
         @php
-            $caissier = \App\Models\User::orderby('id', 'desc')->where('compte_id', compte_id());
-            $tc = $caissier->get()->count() - 1;
+            $caissier = \App\Models\User::orderby('id', 'desc')
+                ->where('user_role', 'caissier')
+                ->where('compte_id', compte_id());
+            $tc = $caissier->get()->count();
 
-            $ta = \App\Models\Article::where('compte_id', compte_id())
-                ->get()
-                ->count();
-            $nf = \App\Models\Facture::where('compte_id', compte_id())
-                ->get()
-                ->count();
+            $ta = \App\Models\Article::where('compte_id', compte_id())->get()->count();
+            $nf = \App\Models\Facture::where('compte_id', compte_id())->get()->count();
 
             $tot = \App\Models\Facture::where('compte_id', compte_id())
                 ->groupBy('devise')
@@ -61,7 +59,8 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <a no-under href="{{ route('articles.admin') }}">
-                            <div class="card ombre" style="min-height: 200px" data-toggle="tooltip" title="Total articles dans votre magasin">
+                            <div class="card ombre" style="min-height: 200px" data-toggle="tooltip"
+                                title="Total articles dans votre magasin">
                                 <div class="card-statistic-4">
                                     <div class="align-items-center justify-content-between">
                                         <div class="row ">
@@ -133,7 +132,7 @@
             </section>
             <div class="card ">
                 <div class="card-header">
-                    <h4>Statistiques</h4>
+                    <h4>Statistiques générales de vente</h4>
                     <div class="card-header-action">
                         <form id="f-change">
                             <div class="d-flex">
@@ -178,6 +177,24 @@
                         <div id="d-total"></div>
                     </div>
                 </div>
+
+                {{-- <div class="card-header">
+                    <h4>Statistiques générales par article</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div id="graph2"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row mt-5">
+                                <div class="col-12 mb-3">Légende :<b>
+                                        <span class="ml-2" id='legende2'></span></b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> --}}
             </div>
         </div>
     </div>

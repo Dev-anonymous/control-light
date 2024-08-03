@@ -283,8 +283,8 @@ class DataApiController extends Controller
         $devise = request()->devise;
         $caissier = request()->caissier;
 
-        $tab = [];
-        $total = [];
+        $tab = $tab2 = [];
+        $total = $total2 = [];
         if ($devise) {
             $sum = [];
             $t = 0;
@@ -332,6 +332,29 @@ class DataApiController extends Controller
                 $tab[$dev] = $sum;
                 array_push($total, montant($t, $dev));
             }
+            // foreach (Article::orderBy('article')->get() as $art) {
+            //     $sum = [];
+            //     $t = 0;
+            //     foreach (range(1, 12) as $mois) {
+            //         $factures = Facture::where('devise', $dev)->where('compte_id', compte_id());
+            //         $factures = $factures->whereMonth('date', $mois);
+
+            //         if ($caissier) {
+            //             $factures = $factures->where('users_id', $caissier);
+            //         }
+
+            //         if (auth()->user()->user_role != 'admin') {
+            //             $factures = $factures->where('users_id', auth()->user()->id);
+            //         }
+            //         $factures = $factures->selectRaw('coalesce(sum(total), 0) as total');
+            //         $factures = $factures->get();
+            //         $tot = $factures[0]->total;
+            //         $t += $tot;
+            //         array_push($sum, $tot);
+            //     }
+            //     $tab2[$art] = $sum;
+            //     array_push($total2, montant($t, $dev));
+            // }
         }
 
         return $this->success(['stat' => $tab, 'total' => $total]);

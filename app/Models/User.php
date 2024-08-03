@@ -25,10 +25,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $phone
  * @property Carbon|null $derniere_activite
  * @property int|null $actif
- * @property int $compte_id
+ * @property int|null $compte_id
+ * @property string|null $adresse
+ * @property string|null $adresselivraison
  *
- * @property Compte $compte
+ * @property Compte|null $compte
  * @property Collection|Facture[] $factures
+ * @property Collection|Proforma[] $proformas
  *
  * @package App\Models
  */
@@ -68,7 +71,9 @@ class User extends Authenticatable
         'phone',
         'derniere_activite',
         'actif',
-        'compte_id'
+        'compte_id',
+        'adresse',
+        'adresselivraison'
     ];
 
     public function compte()
@@ -79,5 +84,10 @@ class User extends Authenticatable
     public function factures()
     {
         return $this->hasMany(Facture::class, 'users_id');
+    }
+
+    public function proformas()
+    {
+        return $this->hasMany(Proforma::class, 'users_id');
     }
 }

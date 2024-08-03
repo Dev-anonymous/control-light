@@ -9,7 +9,7 @@ class CaissierController extends Controller
 {
     public function index()
     {
-        return redirect(route('ventes.caissier'));
+        return redirect(route('proforma'));
         return view('caissier.index');
     }
 

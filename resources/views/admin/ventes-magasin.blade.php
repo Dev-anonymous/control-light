@@ -69,7 +69,6 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Article</th>
-                                                <th>Code</th>
                                                 <th>Stock actuel</th>
                                                 <th>Qté tot. vendue</th>
                                                 <th>Prix</th>
@@ -89,8 +88,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <h5>Montant total (MT)
-                                    <button data-toggle="pop" title="Information"
-                                        data-content="Ceci est le montant représentatif des ventes,
+                                        <button data-toggle="pop" title="Information"
+                                            data-content="Ceci est le montant représentatif des ventes,
                                         il indique la somme vendue sans conversion de devise,
                                         c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
                                         le montant de cet artcle en CDF sera converti en USD sur la facture,
@@ -99,24 +98,23 @@
                                         si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
                                         et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
                                         et vous verrez que le montant X USD sera égale au montant Y USD"
-                                        class="btn">
-                                        <i class="fa fa-info-circle text-danger"></i>
-                                    </button>
+                                            class="btn">
+                                            <i class="fa fa-info-circle text-danger"></i>
+                                        </button>
                                     </h5>
                                     <div class="" id="d-vente0"></div>
                                 </div>
                                 <div class="col-md-6 text-right">
                                     <h5>Marge bénéficiaire
                                         <button data-toggle="pop" title="Information"
-                                            data-content="Ce montant est inclus dans le montant total(MT)"
-                                            class="btn">
+                                            data-content="Ce montant est inclus dans le montant total(MT)" class="btn">
                                             <i class="fa fa-info-circle text-danger"></i>
                                         </button>
                                     </h5>
                                     <div class="" id="d-marge0"></div>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -177,7 +175,6 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Article</th>
-                                                <th>Code</th>
                                                 <th>Quantité vendue</th>
                                                 <th>Prix</th>
                                                 <th>Total Vente</th>
@@ -198,8 +195,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <h5>Montant total (A)
-                                    <button data-toggle="pop" title="Information"
-                                        data-content="Ceci est le montant représentatif des ventes,
+                                        <button data-toggle="pop" title="Information"
+                                            data-content="Ceci est le montant représentatif des ventes,
                                         il indique la somme vendue sans conversion de devise,
                                         c-a-d, si un article coute 20000 CDF et que le caissier a enregistré la facture de cet article en USD,
                                         le montant de cet artcle en CDF sera converti en USD sur la facture,
@@ -208,24 +205,23 @@
                                         si vous convertissez en USD par exemple le Montant total(A) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant X USD,
                                         et si vous convertissez encore en USD le Montant total(B) de la sorte => (USD->USD + CDF->USD) vous trouverez un montant Y USD,
                                         et vous verrez que le montant X USD sera égale au montant Y USD"
-                                        class="btn">
-                                        <i class="fa fa-info-circle text-danger"></i>
-                                    </button>
-                                </h5>
-                                <div class="" id="d-vente"></div>
+                                            class="btn">
+                                            <i class="fa fa-info-circle text-danger"></i>
+                                        </button>
+                                    </h5>
+                                    <div class="" id="d-vente"></div>
                                 </div>
                                 <div class="col-md-6 text-right">
                                     <h5>Marge bénéficiaire
-                                            <button data-toggle="pop" title="Information"
-                                                data-content="Ce montant est inclus dans le montant total(MT)"
-                                                class="btn">
-                                                <i class="fa fa-info-circle text-danger"></i>
-                                            </button>
-                                        </h5>
-                                        <div class="" id="d-marge1"></div>
+                                        <button data-toggle="pop" title="Information"
+                                            data-content="Ce montant est inclus dans le montant total(MT)" class="btn">
+                                            <i class="fa fa-info-circle text-danger"></i>
+                                        </button>
+                                    </h5>
+                                    <div class="" id="d-marge1"></div>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -408,14 +404,13 @@
                 locale: {
                     format: 'YYYY/MM/DD'
                 },
-                maxDate: "{{ date('Y-m-d') }}"
+                maxDate: "{{ now()->addDays(1)->format('Y-m-d') }}"
             });
             opt = {
                 dom: 'Bfrtip',
                 buttons: [
                     'pageLength', 'excel', 'pdf', 'print'
                 ],
-                stateSave: !0,
                 "lengthMenu": [
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]
@@ -503,20 +498,19 @@
                             var buto =
                                 `<span class='text-danger' ><i class='fa fa-ban'></i> Article supprimé</span>`;
                         }
-                        if(e.marge_result=='solde'){
-                            mcl='warning'                            
-                        }else if(e.marge_result=='perte'){
-                            mcl='danger'
-                        }else{
-                            mcl='success'
+                        if (e.marge_result == 'solde') {
+                            mcl = 'warning'
+                        } else if (e.marge_result == 'perte') {
+                            mcl = 'danger'
+                        } else {
+                            mcl = 'success'
                         }
-                        
+
                         str += `<tr>
                                     <td>${i+1}</td>
                                     <td title="${e.categorie_article}(${e.groupe})">${e.article}</td>
-                                    <td>${e.code}</td>
                                     <td>${e.qte}</td>
-                                    <td>${e.prix}</td>
+                                    <td class="text-nowrap">${e.prix}</td>
                                     <td><span class="badge badge-info font-weight-bold">${e.total}</span></td>
                                     <td><span class="badge badge-${mcl}">${e.marge}</span></td>
                                     <td>${e.caissier}</td>
@@ -537,9 +531,7 @@
                     } else {
                         $('#z-vente').slideUp();
                     }
-                    table.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-                    );
+                    table.find('tbody').html('');
                     table.DataTable().destroy();
                     if (str.length > 0) {
                         table.find('tbody').html(str);
@@ -583,20 +575,19 @@
                                 `<span class='text-danger' ><i class='fa fa-ban'></i> Article supprimé</span>`;
                         }
 
-                        if(e.marge_result=='solde'){
-                            mcl='warning'                            
-                        }else if(e.marge_result=='perte'){
-                            mcl='danger'
-                        }else{
-                            mcl='success'
+                        if (e.marge_result == 'solde') {
+                            mcl = 'warning'
+                        } else if (e.marge_result == 'perte') {
+                            mcl = 'danger'
+                        } else {
+                            mcl = 'success'
                         }
                         str += `<tr>
                                     <td>${i+1}</td>
                                     <td title="${e.categorie_article}(${e.groupe})">${e.article}</td>
-                                    <td>${e.code}</td>
                                     <td>${e.stock}</td>
                                     <td>${e.qte}</td>
-                                    <td>${e.prix}</td>
+                                    <td class="text-nowrap">${e.prix}</td>
                                     <td><span class="badge badge-info font-weight-bold">${e.total}</span></td>
                                     <td><span class="badge badge-${mcl}">${e.marge}</span></td>
                                     <td class='d-flex justify-content-center'>${buto}</td>
@@ -615,9 +606,7 @@
                     } else {
                         $('#z-vente0').slideUp();
                     }
-                    table0.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-                    );
+                    table0.find('tbody').html('');
                     table0.DataTable().destroy();
                     if (str.length > 0) {
                         table0.find('tbody').html(str);
@@ -651,11 +640,13 @@
                                     <td >${e.numero_facture}</td>
                                     <td >${e.client}</td>
                                     <td>${e.caissier}</td>
-                                    <td>${e.total}</td>
+                                    <td class="text-nowrap">${e.total}</td>
                                     <td>${e.date}</td>
                                     <td class='d-flex justify-content-center'>
                                         <button value='${e.id}' class='btn text-muted detail' ><i class='fa fa-eye'></i> Détails</button>
-                                        <button value='${e.id}' mont-fac='${e.total}' facture="Voulez-vous vraiment supprimer la facture N° ${e.numero_facture} enregistrée à la date ${e.date} ?" class='btn text-muted del-fact ml-2'><i class='fa fa-trash'></i> Supprimer</button>
+                                        @if (in_array(auth()->user()->user_role, ['admin']))
+                                            <button value='${e.id}' mont-fac='${e.total}' facture="Voulez-vous vraiment supprimer la facture N° ${e.numero_facture} enregistrée à la date ${e.date} ?" class='btn text-muted del-fact ml-2'><i class='fa fa-trash'></i> Supprimer</button>
+                                        @endif
                                     </td>
                                 </tr>`;
                     });

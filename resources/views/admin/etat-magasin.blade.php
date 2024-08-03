@@ -21,8 +21,8 @@
         @endphp
         <div class="main-content">
             <section class="section">
-                <div class="row justify-content-between">
-                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="row">
+                    <div class="col-md-4">
                         <a no-under href="{{ route('articles.admin') }}">
                             <div class="card ombre p-3" style="height:200px">
                                 <div class="d-flex justify-content-end">
@@ -43,8 +43,8 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                        <a no-under href="{{ route('articles.admin', ['filtre'=>'stock-20']) }}">
+                    <div class="col-md-4">
+                        <a no-under href="{{ route('articles.admin', ['filtre' => 'stock-20']) }}">
                             <div class="card ombre p-3 @if ($stock > 0) error @endif" style="height:200px">
                                 <div class="d-flex justify-content-end">
                                     <i class="fa fa-database fa-3x text-info"></i>
@@ -61,7 +61,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    {{-- <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-12">
                         <a no-under href="{{ route('articles.admin', ['filtre'=>'expire-in60']) }}">
                             <div class="card ombre p-3 @if ($expMois > 0) error @endif" style="height:200px">
                                 <div class="d-flex justify-content-end">
@@ -102,8 +102,8 @@
                                 </div>
                             </div>
                         </a>
-                    </div>
-                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    </div> --}}
+                    <div class="col-md-4">
                         <a no-under href="{{ route('ventes-magasin.admin') }}">
                             <div class="card ombre p-3" style="height:200px">
                                 <div class="d-flex justify-content-end">

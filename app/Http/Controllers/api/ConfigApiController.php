@@ -29,6 +29,14 @@ class ConfigApiController extends Controller
             $message = "Votre configuration a été sauvegardée.";
         }
 
+        if ('prefixe' == $action) {
+            setConfig('prefixe_facture', request('prefixe_facture'));
+            setConfig('prefixe_bs', request('prefixe_bs'));
+            setConfig('prefixe_be', request('prefixe_be'));
+            $success = true;
+            $message = "Votre configuration a été sauvegardée.";
+        }
+
         return response()->json([
             'success' => $success,
             'message' => $message

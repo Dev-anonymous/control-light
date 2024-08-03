@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'Modèles de factures proforma')
+@section('title', 'Modèles de factures')
 
 @section('body')
     <div class="loader"></div>
@@ -13,7 +13,7 @@
         <div class="main-content">
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="h4 font-weight-bold">Modèles de factures proforma</h3>
+                    <h3 class="h4 font-weight-bold">Modèles de factures</h3>
                 </div>
             </div>
             <div class="row">
@@ -53,7 +53,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="alert alert-warning w-100">
-                                    <b>Aucun modèle de proforma</b>
+                                    <b>Aucun modèle de facture</b>
                                 </div>
                             </div>
                         </div>

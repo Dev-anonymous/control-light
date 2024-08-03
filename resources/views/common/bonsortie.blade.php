@@ -21,7 +21,7 @@
                                 style="border-radius: 5px!important;">
                                 Ajouter un bon de sortie Articles
                             </button>
-                            <button class="btn btn-dark" data-toggle='modal' data-target='#mdl-add2'
+                            <button class="btn btn-dark d-none" data-toggle='modal' data-target='#mdl-add2'
                                 style="border-radius: 5px!important;">
                                 Ajouter un bon de sortie fonds
                             </button>
@@ -88,7 +88,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h4>Articles en stock</h4>
-                            <p class="text-danger">Cliquez sur un article pour l'ajouter au bon de sortie.</p>
+                            <b class="text-danger mb-3">Cliquez sur un article pour l'ajouter au bon de sortie.</b>
                             <div class="table-responsive">
                                 <table table class="table table-striped table-hover" style="width: 100%">
                                     <thead>
@@ -113,9 +113,22 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <h4>Bon de sortie</h4>
-                            <div class="table-responsive">
-                                <form action="#" id="f-bon" class="was-validated">
+                            <form action="#" id="f-bon" class="was-validated">
+                                <div class="d-flex justify-content-between">
+                                    <h4>Bon de sortie</h4>
+                                    <div class="form-group mr-1">
+                                        <label for="">Sélectionnez un Client</label> <br>
+                                        <select name="client_id" required
+                                            class="select2 form-control rounded-0 p-0 selclient"
+                                            style="width: 300px !important">
+                                            @foreach ($clients as $el)
+                                                <option value="{{ $el->id }}" client='{{ json_encode($el) }}'>
+                                                    {{ $el->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
                                     <input type="hidden" name="type" value="sortie" id="">
                                     <table tbon class="table table-striped table-hover" style="width: 100%">
                                         <thead>
@@ -171,15 +184,16 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="">Date de livraison</label>
-                                        <input type="datetime-local" class="form-control" name="datelivraison" required
+                                        <input type="datetime-local" value="{{ now('Africa/Lubumbashi') }}"
+                                            class="form-control" name="datelivraison" required
                                             placeholder="Date de elivraison" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="">Motif de sortie</label>
                                         <textarea name="motif" class="form-control" name="motif" id="" rows="5"></textarea>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                             <div class="form-group" style="display: none" id="rep00"></div>
                         </div>
                     </div>
@@ -408,7 +422,6 @@
                 buttons: [
                     'pageLength', 'excel', 'pdf', 'print'
                 ],
-                stateSave: !0,
                 "lengthMenu": [
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]
@@ -420,7 +433,22 @@
             });
             $('[bprint2]').click(function() {
                 $("#bonsortie").printThis();
+            });
+
+            var selclient = $('.selclient');
+            selclient.change(function() {
+                fillclient();
             })
+
+            function fillclient() {
+                var v = JSON.parse($(':selected', selclient).attr('client'));
+                var form = $('#f-bon');
+                $('[name=nomclient]', form).val(v.name);
+                $('[name=telephoneclient]', form).val(v.phone);
+                $('[name=adresseclient]', form).val(v.adresse);
+                $('[name=adresselivraison]', form).val(v.adresselivraison);
+            }
+            fillclient();
 
             var items = $('[items]');
             $('tr[value]').click(function() {
@@ -526,14 +554,13 @@
                                     `<span style="cursor:pointer" title="ce bon de sortie est rejeté par ${e.rejete_par}." class="badge badge-danger"><span class="fa fa-check-circle"></span> REJETE</i>`;
                             }
 
-
                             var json = escape(JSON.stringify(e));
                             str += `<tr>
                                         <td>${i+1}</td>
                                         <td>
                                             ${e.numero}
                                         </td>
-                                        <td>${e.total_cdf}</td>
+                                        <td class="text-nowrap">${e.total_cdf}</td>
                                         <td>${stat}</td>
                                         <td>${e.emetteur}</td>
                                         <td>${e.date}</td>
@@ -546,7 +573,7 @@
                                                 <div>
                                                     <button class='btn text-black-50 mr-3 bdetail2 text-nowrap' data='${json}'><i class='fa fa-file-archive'></i> Bon de livraison</button>
                                                 </div>
-                                                @if (in_array(auth()->user()->user_role, ['admin', 'gerant']))
+                                                @if (in_array(auth()->user()->user_role, ['admin']))
                                                     <div class="dropdown ml-2">
                                                         <button ${disabled} title="Supprimer : ${e.numero}" class="btn text-danger btn-del dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <i class='fa fa-trash'></i>

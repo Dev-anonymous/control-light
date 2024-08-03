@@ -50,7 +50,7 @@ class VenteApiController extends Controller
             }
         }
 
-        if (auth()->user()->user_role != 'admin') {
+        if (!in_array(auth()->user()->user_role, ['admin', 'gerant'])) {
             $ventesTot = $ventesTot->whereHas('facture', function ($query) {
                 return $query->where('users_id', auth()->user()->id);
             });

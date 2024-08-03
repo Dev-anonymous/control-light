@@ -21,7 +21,17 @@ class CaissierApiController extends Controller
      */
     public function index()
     {
-        $user = User::whereIn('user_role', ['caissier', 'gerant'])->where(['compte_id' => compte_id()])->orderBy('id', 'desc')->get(['id', 'name', 'user_role', 'email', 'phone', 'derniere_activite', 'actif']);
+        $user_role = request('user_role');
+        $where = ['caissier', 'gerant'];
+
+        if ($user_role) {
+            $where = [$user_role];
+        }
+
+        $user = User::whereIn('user_role', $where)->where(['compte_id' => compte_id()])->orderBy('id', 'desc')->get([
+            'id', 'name', 'user_role', 'email', 'phone',
+            'derniere_activite', 'actif', 'adresse', 'adresselivraison'
+        ]);
         $tab = [];
         foreach ($user as $e) {
             $a = (object) $e->toArray();
@@ -42,16 +52,30 @@ class CaissierApiController extends Controller
         if (auth()->user()->user_role != 'admin') {
             abort(401);
         }
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'name' => 'required|string|max:45',
-                'email' => 'sometimes|email|max:255|unique:users',
-                'phone' => 'sometimes|min:10|numeric|regex:/(\+)[0-9]{10}/|unique:users,phone',
-                'password' => 'required|',
-                'user_role' => 'required|in:gerant,caissier',
-            ]
-        );
+        $type = request('type');
+        if ($type == 'client') {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'name' => 'required|string|max:45',
+                    'email' => 'sometimes|email|max:255|unique:users',
+                    'phone' => 'required|min:10|numeric|regex:/(\+)[0-9]{10}/|unique:users,phone',
+                    'adresse' => 'required|',
+                    'adresselivraison' => 'required|',
+                ]
+            );
+        } else {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'name' => 'required|string|max:45',
+                    'email' => 'sometimes|email|max:255|unique:users',
+                    'phone' => 'sometimes|min:10|numeric|regex:/(\+)[0-9]{10}/|unique:users,phone',
+                    'password' => 'required|',
+                    'user_role' => 'required|in:gerant,caissier',
+                ]
+            );
+        }
 
         if ($validator->fails()) {
             return $this->error('Erreur de validation', ['msg' => $validator->errors()->all()]);
@@ -64,11 +88,12 @@ class CaissierApiController extends Controller
         }
 
         $data = $validator->validate();
-        $data['password'] = Hash::make($data['password']);
+        $data['password'] = Hash::make(@$data['password'] ?? '123456');
+        $data['user_role'] = @$data['user_role'] ?? 'client';
         $data['compte_id'] = compte_id();
         $user = User::create($data);
 
-        return $this->success($user, "Compte créé avec succès.");
+        return $this->success($user, ($type == 'client' ? 'Client' : 'Compte') . " créé avec succès.");
     }
 
     /**
@@ -121,15 +146,30 @@ class CaissierApiController extends Controller
             }
             return $this->success([], $m);
         } else {
-            $validator = Validator::make(
-                request()->all(),
-                [
-                    'name' => 'required|string|max:45',
-                    'email' => 'sometimes|email|max:255|unique:users,email,' . $caissier->id,
-                    'phone' => 'sometimes|min:10|numeric|regex:/(\+)[0-9]{10}/|unique:users,phone,' . $caissier->id,
-                    'user_role' => 'required|in:gerant,caissier',
-                ]
-            );
+            $type = request('type');
+            if ($type == 'client') {
+                $validator = Validator::make(
+                    request()->all(),
+                    [
+                        'name' => 'required|string|max:45',
+                        'email' => 'sometimes|email|max:255|unique:users,email,' . $caissier->id,
+                        'phone' => 'sometimes|min:10|numeric|regex:/(\+)[0-9]{10}/|unique:users,phone,' . $caissier->id,
+                        'adresse' => 'required|',
+                        'adresselivraison' => 'required|',
+                    ]
+                );
+            } else {
+                $validator = Validator::make(
+                    request()->all(),
+                    [
+                        'name' => 'required|string|max:45',
+                        'email' => 'sometimes|email|max:255|unique:users,email,' . $caissier->id,
+                        'phone' => 'sometimes|min:10|numeric|regex:/(\+)[0-9]{10}/|unique:users,phone,' . $caissier->id,
+                        'user_role' => 'required|in:gerant,caissier',
+                    ]
+                );
+            }
+
 
             if ($validator->fails()) {
                 return $this->error('Erreur de validation', ['msg' => $validator->errors()->all()]);
@@ -161,9 +201,9 @@ class CaissierApiController extends Controller
         if ($caissier->compte_id != compte_id()) {
             abort(403);
         }
-        if ($caissier->user_role == 'caissier') {
-            $caissier->delete();
-            return $this->success(null, "Le compte du caissier \"$caissier->name\" a été supprimé.");
-        }
+        // if ($caissier->user_role == 'caissier') {
+        $caissier->delete();
+        return $this->success(null, "Le compte \"$caissier->name\" a été supprimé.");
+        // }
     }
 }

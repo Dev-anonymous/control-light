@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'Factures proforma')
+@section('title', 'Factures')
 
 @section('body')
     <div class="loader"></div>
@@ -16,7 +16,7 @@
         <div class="main-content">
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="h4 font-weight-bold">Factures proforma</h3>
+                    <h3 class="h4 font-weight-bold">Factures</h3>
                     <div class="card-header-action">
                         <form id="f-change0">
                             <div class="row">
@@ -37,10 +37,11 @@
                 </div>
                 <div class="card-hearder d-flex justify-content-end">
                     <div class="form-group m-2 d-block">
-                        <button class="btn btn-danger" onclick="javascript:location.assign('{{route('proforma_default')}}')"
+                        <button class="btn btn-danger"
+                            onclick="javascript:location.assign('{{ route('proforma_default') }}')"
                             style="border-radius: 5px!important;">
                             <i class="fa fa-plus-circle"></i>
-                            Nouvelle facture PF
+                            Editer facture
                         </button>
                     </div>
                 </div>
@@ -55,7 +56,6 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th></th>
                                                 <th>Numéro facture</th>
                                                 <th>Client</th>
                                                 <th>Total facture</th>
@@ -100,14 +100,13 @@
                 locale: {
                     format: 'YYYY/MM/DD'
                 },
-                maxDate: "{{ date('Y-m-d') }}"
+                maxDate: "{{ now()->addDays(1)->format('Y-m-d') }}"
             });
             opt = {
                 dom: 'Bfrtip',
                 buttons: [
                     'pageLength', 'excel', 'pdf', 'print'
                 ],
-                stateSave: !0,
                 "lengthMenu": [
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]
@@ -146,19 +145,18 @@
 
                         var enc = '';
                         var title = '';
-                        if (null != e.date_encaissement) {
-                            enc =
-                                `<i class="fa fa-2x fa-check-circle text-success"></i>`;
-                            title = `Proforma encaissée le ${e.date_encaissement}`;
-                        } else {
-                            enc =
-                                `<i class="fa fa-2x fa-times-circle text-danger"></i>`;
-                            title = 'Proforma non encaissée';
-                        }
+                        // if (null != e.date_encaissement) {
+                        //     enc =
+                        //         `<i class="fa fa-2x fa-check-circle text-success"></i>`;
+                        //     title = `Proforma encaissée le ${e.date_encaissement}`;
+                        // } else {
+                        //     enc =
+                        //         `<i class="fa fa-2x fa-times-circle text-danger"></i>`;
+                        //     title = 'Proforma non encaissée';
+                        // }
 
                         str += `<tr title="${title}">
                                     <td>${i+1}</td>
-                                    <td>${enc}</td>
                                     <td>${e.numero}</td>
                                     <td>${e.client}</td>
                                     <td>${e.montant}</td>
@@ -168,9 +166,7 @@
                                 </tr>`;
                     });
 
-                    table.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-                    );
+                    table.find('tbody').html('');
                     table.DataTable().destroy();
                     if (str.length > 0) {
                         table.find('tbody').html(str);

@@ -254,7 +254,6 @@
                 buttons: [
                     'pageLength', 'excel', 'pdf', 'print'
                 ],
-                stateSave: !0,
                 "lengthMenu": [
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]
@@ -409,7 +408,7 @@
                                         <td>
                                             ${e.numero}
                                         </td>
-                                        <td>${e.total_cdf}</td>
+                                        <td class="text-nowrap">${e.total_cdf}</td>
                                         <td>${stat}</td>
                                         <td>${e.emetteur}</td>
                                         <td>${e.date}</td>
@@ -417,7 +416,7 @@
                                             <span app-label-msg='${e.id}' class='ml-3 text-nowrap'></span>
                                             <div class='d-flex justify-content-center'>
                                                 <button class='btn text-muted mr-3 bdetail' data='${json}'><i class='fa fa-eye'></i></button>
-                                                @if (in_array(auth()->user()->user_role, ['admin', 'gerant']))
+                                                @if (in_array(auth()->user()->user_role, ['admin']))
                                                     <div class="dropdown ml-2">
                                                         <button ${disabled} title="Supprimer : ${e.numero}" class="btn text-danger btn-del dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <i class='fa fa-trash'></i>

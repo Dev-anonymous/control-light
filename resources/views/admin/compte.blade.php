@@ -130,8 +130,9 @@
                                                             <th>Logo</th>
                                                             <th>
                                                                 @if ($shop->logo)
-                                                                    <img src="{{ asset( 'storage/'. $shop->logo) }}"
-                                                                        class="img-thumbnail" alt="" width="80px" height="80px">
+                                                                    <img src="{{ asset('storage/' . $shop->logo) }}"
+                                                                        class="img-thumbnail" alt="" width="80px"
+                                                                        height="80px">
                                                                 @endif
                                                             </th>
                                                         </tr>
@@ -279,6 +280,103 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-12">
+                            <div class="card ">
+                                <div class="card-header d-flex justify-content-between">
+                                    <h3 class="h4 font-weight-bold">Préfixe</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-hover" id='table-r'
+                                                    style="width:100%;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Préfixe Numéro Facture</th>
+                                                            <th>{{ getConfig('prefixe_facture') ?? '' }}-000n</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Préfixe Numéro Bon d'entrée</th>
+                                                            <th>{{ getConfig('prefixe_be') ?? '' }}-000n</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Préfixe Numéro Bon de sortie</th>
+                                                            <th>{{ getConfig('prefixe_bs') ?? '' }}-000n</th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <button class="btn btn-danger" id="btn-edit-3">
+                                                <i class="fa fa-edit"></i>
+                                                Modifier
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="display: none" id="tab-edit-3">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">
+                                    <h3 class="h4 font-weight-bold">Modification informations</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <form id="f-up-3" class="was-validated">
+                                                <input type="hidden" name="action" value="prefixe">
+                                                <div class="ps-form__content">
+                                                    <div class="form-group">
+                                                        <label>Préfixe Numéro Facture</label>
+                                                        <div class="input-group mb-3">
+                                                            <input class="form-control" type="text"
+                                                                name="prefixe_facture"
+                                                                value="{{ getConfig('prefixe_facture') }}" required>
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text"
+                                                                    id="basic-addon2">#000n</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Préfixe Numéro Bon d'entrée</label>
+                                                        <div class="input-group mb-3">
+                                                            <input class="form-control" type="text" name="prefixe_be"
+                                                                value="{{ getConfig('prefixe_be') }}" required>
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text"
+                                                                    id="basic-addon2">#000n</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Préfixe Numéro Bon de sortie</label>
+                                                        <div class="input-group mb-3">
+                                                            <input class="form-control" type="text" name="prefixe_bs"
+                                                                value="{{ getConfig('prefixe_bs') }}" required>
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text"
+                                                                    id="basic-addon2">#000n</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group w-100" id="rep" style="display: none">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group d-flex justify-content-between">
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <span></span>
+                                                        Enregister
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -346,6 +444,10 @@
             $('#btn-edit-2').click(function() {
                 event.preventDefault();
                 $('#tab-edit-2').toggle('scale')
+            });
+            $('#btn-edit-3').click(function() {
+                event.preventDefault();
+                $('#tab-edit-3').toggle('scale')
             });
 
             $('#f-up').submit(function() {
@@ -416,6 +518,54 @@
                     timeout: 20000,
                     contentType: false,
                     processData: false,
+                }).done(function(res) {
+                    btn.attr('disabled', false);
+                    btn.find('span').removeClass().addClass('fa fa-check mr-3');
+                    rep.removeClass().addClass('alert alert-success').html(res.message).slideDown()
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+
+                }).fail(function(res) {
+                    btn.attr('disabled', false);
+                    btn.find('span').removeClass();
+                    res = res.responseJSON;
+                    if (res.data?.msg) {
+                        m = res.message + '<br>';
+                        try {
+                            m += res.data.msg.join('<br>');
+                        } catch (error) {}
+                        rep.removeClass().addClass('alert alert-danger').html(m).slideDown()
+                        return;
+                    }
+                    rep.removeClass().addClass('alert alert-danger').html(
+                            "une erreur s'est produite.")
+                        .slideDown()
+                }).always(function(res) {
+                    if (res.status == 403 || res.status == 401) {
+                        var json = res.responseJSON;
+                        var m = json.message ?? res.statusText;
+                        rep.addClass(`alert alert-danger w-100`).html(m);
+                        rep.slideDown();
+                        btn.find('span').removeClass();
+                        btn.attr('disabled', false);
+                    }
+                })
+            });
+
+            $('#f-up-3').submit(function() {
+                event.preventDefault();
+                var f = $(this);
+                var btn = $(':submit', f).attr('disabled', true);
+                btn.find('span').removeClass().addClass('spinner-border spinner-border-sm mr-3');
+                rep = $('#rep', f);
+                rep.slideUp();
+                var data = f.serialize();
+                $.ajax({
+                    url: '{{ route('config.api') }}',
+                    type: 'post',
+                    data: data,
+                    timeout: 20000,
                 }).done(function(res) {
                     btn.attr('disabled', false);
                     btn.find('span').removeClass().addClass('fa fa-check mr-3');
