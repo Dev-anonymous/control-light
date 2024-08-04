@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Proforma;
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -97,13 +98,15 @@ class CommonController extends Controller
     function bonentree()
     {
         $articles = Article::orderBy('article')->with('devise')->where('compte_id', compte_id())->get();
-        return view('common.bonentree', compact('articles'));
+        $shop = Shop::where('compte_id', compte_id())->first();
+        return view('common.bonentree', compact('articles','shop'));
     }
 
     function bonsortie()
     {
         $articles = Article::orderBy('article')->with('devise')->where('compte_id', compte_id())->get();
         $clients = User::where('user_role', 'client')->where('compte_id', compte_id())->get();
-        return view('common.bonsortie', compact('articles', 'clients'));
+        $shop = Shop::where('compte_id', compte_id())->first();
+        return view('common.bonsortie', compact('articles', 'clients', 'shop'));
     }
 }

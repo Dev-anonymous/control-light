@@ -27,7 +27,7 @@
                 <img src="__ENTREPRISE_LOGO__" width="120px" height="120px" alt="" >
             </div>
             <div class="col-6 d-flex align-items-center justify-content-end">
-                <h3 style="font-weight: 900; color:#112667">DEVIS N° __NUMERO_PROFORMA__</h3>
+                <h5 style="font-weight: 900; color:#112667">FACTURE N° __NUMERO_PROFORMA__</h5>
             </div>
         </div>
         <div style="height: 3px;background-color: #112667" class="w-100 mt-3"></div>

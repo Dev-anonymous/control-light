@@ -165,25 +165,126 @@
                 <input type="hidden" name="id">
                 <div class="modal-body">
                     <div class="table-responsive">
-                        <div id="bonentree" estyle="width: 21cm !important">
-                            <div style="width: 100% !important">
-                                <h2 class="text-center mt-3">BON ENTREE N° : <span numbon></span></h2>
-                                <h6 class="text-center">Emis par : <span emispar></span></h6>
-                                <h6 class="text-center">Date : <span datebon></span></h6>
-                                <h6 class="text-center">Status : <span statusbon></span></h6>
-                                <h6 class="text-center"><span validation></span></h6>
-                                <div class="mt-3">
-                                    <table class="table table-striped table-hover w-100">
-                                        <thead>
+                        @php
+                            if (!$shop->logo) {
+                                $logo = fileToBase64('assets/img/logo.png');
+                            } else {
+                                $logo = fileToBase64('storage/' . $shop->logo);
+                            }
+                        @endphp
+                        <div style="width: 21cm !important">
+                            <div id="bonentree" style="width: 100% !important" class="p-2">
+                                <div class="row px-4" style="padding-top: 20px; height: 170px">
+                                    <div class="col-6 d-flex align-items-center">
+                                        <img src="{{ $logo }}" width="120px" height="120px" alt="">
+                                    </div>
+                                    <div class="col-6 d-flex align-items-center justify-content-end">
+                                        <div class="text-right">
+                                            <h5 style="font-weight: 900; color:#112667">BON D'ENTREE N° <span
+                                                    numbon></span>
+                                            </h5>
+                                            <h5 style="font-weight: 900; color:#112667">STATUS : <span statusbon></span>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="height: 3px;background-color: #112667" class="w-100 mt-3"></div>
+                                <div class="row px-4">
+                                    <div class="col-8 mt-3">
+                                        <h5 class="font-weight-bold">{{ $shop->shop }}</h5>
+                                        <div class="text-muted">
+                                            <p class='m-0'>
+                                                {{ $shop->adresse }}
+                                            </p>
+                                            <p class='m-0'>
+                                                {{ $shop->contact }}
+                                                <br>
+                                                RCCM: {{ $shop->rccm ?? '-' }},
+                                                IDNAT: {{ $shop->idnat ?? '-' }},
+                                                MUM IMPOT: {{ $shop->numeroimpot ?? '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="height: 200px;background-color: #f5e513" class="w-100">
+                                    <div class="row d-flex h-100 px-4">
+                                        <div class="col-6 d-flex align-items-center">
+                                            <div class="bg-white p-2 w-100 text-dark"
+                                                style="border: 2px solid #112667; border-radius: 10px;">
+                                                <p class="m-0">Date : <span datebon></span></p>
+                                                <p class="m-0">Date limite : -</p>
+                                                <p class="m-0">Référence : <span numbon></span></p>
+                                                <p class="m-0">Emis par : <span emispar></span></p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 d-flex align-items-center">
+                                            <div class="">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <iscopie></iscopie>
+                                </div>
+                                <div style="background-color: #112667" class="w-100 my-3">
+                                    <p class="m-0 text-white font-weight-bold p-2"></p>
+                                </div>
+
+                                <div style="height: 3px;background-color: #112667" class="w-100 my-3"></div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <table class="table table-borderless table-condensed" style="width: 100%">
                                             <tr>
-                                                <th>ARTICLE</th>
-                                                <th>QTE</th>
-                                                <th>PRIX D'ACHAT</th>
-                                                <th class='text-right'>PRIX DE VENTE</th>
+                                                <th style="width:2px!important">#</th>
+                                                <th>Désignation</th>
+                                                <th>Prix Unitaire</th>
+                                                <th>Qte</th>
+                                                <th class="text-right">Prix Total</th>
                                             </tr>
-                                        </thead>
-                                        <tbody titems></tbody>
-                                    </table>
+                                            <tbody titems></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row px-4">
+                                    <div class="col-4"></div>
+                                    <div class="col-8 text-right" style="font-size:20px">
+                                        <span>
+                                            <b style="color: #112667">Total Géneral TTC</b>
+                                            <span class="p-1"
+                                                style="border-radius: 10px;background-color: #ff0000; color: #112667"
+                                                totbon1></span>
+                                        </span>
+                                        <div class="d-flex justify-content-end">
+                                            <div class="mt-2 p-2"
+                                                style="height: 100px; width:400px; font-size: 15px; background-color: #e7e9e9;">
+                                                <small class="text-muted">Signature du client (précédée de la mention «
+                                                    Bon
+                                                    pour accord
+                                                    »)</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <b>Modalité de paiemen : -</b>
+                                    </div>
+                                    <div style="height: 3px;background-color: #e7e9e9" class="w-100 my-3"></div>
+                                    <div class="text-center w-100">
+                                        <h5 class="font-weight-bold">{{ $shop->shop }}</h5>
+                                        <p class="m-0">
+                                            {{ $shop->contact }}
+                                            <br>
+                                            RCCM: {{ $shop->rccm ?? '-' }},
+                                            IDNAT: {{ $shop->idnat ?? '-' }},
+                                            MUM IMPOT: {{ $shop->numeroimpot ?? '-' }}
+                                        </p>
+                                        <p class="m-0">{{ $shop->adresse }}</p>
+                                    </div>
+                                </div>
+                                <div class="w-100 d-flex">
+                                    <div style="height: 20px;background-color: #112667" class="w-100 my-3"></div>
+                                    <div style="height: 20px; width: 60px; background-color: #f5e513" class="my-3">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -450,30 +551,27 @@
                             $(data.articles).each(function(i, e) {
                                 tr += `
                                 <tr>
+                                    <td>${i+1}</td>
                                     <td>${e.article}</td>
-                                    <td>${e.pivot.qte}</td>
                                     <td>${e.pivot.prix_achat} ${e.pivot.devise_achat}</td>
-                                    <td class='text-right'>${e.pivot.prix_vente} ${e.pivot.devise_vente}</td>
+                                    <td>${e.pivot.qte}</td>
+                                    <td class='text-right'>${e.pivot.prix_achat * e.pivot.qte} ${e.pivot.devise_achat}</td>
                                 </tr>
                                 `;
                             });
-                            tr += `
-                                <tr title="Somme Prix d'achat * Qte">
-                                    <td class="text-nowrap">
-                                        TOTAL BON
-                                    </td>
-                                    <td colspan="3" class="text-right text-nowrap">
-                                        <span class="badge badge-success" style="font-size: 18px">${data.total_cdf}</span>
-                                    </td>
-                                </tr>
-                                `;
+
                             titem.html(tr);
                             $('span[numbon]').html(data?.numero);
                             $('span[datebon]').html(data?.date);
                             $('span[emispar]').html(data?.emetteur);
+                            $('span[totbon1]').html(data?.total_cdf);
+
                             var st = data.status;
-                            $('span[statusbon]').html(st == 0 ? 'EN ATTENTE' : (st == 1 ? 'VALIDE' :
-                                'REJETE'));
+                            $('span[statusbon]').html(st == 0 ?
+                                '<span class="text-muted">EN ATTENTE</span>' : (st == 1 ?
+                                    '<span class="text-success">VALIDE</span>' :
+                                    '<span class="text-danger">REJETE</span>'));
+
                             var b = $('[btnvalide]');
                             b.val(data.id);
                             if (st == 0) {
