@@ -30,18 +30,21 @@
                 <div class="card-header d-flex justify-content-between">
                     <h3 class="h4 font-weight-bold">Articles</h3>
                     <div class="card-header-action">
-                        <div class="form-group m-2 d-block">
-                            <button class="btn btn-dark mr-3" data-toggle='modal' data-target='#mdl-imp'
-                                style="border-radius: 5px!important;">
-                                <i class="fa fa-file"></i>
-                                Importer les articles
-                            </button>
-                            <button class="btn btn-danger" data-toggle='modal' data-target='#mdl-add'
-                                style="border-radius: 5px!important;">
-                                <i class="fa fa-plus-circle"></i>
-                                Ajouter un article
-                            </button>
-                        </div>
+                        @if (in_array(auth()->user()->user_role, ['admin']))
+                            <div class="form-group m-2 d-block">
+                                <button class="btn btn-dark mr-3" data-toggle='modal' data-target='#mdl-imp'
+                                    style="border-radius: 5px!important;">
+                                    <i class="fa fa-file"></i>
+                                    Importer les articles
+                                </button>
+                                <button class="btn btn-danger" data-toggle='modal' data-target='#mdl-add'
+                                    style="border-radius: 5px!important;">
+                                    <i class="fa fa-plus-circle"></i>
+                                    Ajouter un article
+                                </button>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
                 <div class="card-header">
@@ -93,7 +96,6 @@
                                             <th>Réduction</th>
                                             <th>Marge bénéficiaire</th>
                                             <th>Qté Stock</th>
-                                            <th>Code article</th>
                                             <th>Catégorie</th>
                                             <th>Date expiration</th>
                                             <th>#</th>
@@ -137,7 +139,8 @@
 
                             <p class="text-muted">
                                 <i class="fa fa-exclamation-triangle text-warning"></i>
-                                Il n'est pas recommandé de modifier les prix de vos articles pendant qu'un caissier est entrain
+                                Il n'est pas recommandé de modifier les prix de vos articles pendant qu'un caissier est
+                                entrain
                                 d'enregistrer des ventes, rassurez vous que lors de la modification des prix, vous etes le
                                 seul à utiliser l'application ou aucun de vos caissier n'est entrain d'enregistrer les
                                 ventes, au cas contraire, demandez à votre caissier d'actualiser sa page de vente pour
@@ -507,12 +510,12 @@
                                 .prix + ' lors de la vente';
                         }
 
-                        if(e.marge.result=='solde'){
-                            mcl='warning'
-                        }else if(e.marge.result=='perte'){
-                            mcl='danger'
-                        }else{
-                            mcl='success'
+                        if (e.marge.result == 'solde') {
+                            mcl = 'warning'
+                        } else if (e.marge.result == 'perte') {
+                            mcl = 'danger'
+                        } else {
+                            mcl = 'success'
                         }
 
                         str += `<tr>
@@ -523,7 +526,6 @@
                                     <td class="text-center" title="${redt}">${red}</td>
                                     <td class='text-nowrap' title="${e.marge.margelabel}"> <span class="badge badge-${mcl}">${e.marge.marge}</span></td>
                                     <td class="${stCl}" title="${stTi}">${e.stock} ${e.unite_mesure}</td>
-                                    <td>${e.code}</td>
                                     <td>${e.categorie}</td>
                                     <td class="${canEc}" title="${canE}" >${e.date_expiration}</td>
                                     <td class='d-flex justify-content-center'>
@@ -534,9 +536,7 @@
                     catechange.attr('disabled', false);
                     groupchange.attr('disabled', false);
                     filtre2.attr('disabled', false);
-                    table.find('tbody').html(
-                        '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-                    );
+                    table.find('tbody').html('');
                     table.DataTable().destroy();
                     if (str.length > 0) {
                         table.find('tbody').html(str);

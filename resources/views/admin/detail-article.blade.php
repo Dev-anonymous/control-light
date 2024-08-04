@@ -132,11 +132,11 @@
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <button class="btn btn-dark mr-2" data-toggle="modal" data-target="#mdl-edit">
-                        <i class="fa fa-edit"></i>
-                        Modifier
-                    </button>
                     @if (in_array(auth()->user()->user_role, ['admin']))
+                        <button class="btn btn-dark mr-2" data-toggle="modal" data-target="#mdl-edit">
+                            <i class="fa fa-edit"></i>
+                            Modifier
+                        </button>
                         <button class="btn btn-danger" data-toggle="modal" data-target="#mdl-del">
                             <i class="fa fa-trash"></i>
                             Supprimer cet article
@@ -235,10 +235,13 @@
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <button class="btn btn-danger" data-toggle='modal' data-target='#mdl-appro'>
-                        <i class="fa fa-plus-circle"></i>
-                        Approvisionner le stock
-                    </button>
+                    @if (in_array(auth()->user()->user_role, ['admin']))
+                        <button class="btn btn-danger" data-toggle='modal' data-target='#mdl-appro'>
+                            <i class="fa fa-plus-circle"></i>
+                            Approvisionner le stock
+                        </button>
+                    @endif
+
                 </div>
             </div>
         </div>

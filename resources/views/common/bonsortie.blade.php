@@ -441,12 +441,16 @@
             })
 
             function fillclient() {
-                var v = JSON.parse($(':selected', selclient).attr('client'));
-                var form = $('#f-bon');
-                $('[name=nomclient]', form).val(v.name);
-                $('[name=telephoneclient]', form).val(v.phone);
-                $('[name=adresseclient]', form).val(v.adresse);
-                $('[name=adresselivraison]', form).val(v.adresselivraison);
+                try {
+                    var v = JSON.parse($(':selected', selclient).attr('client'));
+                    var form = $('#f-bon');
+                    $('[name=nomclient]', form).val(v.name);
+                    $('[name=telephoneclient]', form).val(v.phone);
+                    $('[name=adresseclient]', form).val(v.adresse);
+                    $('[name=adresselivraison]', form).val(v.adresselivraison);
+                } catch (error) {
+
+                }
             }
             fillclient();
 

@@ -244,9 +244,7 @@
                                         </td>
                                     </tr>`;
                         });
-                        table.find('tbody').html(
-                            '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-                        );
+                        table.find('tbody').html('');
                         table.DataTable().destroy();
                         table.find('tbody').html(str);
                         $('[data-toggle=tooltip]').off('tooltip').tooltip();
@@ -260,8 +258,7 @@
                     } else {
                         str =
                             '<tr><td colspan="7" class="text-danger font-weight-bolder text-center">Aucune donnée</td></tr>';
-                        table.find('tbody').html(
-                            '<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
+                        table.find('tbody').html('');
                         table.DataTable().destroy();
                         table.find('tbody').html(str);
                     }

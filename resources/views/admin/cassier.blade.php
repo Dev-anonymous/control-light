@@ -286,9 +286,7 @@
                                         </td>
                                     </tr>`;
                         });
-                        table.find('tbody').html(
-                            '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-                            );
+                        table.find('tbody').html('');
                         table.DataTable().destroy();
                         table.find('tbody').html(str);
                         $('[data-toggle=tooltip]').off('tooltip').tooltip();
@@ -301,9 +299,8 @@
                         table.DataTable(opt);
                     } else {
                         str =
-                            '<tr><td colspan="7" class="text-danger font-weight-bolder text-center">Aucun compte</td></tr>';
-                        table.find('tbody').html(
-                            '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
+                            '<tr><td colspan="8" class="text-danger font-weight-bolder text-center">Aucun compte</td></tr>';
+                        table.find('tbody').html('');
                         table.DataTable().destroy();
                         table.find('tbody').html(str);
                     }
@@ -361,7 +358,7 @@
                             var m = res.message;
                             span.addClass('ml-2 text-danger').html(m);
                             btn.find('i').removeClass().addClass(
-                                        'fa fa-trash text-danger');
+                                'fa fa-trash text-danger');
                         }
                         $('button', tr).attr('disabled', false);
                     });
