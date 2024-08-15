@@ -24,7 +24,14 @@ class BonsortieApiController extends Controller
      */
     public function index()
     {
-        $data = Bonsortie::orderBy('id', 'desc')->with(['articles', 'bon_livraisons'])->get();
+        // $data = Bonsortie::orderBy('id', 'desc')->with(['articles' => function ($q) {
+        //     $q->orderBy('article_bonsortie.id');
+        // }, 'bon_livraisons'],)->get();
+
+        $data = Bonsortie::orderBy('id', 'desc')->with('articles', function ($q) {
+            $q->orderBy('article_bonsortie.id');
+        })->with('bon_livraisons')->get();
+
         $tab = [];
         foreach ($data as $el) {
             $o = (object) $el->toArray();
@@ -48,7 +55,7 @@ class BonsortieApiController extends Controller
             $validator = Validator::make(
                 $request->all(),
                 [
-                    'client_id' => 'required|exists:users,id',
+                    'client_id' => 'sometimes|',
                     'article_id' => 'required|array',
                     'article_id.*' => 'required|exists:article,id',
                     'qte' => 'required|array',
@@ -167,9 +174,7 @@ class BonsortieApiController extends Controller
      * @param  \App\Models\Bonsortie  $bonsortie
      * @return \Illuminate\Http\Response
      */
-    public function show(Bonsortie $bonsortie)
-    {
-    }
+    public function show(Bonsortie $bonsortie) {}
 
     /**
      * Update the specified resource in storage.
@@ -191,74 +196,158 @@ class BonsortieApiController extends Controller
                 return $this->error("Impossible de valider ce bon, car aucune facture n'a été trouvée pour ce bon.");
             }
 
+            $qtevente = (array) request('qtevente');
+            $prixvente = (array)  request('prixvente');
+            $article_ids = (array)  request('article_ids');
+
+            if (!count($qtevente)) {
+                return $this->error("Veuillez spécifier les articles vendus.");
+            }
+
             $bonsortie->update(['status' => 1, 'valider_par' => auth()->user()->name]);
             $art = json_decode($proforma->article);
-            $alerte = [];
 
-            $articles = [];
-            $can = true;
-            foreach ($art as $el) {
-                $a = Article::where('id', $el->id)->first();
-                $candd = true;
-                if ($a) {
-                    $oldd = $el->devise->devise;
-                    $oldp = change($el->prix, $oldd, 'CDF');
 
-                    $newd = $a->devise->devise;
-                    $newp = change($a->prix, $newd, 'CDF');
+            // $alerte = [];
 
-                    if ($newp  != $oldp) {
-                        $alerte[] = "L'ancien prix de l'article $el->article est $oldp $oldd, le nouveau prix est : $newp $newd.";
-                        $candd = false;
+            // $articles = [];
+            // $can = true;
+            // foreach ($art as $el) {
+            //     $a = Article::where('id', $el->id)->first();
+            //     $candd = true;
+            //     if ($a) {
+            //         $oldd = $el->devise->devise;
+            //         $oldp = change($el->prix, $oldd, 'CDF');
+
+            //         $newd = $a->devise->devise;
+            //         $newp = change($a->prix, $newd, 'CDF');
+
+            //         if ($newp  != $oldp) {
+            //             $alerte[] = "L'ancien prix de l'article $el->article est $oldp $oldd, le nouveau prix est : $newp $newd.";
+            //             $candd = false;
+            //         }
+
+            //         if ($a->stock < $el->qte) {
+            //             $can = false;
+            //             $alerte[] = "Le stock actuel de l'article $el->article est de $a->stock {$a->unite_mesure->unite_mesure}, la quantité sur la facture est de : $el->qte.";
+            //             $candd = false;
+            //         }
+            //     } else {
+            //         $alerte[] = "L'article $el->article n'existe plus.";
+            //         $candd = false;
+            //     }
+
+            //     if ($candd) {
+            //         $a = $a->toArray();
+            //         $a['qte'] = $el->qte;
+            //         $a['pv'] = $el->prix;
+            //         $articles[] = $a;
+            //     }
+            // }
+
+            // if ($can and count($articles)) {
+
+            $client = json_decode($proforma->client)->nom;
+            $devise = explode(' ', $proforma->montant);
+            $devise = trim(end($devise));
+            $items = []; //json_encode($articles);
+
+
+            $tot = 0;
+            $dev0 = 'CDF';
+            foreach ($article_ids as $k => $id) {
+                $a = Article::where('id', $id)->first();
+
+                $artfac = false;
+                foreach ($art as $el) {
+                    if ($id == $el->id) {
+                        $artfac = $el;
+                        break;
                     }
-
-                    if ($a->stock < $el->qte) {
-                        $can = false;
-                        $alerte[] = "Le stock actuel de l'article $el->article est de $a->stock {$a->unite_mesure->unite_mesure}, la quantité sur la facture est de : $el->qte.";
-                        $candd = false;
-                    }
-                } else {
-                    $alerte[] = "L'article $el->article n'existe plus.";
-                    $candd = false;
                 }
 
-                if ($candd) {
-                    $a = $a->toArray();
-                    $a['qte'] = $el->qte;
-                    $a['pv'] = $el->prix;
-                    $articles[] = $a;
+                $qtev = $qtevente[$k];
+                $pv = $prixvente[$k];
+
+                if ($artfac) {
+                    $qtefac = $artfac->qte;
+                    if ($qtev > $qtefac) {
+                        return $this->error("Erreur sur la qte vendue de l'article $a->article");
+                    }
+                    $pvreal = $a->prix;
+
+                    if ($a->reduction) {
+                        $prix_min = reduction($pvreal, $a->reduction);
+                        if ($pv < $prix_min or $pv > $pvreal) {
+                            $msg = "Le prix de vente de l'article \"$a->article\" doit etre dans la marge de réduction de $a->reduction% de $a->prix {$a->devise->devise}, c-a-d entre $prix_min {$a->devise->devise} et $a->prix {$a->devise->devise}.";
+                            return $this->error($msg);
+                        }
+                    }
+                    $tot +=  change($pv, $a->devise->devise, $dev0) * $qtev;
+
+                    $itm = $a->toArray();
+                    $itm['qte'] = $qtev;
+                    $itm['pv'] = $pv;
+                    $items[] = $itm;
+                } else {
+                    return $this->error("Erreur, un article n'a pas été trouvé sur la facture.");
                 }
             }
 
-            if ($can and count($articles)) {
-                $client = json_decode($proforma->client)->nom;
-                $devise = explode(' ', $proforma->montant);
-                $devise = trim(end($devise));
-                $items = json_encode($articles);
+            $tmp = [];
+            foreach ($items as  $i) {
+                $i = (object) $i;
+                $i->devise = (object) $i->devise;
+                $a = 0;
+                foreach ($art as $ar) {
+                    if ($ar->id == $i->id) {
+                        $a = $i;
+                        $a->unite_mesure = $ar->unite_mesure;
+                    }
+                }
+                if ($a) {
+                    $tmp[] = $a;
+                }
+            }
 
-                $rq = Request::create(route('nouvelle-facture.api'), 'POST', compact('devise', 'client', 'items'));
-                $resp = app()->handle($rq);
+            $items = $tmp;
 
-                if (200 == $resp->getStatusCode()) {
-                    $body = json_decode($resp->getContent());
+            $items = json_encode($items);
+            $rq = Request::create(route('nouvelle-facture.api'), 'POST', compact('devise', 'client', 'items'));
+            $resp = app()->handle($rq);
 
-                    if ($body->success) {
-                        $proforma->update(['date_encaissement' => now('Africa/Lubumbashi')]);
-                        
-                    } else {
-                        $msg = $body->data->msg;
-                        $msg = implode('<br>', $msg);
-                        $msg = "$body->message<br>$msg";
-                        return $this->error($msg);
+            if (200 == $resp->getStatusCode()) {
+                $body = json_decode($resp->getContent());
+
+                if ($body->success) {
+                    $proforma->update(['date_encaissement' => now('Africa/Lubumbashi'), 'article' => $items, 'montant' => "$tot $dev0"]);
+                    ArticleBonsortie::where('bonsortie_id', $bonsortie->id)->delete();
+                    $bonsortie->update((['total_cdf' => $tot]));
+                    foreach ($tmp as $i => $el) {
+                        $article = Article::where('id', $el->id)->first();
+                        ArticleBonsortie::create([
+                            'article_id' => $el->id,
+                            'bonsortie_id' => $bonsortie->id,
+                            'article' => ucfirst($article->article),
+                            'prix_vente' => $el->pv,
+                            'devise_vente' => $article->devise->devise,
+                            'qte' => $el->qte,
+                        ]);
                     }
                 } else {
-                    return $this->error("Une erreur s'est produite, veuillez reessayer.");
+                    $msg = $body->data->msg;
+                    $msg = implode('<br>', $msg);
+                    $msg = "$body->message<br>$msg";
+                    return $this->error($msg);
                 }
             } else {
-                $t = ["Impossible d'encaisser cette facture", ...$alerte];
-                $m = implode('<br>', $t);
-                return $this->error($m);
+                return $this->error("Une erreur s'est produite, veuillez reessayer.");
             }
+            // } else {
+            //     $t = ["Impossible d'encaisser cette facture", ...$alerte];
+            //     $m = implode('<br>', $t);
+            //     return $this->error($m);
+            // }
 
             DB::commit();
             return $this->success([], "Le bon {$bonsortie->numero} a été validé avec succès.");

@@ -56,8 +56,8 @@
                     <i class="fa fa-file"></i><span>Facturation</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('proforma') }}">Consulter factures</a></li>
-                    <li><a class="nav-link" href="{{ route('proforma_default') }}">Editer facture</a></li>
+                    {{-- <li><a class="nav-link" href="{{ route('proforma') }}">Consulter factures</a></li> --}}
+                    {{-- <li><a class="nav-link" href="{{ route('proforma_default') }}">Editer facture</a></li> --}}
                     <li><a class="nav-link" href="{{ route('proforma.modele') }}">Modèles des factures</a></li>
                 </ul>
             </li>

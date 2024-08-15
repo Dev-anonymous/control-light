@@ -33,10 +33,9 @@
                                         style="object-fit: cover">
                                 </div>
                                 <div class="card-footer d-flex justify-content-between">
-                                    <a href="{{ route('proforma.facture', $el->id) }}" class="btn btn-danger mr-2">
+                                    {{-- <a href="{{ route('proforma.facture', $el->id) }}" class="btn btn-danger mr-2">
                                         Utiliser ce modèle
-                                    </a>
-
+                                    </a> --}}
                                     @if ($el->id != getConfig('facture_zero'))
                                         <button type="button" bdef title="Définir comme modèle par defaut."
                                             value="{{ $el->id }}" class="btn btn-info">

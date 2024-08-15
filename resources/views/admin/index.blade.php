@@ -12,7 +12,7 @@
         </div>
         @php
             $caissier = \App\Models\User::orderby('id', 'desc')
-                ->where('user_role', 'caissier')
+                ->whereIn('user_role', ['caissier', 'gerant'])
                 ->where('compte_id', compte_id());
             $tc = $caissier->get()->count();
 

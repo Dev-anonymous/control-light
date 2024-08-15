@@ -254,7 +254,11 @@ function build_proforma($proforma, $id, $data = [])
         }
     }
 
-    $art = Article::whereIn('id', $ids)->get();
+    // do not use whereIn for keep order on proforma
+    $art = [];
+    foreach ($ids as $aid) {
+        $art[] = Article::where('id', $aid)->first();
+    }
 
     $tr = '';
     $tg = 0;
