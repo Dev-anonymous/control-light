@@ -5,7 +5,6 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleBonsortie;
-use App\Models\BonLivraison;
 use App\Models\Bonsortie;
 use App\Models\Proforma;
 use App\Models\Shop;
@@ -30,14 +29,21 @@ class BonsortieApiController extends Controller
 
         $data = Bonsortie::orderBy('id', 'desc')->with('articles', function ($q) {
             $q->orderBy('article_bonsortie.id');
-        })->with('bon_livraisons')->get();
+        })->get();
 
+        $user = auth()->user();
         $tab = [];
         foreach ($data as $el) {
             $o = (object) $el->toArray();
             $o->date = $el->date?->format('d-m-Y H:i:s');
             $o->total_cdf = montant($o->total_cdf, 'CDF');
-            $tab[] = $o;
+            if ($user->user_role == 'caissier') {
+                if (@$el->proforma->users_id == $user->id) {
+                    $tab[] = $o;
+                }
+            } else {
+                $tab[] = $o;
+            }
         }
 
         return $this->success($tab);
@@ -60,13 +66,13 @@ class BonsortieApiController extends Controller
                     'article_id.*' => 'required|exists:article,id',
                     'qte' => 'required|array',
                     'qte.*' => 'required|numeric|min:1',
-                    'nomclient' => 'required|',
+                    'nomclient' => 'sometimes|',
                     'adresseclient' => 'sometimes|',
-                    'telephoneclient' => 'required|',
+                    'telephoneclient' => 'sometimes|',
                     'adresseclient' => 'sometimes|',
-                    'adresselivraison' => 'required|',
+                    'adresselivraison' => 'sometimes|',
                     'Numerovehicule' => 'sometimes|',
-                    'datelivraison' => 'required|date',
+                    'datelivraison' => 'sometimes|date',
                     'motif' => 'sometimes|',
                 ]
             );
@@ -152,16 +158,6 @@ class BonsortieApiController extends Controller
                     'qte' => $qte[$i],
                 ]);
             }
-            BonLivraison::create([
-                'bonsortie_id' => $bon->id,
-                'nomclient' => request('nomclient'),
-                'telephoneclient' => request('telephoneclient'),
-                'adresseclient' => request('adresseclient'),
-                'adresselivraison' => request('adresselivraison'),
-                'chauffeur' => request('chauffeur'),
-                'numerovehicule' => request('numerovehicule'),
-                'datelivraison' => request('datelivraison'),
-            ]);
             DB::commit();
             return $this->success(null, "Le bon de sortie $numerbon a été créé, veuiller attendre la validation du gérant.");
         } else {
@@ -321,6 +317,30 @@ class BonsortieApiController extends Controller
 
                 if ($body->success) {
                     $proforma->update(['date_encaissement' => now('Africa/Lubumbashi'), 'article' => $items, 'montant' => "$tot $dev0"]);
+
+                    // FLEMME , ON DOIT RECREE LE PROFORMAT AVEC LES NOUVELS ARTICLES VENDUS
+                    // PROFORMA SHOW, GARDE LES ANCIENNES DONNES LORS DE LA CREARION DU BON DE SORTIE
+
+                    // $data = [
+                    //     'nom_entreprise' => @$shop->shop,
+                    //     'adresse_entreprise' => @$shop->adresse,
+                    //     'email_entreprise' => @$shop->contact,
+                    //     'telephone_entreprise' => '',
+                    //     'nom_client' => request('nomclient'),
+                    //     'adresse_client' => request('adresseclient'),
+                    //     'email_client' => '-',
+                    //     'telephone_client' => request('telephoneclient'),
+                    //     'mode_reglement' => 'CASH',
+                    //     'condition_reglement' => '-',
+                    //     'date_reglement' => now('Africa/Lubumbashi'),
+                    //     'note_reglement' => '-',
+                    //     'articles' => request('article_id'),
+                    //     'qtes' => request('qte'),
+                    //     'devise' => 'CDF'
+                    // ];
+                    // $proforma = build_proforma($pro, $id, $data);
+
+
                     ArticleBonsortie::where('bonsortie_id', $bonsortie->id)->delete();
                     $bonsortie->update((['total_cdf' => $tot]));
                     foreach ($tmp as $i => $el) {

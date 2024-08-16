@@ -37,6 +37,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('/config', [ConfigApiController::class, 'update'])->name('config.api');
         });
 
+        Route::post('/code', [DataApiController::class, 'code'])->name('code.api');
+        Route::delete('/code', [DataApiController::class, 'codedel']);
+
         Route::resource('groupe-article', GroupeArticleApiController::class);
         Route::resource('categorie-article', CategorieArticleApiController::class);
         Route::resource('articles', ArticlesApiController::class);

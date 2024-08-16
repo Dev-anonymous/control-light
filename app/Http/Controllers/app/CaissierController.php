@@ -9,32 +9,32 @@ class CaissierController extends Controller
 {
     public function index()
     {
-        return redirect(route('proforma'));
+        return redirect(route('bonsortie.common'));
         return view('caissier.index');
     }
 
-    public function articles()
-    {
-        return view('caissier.articles');
-    }
+    // public function articles()
+    // {
+    //     return view('caissier.articles');
+    // }
 
     public function compte()
     {
         return view('caissier.compte');
     }
 
-    public function ventesMagasin()
-    {
-        return view('caissier.ventes-magasin');
-    }
+    // public function ventesMagasin()
+    // {
+    //     return view('caissier.ventes-magasin');
+    // }
 
-    public function ventes()
-    {
-        return view('caissier.ventes');
-    }
+    // public function ventes()
+    // {
+    //     return view('caissier.ventes');
+    // }
 
-    public function cassier()
-    {
-        return view('caissier.cassier');
-    }
+    // public function cassier()
+    // {
+    //     return view('caissier.cassier');
+    // }
 }

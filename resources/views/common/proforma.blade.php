@@ -35,16 +35,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="card-hearder d-flex justify-content-end">
-                    <div class="form-group m-2 d-block">
-                        <button class="btn btn-danger"
-                            onclick="javascript:location.assign('{{ route('proforma_default') }}')"
-                            style="border-radius: 5px!important;">
-                            <i class="fa fa-plus-circle"></i>
-                            Editer facture
-                        </button>
-                    </div>
-                </div>
+
                 <div class="collapse show" id="mycard-collapse0">
                     <div class="card-body">
                         <div class="row">
@@ -57,7 +48,6 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Numéro facture</th>
-                                                <th>Client</th>
                                                 <th>Total facture</th>
                                                 <th>Créée par</th>
                                                 <th>Date</th>
@@ -158,7 +148,6 @@
                         str += `<tr title="${title}">
                                     <td>${i+1}</td>
                                     <td>${e.numero}</td>
-                                    <td>${e.client}</td>
                                     <td>${e.montant}</td>
                                     <td>${e.enregistrer_par}</td>
                                     <td>${e.date}</td>

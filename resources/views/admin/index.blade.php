@@ -106,7 +106,13 @@
                         </a>
                     </div>
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <a no-under href="{{ route('cassier.admin') }}">
+                        @php
+                            $url = '#';
+                            if (in_array(auth()->user()->user_role, ['admin'])) {
+                                $url = route('cassier.admin');
+                            }
+                        @endphp
+                        <a no-under href="{{ $url }}">
                             <div class="card ombre" style="min-height: 200px" data-toggle="tooltip" title="Utilisateurs">
                                 <div class="card-statistic-4">
                                     <div class="align-items-center justify-content-between">

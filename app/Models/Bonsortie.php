@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Bonsortie
- * 
+ *
  * @property int $id
  * @property int|null $proforma_id
  * @property float|null $total_cdf
@@ -25,10 +25,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $date
  * @property string|null $type
  * @property string|null $motif
- * 
+ *
  * @property Proforma|null $proforma
  * @property Collection|Article[] $articles
- * @property Collection|BonLivraison[] $bon_livraisons
  *
  * @package App\Models
  */
@@ -73,8 +72,4 @@ class Bonsortie extends Model
 					->withPivot('id', 'article', 'prix_vente', 'devise_vente', 'qte');
 	}
 
-	public function bon_livraisons()
-	{
-		return $this->hasMany(BonLivraison::class);
-	}
 }

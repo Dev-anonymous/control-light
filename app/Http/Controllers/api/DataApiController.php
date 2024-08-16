@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\Code;
 use App\Models\Devise;
 use App\Models\Facture;
 use App\Models\FactureSupprimee;
@@ -365,5 +366,35 @@ class DataApiController extends Controller
         demo();
         $item = (int) request()->item;
         FactureSupprimee::where('id', $item)->where('compte_id', compte_id())->delete();
+    }
+
+    function code()
+    {
+        $validator = Validator::make(
+            request()->all(),
+            [
+                'code' => 'required|unique:code',
+                'article_id' => 'required|',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return $this->error(implode(' ',  $validator->errors()->all()));
+        }
+
+        $code = request('code');
+        $article_id = request('article_id');
+        $date = now('Africa/Lubumbashi');
+
+        Code::create(compact('code', 'article_id', 'date'));
+
+        return $this->success(null, 'Code unique créé');
+    }
+
+    function codedel()
+    {
+        $code_id = request('code_id');
+        Code::where('id', $code_id)->delete();
+        return $this->success(null, 'Code unique supprimé');
     }
 }

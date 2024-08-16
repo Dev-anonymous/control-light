@@ -94,8 +94,8 @@
                                     <thead>
                                         <th></th>
                                         <th>ARTICLE</th>
-                                        <th>PU</th>
                                         <th>PV</th>
+                                        <th>REDUCTION</th>
                                         <th>STOCK ACTUEL</th>
                                     </thead>
                                     <tbody>
@@ -103,8 +103,8 @@
                                             <tr style="cursor: pointer" value="{{ json_encode($el) }}">
                                                 <td>{{ $k + 1 }}</td>
                                                 <td>{{ $el->article }}</td>
-                                                <td>{{ montant($el->prix_achat, $el->devise_achat) }}</td>
                                                 <td>{{ montant($el->prix, $el->devise->devise) }}</td>
+                                                <td>{{ $el->reduction }} %</td>
                                                 <td>{{ "$el->stock {$el->unite_mesure->unite_mesure}" }}</td>
                                             </tr>
                                         @endforeach
@@ -423,111 +423,6 @@
         $shop = \App\Models\Shop::where('compte_id', compte_id())->first();
     @endphp
 
-    <div class="modal fade" id="mdl-up2" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content ">
-                <div class="modal-header bg-danger text-white font-weight-bold d-flex justify-content-between">
-                    <b>Bon de livraison</b>
-                    <span style="cursor: pointer" data-dismiss="modal">
-                        <i class="fa fa-times-circle p-2 "></i>
-                    </span>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <div id="bonsortie" estyle="width: 21cm !important">
-                            <div style="width: 100% !important">
-                                <div class="mt-3 p-3">
-                                    <table class="table-table-striped table-hover w-100" border="1">
-                                        <thead>
-                                            <tr class="text-center">
-                                                <th colspan="5">BON DE LIVRAISON</th>
-                                            </tr>
-                                        </thead>
-                                        <tr>
-                                            <td colspan="2"><b>{{ $shop->shop }}</b></td>
-                                            <td>BDL N0</td>
-                                            <td colspan="2">-</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2" rowspan="6">
-                                                @if ($shop->adresse)
-                                                    {{ $shop->adresse }} <br>
-                                                @endif
-                                                @if ($shop->contact)
-                                                    {{ $shop->contact }} <br>
-                                                @endif
-                                                @if ($shop->email)
-                                                    {{ $shop->email }} <br>
-                                                @endif
-                                                @if ($shop->telephone)
-                                                    {{ $shop->telephone }} <br>
-                                                @endif
-                                                @if ($shop->siegesocial)
-                                                    {{ $shop->siegesocial }} <br>
-                                                @endif
-                                            </td>
-                                            <td>Date livraison</td>
-                                            <td colspan="2"> <span datelivraison>-</span> </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="1">N° Bon</td>
-                                            <td colspan="2"><span numbonsortie></span></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="1">Date facture</td>
-                                            <td colspan="2"><span datefacture>-</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="1">Délivré par</td>
-                                            <td colspan="2"><span emetteurnom>-</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="1">BDC Number</td>
-                                            <td colspan="2"><span bdc>-</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="1">Location</td>
-                                            <td colspan="2"><span location>-</span></td>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="5">Client : <span nomclient></span></th>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="2">Contact : <span telephoneclient></span></th>
-                                            <th colspan="3">Email : <span emailclient></span></th>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="5">Adresse : <span adresseclient></span></th>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="2">Chauffeur : <span nomchauffeur></span></th>
-                                            <th colspan="3">N° vehicule : <span numerovehicule></span></th>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="2" class="font-weight-bold">Description article</th>
-                                            <th colspan="3" class="font-weight-bold text-right">Prix * Qte</th>
-                                        </tr>
-                                        <tbody articleslist></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <div class="">
-                        <button class="btn mb-2 btn-success ml-2" bprint2>
-                            <i class="fa fa-print"></i>
-                            Imprimer
-                        </button>
-                    </div>
-                    <button class="btn mb-2 btn-dark" data-dismiss="modal">
-                        Fermer
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('js-code')
@@ -775,10 +670,6 @@
                             $('span[emispar]').html(data?.emetteur);
                             $('span[totbon1]').html(data?.total_cdf);
 
-                            var bon = data.bon_livraisons[0];
-                            $('span[bnomclient]').html(bon?.nomclient);
-                            $('span[badresseclient]').html(bon?.adresseclient);
-                            $('span[btelephoneclient]').html(bon?.telephoneclient);
 
                             var st = data.status;
                             $('span[statusbon]').html(st == 0 ?
@@ -794,46 +685,6 @@
                             }
                             mdl.modal();
                             $('#showfac').click();
-                        });
-                        $('.bdetail2').off('click').click(function() {
-                            var data = JSON.parse(unescape($(this).attr('data')));
-                            var mdl = $('#mdl-up2');
-                            var bonlivr = data.bon_livraisons[0];
-
-                            $('[datelivraison]').html(bonlivr?.datelivraison);
-                            $('[numbonsortie]').html(data?.numero);
-                            $('[datefacture]').html(data?.date);
-                            $('[emetteurnom]').html(data?.emetteur);
-                            $('[nomclient]').html(bonlivr?.nomclient);
-                            $('[telephoneclient]').html(bonlivr?.telephoneclient);
-                            $('[emailclient]').html(bonlivr?.emailclient);
-                            $('[adresseclient]').html(bonlivr?.adresseclient);
-                            $('[nomchauffeur]').html(bonlivr?.chauffeur);
-                            $('[numerovehicule]').html(bonlivr?.numerovehicule);
-
-                            var articles = data.articles;
-                            var txt = '';
-
-                            $(articles).each(function(i, e) {
-                                txt +=
-                                    `<tr>
-                                        <th colspan="2">${e.article}</th>
-                                        <th colspan="3" class='text-right'> ${e.pivot.prix_vente} ${e.pivot.devise_vente} * ${e.pivot.qte} </th>
-                                    </tr>
-                                    `;
-                            });
-
-                            txt +=
-                                `<tr>
-                                        <th colspan="2">TOTAL BON</th>
-                                        <th colspan="3" class='text-right'> ${data.total_cdf}</th>
-                                    </tr>
-                                    `
-
-                            $('[articleslist]').html(txt);
-
-                            mdl.modal();
-
                         });
 
                         $('.delete').off('click').click(function() {
@@ -895,18 +746,18 @@
                     return;
                 }
 
-                var stop = false
-                $(':input[required]', $('#f-bon')).each(function(i, e) {
-                    if ($(this).val() == '') {
-                        stop = true;
-                        return;
-                    }
-                });
+                // var stop = false
+                // $(':input[required]', $('#f-bon')).each(function(i, e) {
+                //     if ($(this).val() == '') {
+                //         stop = true;
+                //         return;
+                //     }
+                // });
 
-                if (stop) {
-                    alert("Veuillez completer tous champs en rouge dans le formulaire");
-                    return;
-                }
+                // if (stop) {
+                //     alert("Veuillez completer tous champs en rouge dans le formulaire");
+                //     return;
+                // }
 
                 rep.removeClass().slideUp();
 
