@@ -397,4 +397,22 @@ class DataApiController extends Controller
         Code::where('id', $code_id)->delete();
         return $this->success(null, 'Code unique supprimé');
     }
+
+    function codeget()
+    {
+        $code = request('code');
+        $el = null;
+        $m = "CODE NON VALIDE :\n\n $code";
+        if ($code != null) {
+            $el = Code::where(compact('code'))->first();
+            if ($el) {
+                $m = "ARTICLE TROUVE => {$el->article->article}";
+            }
+        }
+
+        return response()->json([
+            'success' => !is_null(($el)),
+            'message' => $m
+        ]);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\app;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\Code;
 use App\Models\FactureSupprimee;
 use App\Models\TauxOnline;
 
@@ -90,5 +91,9 @@ class AdminController extends Controller
         return view('admin.facture-supprimee', compact('factures'));
     }
 
-
+    function scan_article()
+    {
+        $code = Code::orderBy('date')->get();
+        return view('admin.scan_article', compact('code'));
+    }
 }

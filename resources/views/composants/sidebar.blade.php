@@ -41,6 +41,7 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="{{ route('articles.admin') }}">Afficher les articles</a></li>
+                    <li><a class="nav-link" href="{{ route('scan-article.admin') }}">Scanner un article</a></li>
                     {{-- <li><a class="nav-link" href="{{ route('code-barre.admin') }}">Code barre</a></li> --}}
                 </ul>
             </li>
