@@ -632,7 +632,7 @@
                 "my-qr-reader", {
                     fps: 10,
                     qrbos: 150,
-                    rememberLastUsedCamera: true,
+                    // rememberLastUsedCamera: true,
                 }
             );
 
