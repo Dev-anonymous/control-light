@@ -137,6 +137,10 @@
                             <i class="fa fa-edit"></i>
                             Modifier
                         </button>
+                        <button class="btn btn-success mr-2" data-toggle="modal" data-target="#mdl-share">
+                            <i class="fa fa-share"></i>
+                            Transferer
+                        </button>
                         <button class="btn btn-danger" data-toggle="modal" data-target="#mdl-del">
                             <i class="fa fa-trash"></i>
                             Supprimer cet article
@@ -573,6 +577,51 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="mdl-share" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content ">
+                <div class="modal-header bg-danger text-white font-weight-bold d-flex justify-content-between">
+                    <b>Transfert de l'article</b>
+                    <span style="cursor: pointer" data-dismiss="modal">
+                        <i class="fa fa-times-circle p-2 "></i>
+                    </span>
+                </div>
+                <form id="f-share" class="was-validated">
+                    <input type="hidden" name="action" value="">
+                    @php
+                        $shop = \App\Models\Shop::where('compte_id', '!=', compte_id())->get();
+                    @endphp
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <h6>Tranférer de l'article : {{ strtoupper($article->article) }}</h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Vers le magasin</label>
+                            <select class="custom-select" name="categorie_article_id" required>
+                                <option value=""></option>
+                                @foreach ($shop as $e)
+                                    <option value="{{ $e->id }}">
+                                        {{ $e->shop }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: none" id="rep"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-dark" data-dismiss="modal">
+                            Fermer
+                        </button>
+                        <button class="btn btn-danger " type="submit">
+                            <span></span>
+                            Transférer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('js-code')
@@ -994,6 +1043,23 @@
                         location.reload();
                     }, 3000);
                 });
+            });
+
+            $('#f-share').submit(function() {
+                event.preventDefault();
+                var form = $(this);
+                var btn = $(':submit', form).attr('disabled', true);
+                btn.find('span').removeClass().addClass('spinner-border spinner-border-sm mr-3');
+                rep = $('#rep', form);
+                rep.removeClass().slideUp();
+                setTimeout(() => {
+                    var m = "Votre article a été transféré vers magasin, veuillez patientez la validation.";
+                    rep.addClass('alert alert-success w-100').html(m);
+                    rep.slideDown();
+                }, 2000);
+                setTimeout(() => {
+                    location.reload();
+                }, 5000);
             })
 
         })
