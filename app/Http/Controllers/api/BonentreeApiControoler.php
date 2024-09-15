@@ -23,7 +23,7 @@ class BonentreeApiControoler extends Controller
      */
     public function index()
     {
-        $data = Bonentree::orderBy('id', 'desc')->with('articles')->get();
+        $data = Bonentree::orderBy('id', 'desc')->where('compte_id', compte_id())->with('articles')->get();
         $tab = [];
         foreach ($data as $el) {
             $o = (object) $el->toArray();

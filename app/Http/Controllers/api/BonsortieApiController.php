@@ -27,7 +27,7 @@ class BonsortieApiController extends Controller
         //     $q->orderBy('article_bonsortie.id');
         // }, 'bon_livraisons'],)->get();
 
-        $data = Bonsortie::orderBy('id', 'desc')->with('articles', function ($q) {
+        $data = Bonsortie::orderBy('id', 'desc')->where('compte_id', compte_id())->with('articles', function ($q) {
             $q->orderBy('article_bonsortie.id');
         })->get();
 
